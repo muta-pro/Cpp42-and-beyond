@@ -1,0 +1,34 @@
+CPP abstraction, safety, and expressive power
+
+• name-space : 
+∘ symbols&functions - semantic relation in a same set
+‣ group in a same file:  namespace Foo{
+• stdio streams
+• class and instance
+• member attributes and member functions
+• this
+• accessor
+• initialization list
+• const
+• visibility
+• class vs struct
+• comparisons
+• non member attributes and non member functions
+• pointers to members
+• conclusion
+
+		syntax
+	
+	
+
+std::string = string class to represent sequence of chars - to handle text data
+	- manages buffer
+	- dynamic sizing
+	- includes methods for string manipulation
+	- operator support
+	- const std::string& as function parameter
+
+Concept:
+
+	Range-based loop
+
