@@ -17,6 +17,12 @@ CPP abstraction, safety, and expressive power
 • pointers to members
 • conclusion
 
+HEAP - PREFERNCE:
+• dynamic size objects
+• shared ownership
+• polymorphism
+• large objects
+
 		syntax
 	
 	
