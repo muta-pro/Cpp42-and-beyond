@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Zombie.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 06:32:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 07:04:25 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/10 07:25:34 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/10 07:50:59 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Zombie.hpp"
+#ifndef ZOMBIE_HPP
+#define ZOMBIE_HPP
 
-int main()
+#include <iostream>
+#include <string>
+
+class Zombie
 {
-	Zombie* z = newZombie("Kurosawa");
-	z->announce();
-	delete z;
+public:
+	Zombie();
+	Zombie(std::string name);
+	~Zombie();
+	void setName(std::string name);
+	void announce(void);
+private:
+	std::string _name;	
+};
 
-	randomChump("Kubrick");
+Zombie* zombieHorde(int N, std::string name);
 
-	return 0;
-}
+#endif

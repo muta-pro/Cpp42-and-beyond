@@ -25,7 +25,10 @@ HEAP - PREFERNCE:
 
 		syntax
 	
-	
+RAII
+move semantics
+smart pointers
+object lifetime
 
 std::string = string class to represent sequence of chars - to handle text data
 	- manages buffer

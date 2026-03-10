@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 06:32:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 07:04:25 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/10 07:25:20 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/10 08:08:25 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 int main()
 {
-	Zombie* z = newZombie("Kurosawa");
-	z->announce();
-	delete z;
+	Zombie* z = zombieHorde(3, "Sauron");
+	for(int i = 0; i < 3; i++)
+		z[i].announce();
 
-	randomChump("Kubrick");
-
+	delete[] z;
 	return 0;
 }

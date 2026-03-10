@@ -1,0 +1,28 @@
+| Module | Days | Notes                      |
+| ------ | ---- | -------------------------- |
+| CPP00  | 2    | Class basics, canon form   |
+| CPP01  | 2    | Memory, refs, pointers     |
+| CPP02  | 2    | Operator overloading       |
+| CPP03  | 3    | Inheritance, constructors  |
+| CPP04  | 2    | Polymorphism, virtual dtor |
+
+00: group data and funcitons together:
+	OBJECT - concrete variable created from a class.
+	C++ object is close to a struct variable, but stronger:
+
+it holds data
+it can also have functions attached to it
+it can automatically initialize and clean itself
+
+	CONSTRUCTOR - function that runs automatically when obj is created:
+	it is an object's starting setup function.
+
+	METHOD - function that belongs to a class and is called on an obj.
+	meaning is tied to an object.
+
+01: visualizing memory: where objects live and how to access them.
+
+	STACK - HEAP - REERENCES
+
+STACK → automatic lifetime
+HEAP  → manual lifetime

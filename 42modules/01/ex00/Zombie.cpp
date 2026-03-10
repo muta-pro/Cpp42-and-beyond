@@ -6,14 +6,19 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 21:02:58 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/05 21:33:01 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/10 06:54:21 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
+#include "Zombie.hpp"
 
-void	announce(void)
+Zombie::Zombie(std::string name) : _name(name) {}
+
+Zombie::~Zombie() {
+	std::cout << _name << "is destroyed" << std::endl;
+}
+
+void Zombie::announce(void)
 {
-	name
-	std::cout << name: BraiiiiiiinnnzzzZ... << std::endl
+	std::cout  <<_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
 }
