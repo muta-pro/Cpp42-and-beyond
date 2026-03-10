@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.hpp                                         :+:      :+:    :+:   */
+/*   HumanB.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/05 21:02:58 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 12:22:34 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/10 10:16:55 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/10 13:04:58 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ZOMBIE_HPP
-#define ZOMBIE_HPP
-
+#include "HumanB.hpp"
 #include <iostream>
-#include <string>
-#pragma once
 
-class Zombie
+HumanB::HumanB(const std::string& name) : _name(name), _weapon(nullptr) {}
+
+HumanB::~HumanB() {}
+
+void HumanB::setWeapon(Weapon& weapon)
+{ _weapon = &weapon; }
+
+void HumanB::attack() const
 {
-public:
-	Zombie(std::string name);
-	~Zombie();
-	void announce(void);
-private:
-	std::string _name;
-};
-
-Zombie* newZombie(std::string name);
-void randomChump(std::string name);
-
-#endif
+	if(!_weapon)
+		std::cout << "has no weapon" << std::endl;
+	else
+		std::cout << _name << "attacks with their" << _weapon->getType() << std::endl;
+}

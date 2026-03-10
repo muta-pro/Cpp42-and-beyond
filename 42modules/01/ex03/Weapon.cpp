@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.hpp                                         :+:      :+:    :+:   */
+/*   Weapon.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/05 21:02:58 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 12:22:34 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/10 10:16:33 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/10 11:56:45 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ZOMBIE_HPP
-#define ZOMBIE_HPP
+#include "Weapon.hpp"
 
-#include <iostream>
-#include <string>
-#pragma once
+Weapon::Weapon(const std::string& type) : type(type) {}
 
-class Zombie
-{
-public:
-	Zombie(std::string name);
-	~Zombie();
-	void announce(void);
-private:
-	std::string _name;
-};
+const std::string& Weapon::getType() const {
+	return type; }
 
-Zombie* newZombie(std::string name);
-void randomChump(std::string name);
-
-#endif
+void Weapon::setType(const std::string& nType) {
+	type = nType; }

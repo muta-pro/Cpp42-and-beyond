@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 07:25:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 07:50:59 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/10 12:22:24 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <string>
+#pragma once
 
 class Zombie
 {
