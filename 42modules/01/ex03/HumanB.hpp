@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:17:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 12:57:29 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/11 09:10:18 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ public:
 
 private:
 	std::string _name;
-	Weapon* _Weapon;
+	Weapon* _weapon;
 };

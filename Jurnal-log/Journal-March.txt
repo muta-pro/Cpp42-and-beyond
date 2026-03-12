@@ -16,13 +16,17 @@ it can automatically initialize and clean itself
 
 	CONSTRUCTOR - function that runs automatically when obj is created:
 	it is an object's starting setup function.
+	Constructor with reference memeber must use init list.
 
 	METHOD - function that belongs to a class and is called on an obj.
 	meaning is tied to an object.
 
 01: visualizing memory: where objects live and how to access them.
 
-	STACK - HEAP - REERENCES
+	STACK - HEAP - REERENCES -POINTERS
+
+	reference - must be set at construction, always exist
+	pointer - can be null and set later
 
 STACK → automatic lifetime
 HEAP  → manual lifetime
