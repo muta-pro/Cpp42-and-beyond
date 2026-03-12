@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:16:48 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/10 13:02:30 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/11 09:26:41 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@ HumanA::~HumanA() {}
 
 void HumanA::attack() const
 {
-	std::cout << _name << "attacks with their" << _weapon.getType() << std::endl;
+	std::cout << _name <<
+	" attacks with their " << _weapon.getType() << std::endl;
 }
