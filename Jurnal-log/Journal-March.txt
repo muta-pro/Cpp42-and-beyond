@@ -26,3 +26,14 @@ it can automatically initialize and clean itself
 
 STACK → automatic lifetime
 HEAP  → manual lifetime
+
+#pragma once ->.hpp file need to assure the file is included only once
+
+	ex03 - one shared object whose internal state can change
+		- one class holding a reference to that object
+		- one class holding a pointer to that object
+
+##references - pointers##
+
+
+
