@@ -2,9 +2,9 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 
-NAME = weapon
+NAME = replace
 
-SRC = main.cpp Weapon.cpp HumanA.cpp HumanB.cpp
+SRC = main.cpp replace.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

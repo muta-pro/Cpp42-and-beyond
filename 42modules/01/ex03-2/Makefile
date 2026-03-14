@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 
 NAME = weapon
 
-SRC = main.cpp Weapon.cpp HumanA.cpp HumanB.cpp
+SRC = main.cpp Document.cpp EditorA.cpp EditorB.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HumanB.cpp                                         :+:      :+:    :+:   */
+/*   EditorB.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 10:16:55 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/12 13:53:37 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/12 16:31:46 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/12 17:20:39 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "HumanB.hpp"
+#include "EditorB.hpp"
 #include <iostream>
 
-HumanB::HumanB(const std::string& name) : _name(name), _weapon(NULL) {}
+EditorB::EditorB(const std::string& name) : _doc(NULL), _name(name) {}
 
-HumanB::~HumanB() {}
+EditorB::~EditorB() {}
+void EditorB::setDoc(Document& doc) {_doc = &doc;}
 
-void HumanB::setWeapon(Weapon& weapon) //param as reference
-{ _weapon = &weapon; } //storing address inside pointer
-
-void HumanB::attack() const
+void EditorB::review() const
 {
-	if(!_weapon)
-		std::cout << " has no weapon" << std::endl;
+	if(!_doc)
+		std::cout << _name << " no Document" << std::endl;
 	else
-		std::cout << _name <<
-		 " attacks with their " << _weapon->getType() << std::endl;
+		std::cout << _name << " has Document " << _doc->getTitle() << std::endl;
 }

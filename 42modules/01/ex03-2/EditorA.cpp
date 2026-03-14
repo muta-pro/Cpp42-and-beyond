@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HumanB.cpp                                         :+:      :+:    :+:   */
+/*   EditorA.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 10:16:55 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/12 13:53:37 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/12 16:31:24 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/12 17:20:43 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "HumanB.hpp"
+#include "EditorA.hpp"
 #include <iostream>
 
-HumanB::HumanB(const std::string& name) : _name(name), _weapon(NULL) {}
+EditorA::EditorA(Document& doc, const std::string& name) : _doc(doc), _name(name) {};
 
-HumanB::~HumanB() {}
+EditorA::~EditorA() {};
 
-void HumanB::setWeapon(Weapon& weapon) //param as reference
-{ _weapon = &weapon; } //storing address inside pointer
-
-void HumanB::attack() const
+void EditorA::review() const
 {
-	if(!_weapon)
-		std::cout << " has no weapon" << std::endl;
-	else
-		std::cout << _name <<
-		 " attacks with their " << _weapon->getType() << std::endl;
+	std::cout << _name << " reviews docs " << _doc.getTitle() << std::endl; 
 }
+

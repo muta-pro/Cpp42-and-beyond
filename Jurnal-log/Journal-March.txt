@@ -8,11 +8,11 @@
 
 00: group data and funcitons together:
 	OBJECT - concrete variable created from a class.
-	C++ object is close to a struct variable, but stronger:
 
-it holds data
-it can also have functions attached to it
-it can automatically initialize and clean itself
+	C++ object is close to a struct variable, but stronger:
+	-it holds data
+	-it can also have functions attached to it
+	-it can automatically initialize and clean itself
 
 	CONSTRUCTOR - function that runs automatically when obj is created:
 	it is an object's starting setup function.
@@ -30,3 +30,60 @@ it can automatically initialize and clean itself
 
 STACK → automatic lifetime
 HEAP  → manual lifetime
+
+
+	* brace uniform initialization unifies older init syntaxes:
+		/ copy std::string s = "hi";
+		/ direct std::string s("hi");
+		/ aggregate int arr[3] = {1, 2, 3};
+		/ brace std::string s{"hi"}; int arr{1, 2, 3};
+		- it catches bug such as narrowing conversions int x{2.3}; decimal part doesn't get lost silently.
+		- it works well with containers: std::vector<int> v{1,2,3};
+
+		ex03:
+		consepts - reference memeber: opposite to pointer member
+		must be initialized immediately
+		cannot be null
+		cannot later refer to another document
+		good when the object is mandatory
+//
+		one shared obj with changing internal state;
+		one class holding reference to that obj
+		one class holding pointer to that obj
+
+		DATA: obj memory - _title string
+						 - _name string , _doc (ref)
+
+		CONSTR: Classname(...)
+		when creating obj of that class what we must provide (...)
+		implementation shows then init list of memebers
+
+		METHODS: obj behaviour
+		find implemantation to check
+
+		IDENTIFY OWNERSHIP: does obj own data or just reference it. If it reference it means data must exist before the obj of that class.
+
+		MEMORY ALLOCATED
+		       ↓
+		CONSTRUCTOR RUNS
+		       ↓
+		OBJECT IS USED (methods called)
+		       ↓
+		DESTRUCTOR RUNS
+		       ↓
+		MEMORY RELEASED
+
+
+		ex04:
+		streams instead of C file APIs
+
+		std::string instead of char arrays
+
+		basic command-line handling in C++
+
+		object-oriented standard library usage
+
+		safer text manipulation
+
+		RAII-style resource handling without you even noticing it
+		
