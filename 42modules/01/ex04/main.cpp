@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 19:27:18 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/14 20:09:33 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/16 19:16:54 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
 		std::cerr << "Usage: ./replace <filename> <str1> <str2>" << std::endl;
 		return 1;
 	}
-	std::string filename = argv[1];
+	std::string filename = argv[1];//managed string object
 	std::string s1 = argv[2];
 	std::string s2 = argv[3];
 	if (filename.empty())
@@ -28,12 +28,16 @@ int main(int argc, char const *argv[])
 		std::cerr << "Err: empty filename" << std::endl;
 		return 1;
 	}
-	if (s1.empty())
+	if (s1.empty())//the object answers questions about itself
 	{
 		std::cerr << "Err: empty str1" << std::endl;
 		return 1;
 	}
-	std::ifstream in(filename.c_str());
+	//constructing the object that tries opening a file
+	// ifstream ~input file stream class - creates input file stream in
+	std::ifstream in(filename.c_str()); //const char *c_str() const;
+	//pr can use filename.data() ~ const char *data() const;
+	//file stream constructors often expect a const char *, not a std::string
 	if (!in)
 	{
 		std::cerr << "Err: could not open inp file" << std::endl;
@@ -67,3 +71,20 @@ int main(int argc, char const *argv[])
 	}
 	return 0;
 }
+
+/*So when you design tests, you are asking:
+
+does it work in the normal case?
+mala nisam
+de a - overlaping behaviour
+does it work if nothing matches?
+x z 
+does it work if the file is empty?
+mala "" can work as deletion
+does it work if arguments are wrong?
+
+what if s2 is empty?
+mala "" can work as deletion
+what if s1 is empty?
+"" x - error message - can match everywhere, 
+can act as undefined behaviour*/
