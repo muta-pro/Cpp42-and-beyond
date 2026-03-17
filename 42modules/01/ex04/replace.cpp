@@ -6,15 +6,15 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 19:34:21 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/14 20:09:04 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/17 19:44:12 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "replace.hpp"
 
-std::string replaceAll(const std::string &content,
-						const std::string &s1,
-						const std::string &s2)
+std::string replaceAll(const std::string& content,
+						const std::string& s1,
+						const std::string& s2)
 {
 	if (s1.empty())
 		return content;

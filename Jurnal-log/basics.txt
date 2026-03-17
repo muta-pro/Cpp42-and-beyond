@@ -30,14 +30,27 @@ move semantics
 smart pointers
 object lifetime
 
-std::string = string class to represent sequence of chars - to handle text data
+CLASS:
+##std::string = string class to represent sequence of chars - to handle text data
 	- manages buffer
 	- dynamic sizing
-	- includes methods for string manipulation
+	- includes methods for string manipulation: .size()
 	- operator support
 	- const std::string& as function parameter
 
 Concept:
 
 	Range-based loop
+
+4-step class decoding:
+1. DATA (what memory the object holds)
+2. CONSTRUCTORS (how the object is created)
+3. METHODS (what the object can do)
+4. OWNERSHIP (who owns what memory)
+
+~stram objects : all hold a state of the obj
+
+std::ios_base::iostate -type of stream state flags - error state flags
+
+std::ios : good() eof() fail() bad () rdstate()
 

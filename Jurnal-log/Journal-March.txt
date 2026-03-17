@@ -75,7 +75,17 @@ HEAP  → manual lifetime
 
 
 		ex04:
-		streams instead of C file APIs
+		construct an object that represents the file.
+		creating input/output file streams instead of C file APIs:
+		~objs type:
+			std::ifstream for reading files
+
+			std::ofstream for writing files
+
+		std::string for storing and manipulating text
+
+		~member functions like: .find(), .substr(), .size(), .empty()
+		~non-memeber function: getline - for extracting a line by reading from a stream;
 
 		std::string instead of char arrays
 
@@ -85,5 +95,6 @@ HEAP  → manual lifetime
 
 		safer text manipulation
 
-		RAII-style resource handling without you even noticing it
+		RAII-Resource Acquisition Is Initialization.
+		style resource handling without you even noticing it
 		
