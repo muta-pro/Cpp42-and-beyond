@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 19:27:18 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/16 19:16:54 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/21 20:35:44 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,30 @@ int main(int argc, char const *argv[])
 		std::cerr << "Err: could not open inp file" << std::endl;
 		return 1;
 	}
+	//two empty strings creation
 	std::string content;
 	std::string line;
-	while (std::getline(in, line))
+	while (std::getline(in, line)) //file-reading pattern/ return boolean
 	{
 		content += line;
-		if (!in.eof())
-			content+= '\n';
+		if (!in.eof()) //std::ios bool return error flag state
+			content+= '\n';//has to be added back, it was skipped
 	}
-	if (in.bad())
+	if (in.bad()) //std::ios bool error flag state -read err
 	{
 		std::cerr << "Err: failed reading file" << std::endl;
 		return 1;
 	}
 	std::string replaced = replaceAll(content, s1, s2);
+	//creates output stream plus creates new file  for writitng
+	//c_str is used bc constructor of if/ofstream expects c-style string
 	std::ofstream out((filename + ".replace").c_str());
 	if (!out)
 	{
-		std::cerr << "Err: file not created" << std::endl;
+		std::cerr << "Err: file not created/opened" << std::endl;
 		return 1;
 	}
-	out << replaced;
+	out << replaced;//sends string into output file stream
 	if (!out)
 	{
 		std::cerr << "Err: failed writing output file" << std::endl;
