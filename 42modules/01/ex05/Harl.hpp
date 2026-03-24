@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Harl.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/17 19:49:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/23 14:16:41 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/17 19:49:47 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/23 17:12:32 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Harl.hpp"
+#ifndef HARL_HPP
+#define HARL_HPP
 
-//mini dispatcher
-int	main()
+#include <iostream>
+#include <string>
+
+class Harl
 {
-	Harl h;
+public:
+	Harl();
+	~Harl();
+	void complain(std::string level);
 
-	h.complain("INFO");
-	h.complain("DEBUG");
-	h.complain("ERROR");
-	h.complain("WARNING");
-	h.complain("PARTY");
-	return (0);
-}
+private:
+	void debug();
+	void info();
+	void warning();
+	void error();
+};
+
+#endif

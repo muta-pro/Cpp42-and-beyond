@@ -49,6 +49,7 @@ Concept:
 4. OWNERSHIP (who owns what memory)
 
 ~stram objects : all hold a state of the obj
+std::ios - Base class for streams (type-dependent components)
 
 std::ios_base::iostate -type of stream state flags - error state flags
 

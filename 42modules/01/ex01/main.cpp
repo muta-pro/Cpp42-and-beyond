@@ -14,10 +14,18 @@
 
 int main()
 {
-	Zombie* z = zombieHorde(3, "Sauron");
-	for(int i = 0; i < 3; i++)
+	int N = 3;
+
+	Zombie* z = zombieHorde(N, "Sauron");
+	if (z == NULL)
+	{
+		std::cout << "invalid N input" << std::endl;
+		return 1;
+	}
+	for(int i = 0; i < N; i++)
 		z[i].announce();
 
 	delete[] z;
 	return 0;
 }
+

@@ -41,6 +41,7 @@ HEAP  → manual lifetime
 		- it works well with containers: std::vector<int> v{1,2,3};
 
 		ex03:
+		when to use a reference vs a pointer as a member variable?
 		consepts - reference memeber: opposite to pointer member
 		must be initialized immediately
 		cannot be null
@@ -73,8 +74,12 @@ HEAP  → manual lifetime
 		       ↓
 		MEMORY RELEASED
 
+		getType() returns const std::string& instead of std::string;
+		This avoids copying the string on every attack() call. The double const — one on the return type, one trailing on the method;
+
 
 		ex04:
+		CONCEPT: reading a file into a string with std::getline
 		construct an object that represents the file.
 		creating input/output file streams instead of C file APIs:
 		~objs type:
@@ -84,17 +89,84 @@ HEAP  → manual lifetime
 
 		std::string for storing and manipulating text
 
-		~member functions like: .find(), .substr(), .size(), .empty()
-		~non-memeber function: getline - for extracting a line by reading from a stream;
+		using methods attached to the object:
 
-		std::string instead of char arrays
+		~member functions like: .find(), .substr(), .size(), .empty()
+		substr(start, len) ~ returns substring 
+		bad(); 
+		~bad() vs fail() — fail() also triggers on normal EOF, making it too noisy for a post-read check. bad() only fires on real hardware/OS errors.
+
+		~non-memeber function: getline - for extracting a line by reading from a stream;
+		std::getline strips the newline delimiter, so you have to put it back.
+
+		std::string instead of char arrays : creates empty string that expands automatically - no managed buffer sizes
 
 		basic command-line handling in C++
 
-		object-oriented standard library usage
+		object-oriented standard library usage:
+		using library abstractions instead pointer arithmetic;
+		algorothim at higher level: find -  copy substr - append replacement
 
-		safer text manipulation
+		safer text manipulation: const std::string& text -> read-only reference, no expensive copy ->pass by const ref.
 
 		RAII-Resource Acquisition Is Initialization.
 		style resource handling without you even noticing it
+
+		nested types and constants: classes can define types, constants inside themselves. ::
+		std::string::size_type -> namespace scope syntax:
+		class types contain tensted types, constants, memeber functions;
+		size_type belongs to std::string
+
+		~npos - special constant: not found.
+
+## MEMBER FUNCTION POINTERS
+
+A regular function pointer stores the address of a free function:
+
+      void (*fp)() = &someFunction;
+      fp();                          // call it
+
+A MEMBER function pointer also stores the address of a function,
+  but it belongs to a class, so it always needs an object to run on:
+
+      void (Harl::*mp)() = &Harl::debug;
+      (myObject.*mp)();              // call via object
+      (ptr->*mp)();                  // call via pointer  <- we use this
+
+			ex05:
+			How do I map a string to one of the class’s member functions?
+			how to connect a string command to a class method?
+			~ parallel arrays : mapping index i in levels[] & actions[];
+
+			## void (Class::*)func.name(); -takes no args
+			pointer to member function.
+			-initializer list an array of level names
+			-declare and fill an array of member-function pointers
+			-find matching index
+			-call the function at that index :
+				(ptr->*mp)(); 
+				this->* is the pointer-to-member dereference operator.
+
+			memb func here are private -> means can't be called directly, but only through complain();
+
+			levels - labels -> message of logging systems
+
+			We need an object with memb func pointer to call a funciton:
+			(this->*actions[i])();
+			
+			this -> pointer to current object inside memb func;
+			actions[i] -> pointer to memb. func. stored in arr;
+
+		works like a lookup table -> usefull for:
+	~ command tables
+	~ event handlers
+	~ callback systems
+	~ virtual dispatch
+	~ state machines
+	~ plugin systems
+
+			ex:06
+			how to transform input into a control-flow structure?
+			string->indx->switch->behaviour
+
 		

@@ -2,7 +2,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 
-NAME = complain
+NAME = harlFilter
 
 SRC = main.cpp Harl.cpp
 OBJ = $(SRC:.cpp=.o)
