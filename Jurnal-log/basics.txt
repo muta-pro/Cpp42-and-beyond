@@ -55,3 +55,9 @@ std::ios_base::iostate -type of stream state flags - error state flags
 
 std::ios : good() eof() fail() bad () rdstate()
 
+
+## FIXED-POINT-NUMBERS
+
+- very applicapble for computer graphics,
+	sound processing and scinetific programming~
+
