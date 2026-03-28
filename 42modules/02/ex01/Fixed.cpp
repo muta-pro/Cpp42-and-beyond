@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/26 15:39:44 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/26 18:22:53 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/28 14:27:59 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ Fixed &Fixed::operator=(const Fixed &assign) {
 	if (this != &assign) {
 		this->_fpn = assign.getRawBits();
 	}
-	return *this;
+	return (*this);
 }
 
 Fixed::~Fixed() {
@@ -66,7 +66,7 @@ Fixed::~Fixed() {
 }
 
 int	Fixed::getRawBits(void) const {
-	return this->_fpn;
+	return (this->_fpn);
 }
 
 void	Fixed::setRawBits(int const raw) {
@@ -74,14 +74,14 @@ void	Fixed::setRawBits(int const raw) {
 }
 
 float	Fixed::toFloat(void) const {
-	return static_cast<float>(_fpn) / (1 << _fbn);
+	return (static_cast<float>(_fpn) / (1 << _fbn));
 }
 
 int	Fixed::toInt(void) const {
-	return _fpn >> _fbn;
+	return (_fpn >> _fbn);
 }
 
 std::ostream &operator<<(std::ostream &out, const Fixed &fixed) {
 	out << fixed.toFloat();
-	return out;
+	return (out);
 }

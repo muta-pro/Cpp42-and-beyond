@@ -61,3 +61,43 @@ std::ios : good() eof() fail() bad () rdstate()
 - very applicapble for computer graphics,
 	sound processing and scinetific programming~
 
+	fixed-point number is a way to represent real (decimal) numbers using integers, by pretending there is a fixed decimal point.
+
+	- real_value = stored_integer / scale(to choose)
+	in systens scake is usually 2^8 = 256
+	used in operations like add, substract, multip, divide;
+
+	= there is also a Qn.x format, Q8.8 = 384
+
+The trade-off
+
+You lose flexibility:
+
+Limited range
+Limited precision
+You must manually manage scaling
+Be aware of overflow
+
+#define SCALE 256
+
+int to_fixed(float x)
+{
+    return (int)(x * SCALE);
+}
+
+float to_float(int x)
+{
+    return (float)x / SCALE;
+}
+
+int fixed_mul(int a, int b)
+{
+    return (a * b) / SCALE;
+}
+
+int fixed_div(int a, int b)
+{
+    return (a * SCALE) / b;
+}
+
+to store a float/int with scale fractional bits is 8 , means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;

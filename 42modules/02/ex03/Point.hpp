@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Point.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/26 18:24:48 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/28 14:27:10 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/03/28 12:16:53 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/03/28 14:39:17 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef POINT_HPP
+#define POINT_HPP value
+
+#include <cmath>
 #include "Fixed.hpp"
 
-int main(void)
-{
-	Fixed		a;
-	Fixed const	b(Fixed(5.05f) * Fixed(2));
+class Point{
+	public:
+			Point();
+			Point(const float n, const float m);
+			Point(const Point &src);
+			Point &operator=(const Point &assign);
+			~Point();
+			
+			const Fixed &getX() const;
+			const Fixed &getY() const;
+	
+	private:
+		const Fixed _x;
+		const Fixed _y;
 
-	std::cout << a << std::endl;
-	std::cout << ++a << std::endl;
-	std::cout << a << std::endl;
-	std::cout << a++ << std::endl;
-	std::cout << a << std::endl;
-	std::cout << b << std::endl;
-	std::cout << Fixed::max(a, b) << std::endl;
-	return (0);
-}
+};
+
+bool bsp(Point const a, Point const b, Point const c, Point const point);
+
+#endif

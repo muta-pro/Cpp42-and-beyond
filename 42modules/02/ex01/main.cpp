@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/26 15:39:37 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/26 18:18:51 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/28 14:27:23 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	main(void)
 	std::cout << "c is " << c.toInt() << " as integer" << std::endl;
 	std::cout << "d is " << d.toInt() << " as integer" << std::endl;
 
-	// std::cout << "===== BASIC TESTS =====" << std::endl;
+	// std::cout << "===== EXTRA TESTS =====" << std::endl;
 	
 	// // Test integer constructor
 	// Fixed y(5);
@@ -96,5 +96,5 @@ int	main(void)
 	// std::cout << "j (assigned from b): " << j << std::endl;
 	// std::cout << std::endl;
 
-	return 0;
+	return (0);
 }

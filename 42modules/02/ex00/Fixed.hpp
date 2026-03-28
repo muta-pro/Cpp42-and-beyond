@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:50:40 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/26 15:39:13 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/27 23:21:56 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ public:
 	void setRawBits(int const raw);
 
 private:
-	int fpn;//fixed-point number
-	static const int fbn = 8;//number of fractional bits
+	int _fpn;//fixed-point number
+	static const int _fbn = 8;//number of fractional bits
 };
 
 #endif

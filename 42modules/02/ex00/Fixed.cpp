@@ -6,27 +6,26 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:50:56 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/26 15:38:11 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/28 14:28:22 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
 
-Fixed::Fixed () : fpn(0) {
+Fixed::Fixed () : _fpn(0) {
 	std::cout << "Default Constructor called" << std::endl;
 }
 
-Fixed::Fixed (const Fixed &copy) {
+Fixed::Fixed (const Fixed &copy) : _fpn(copy._fpn) {
 	std::cout << "Copy Constructor called" << std::endl;
-	*this = copy;
 }
 
 Fixed &Fixed::operator= (const Fixed &assign) {
 	std::cout << "Copy assignment operator called" << std::endl;
 	if (this != &assign) {
-		this->fpn = assign.getRawBits();
+		this->_fpn = assign.getRawBits();
 	}
-	return *this;
+	return (*this);
 }
 
 Fixed::~Fixed() {
@@ -35,9 +34,9 @@ Fixed::~Fixed() {
 
 int	Fixed::getRawBits(void) const {
 	std::cout << "getRawBits member function called" << std::endl;
-	return this->fpn;
+	return (this->_fpn);
 }
 
 void	Fixed::setRawBits(int const raw) {
-	this->fpn = raw;
+	this->_fpn = raw;
 }
