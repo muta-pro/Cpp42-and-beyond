@@ -220,9 +220,19 @@ but increment the variable the nex time it's used.
 	2 the Algorythm: binary space partitioning:
 
 		## Half-space - Cross Product method;
+		algorithm relies only on addition, subtraction, and multiplication. It is extremely fast, avoids all division errors, and perfectly utilizes the overloaded operators I wrote in ex02.
 
-		sign() - > calcs 2D Cross Product of two vectors; which side of the line a point is on.
+		Vector math: sign() - > calcs determinant of 2D Matrix- 2D Cross Product of two vectors; which side of the line a point is on.
+			1- create vector 1 : line end point to target point;
+			2- create vector 2 : actual point to point segment;
+		i get a signle number, but only sign matters (x1*y2)-(x2*y1);
+		Depending on the main() and how triangle is drawn we check both sides;
+		I use strict < > , because if on the line should return false;
+
 		Cross Product is positive if P is on left side and negative if on right or
 		0 if it sits on the line.
 
 		The point will be inside if all signs are positive or all negative, if mixed then I know point coressed over an edge.
+
+		other possible choices were Barycentric coordinates or angle summation;
+		Barycentric coordinates, require division, which introduces a risk of dividing by zero and losing precision. Angle summation requires heavy floating-point trigonometry like acos(), which defeats the purpose of writing a fixed-point math class.

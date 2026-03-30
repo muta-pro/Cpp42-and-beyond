@@ -101,3 +101,14 @@ int fixed_div(int a, int b)
 }
 
 to store a float/int with scale fractional bits is 8 , means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;
+
+but to convert back float we devide 256;
+
+to convert back to int we remove fractional bits, shift right;
+
+## in C++, an object has a life cycle.
+
+Floating point numbers in memory: (-1)^sign × 1.mantissa × 2^(exponent - bias127)
+
+A floating-point number is basically scientific notation in binary.
+The mantissa part is the precision part, the exponent part is the range part. Float stores the closest representable approximation.
