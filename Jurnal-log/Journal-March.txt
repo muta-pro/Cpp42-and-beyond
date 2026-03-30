@@ -37,7 +37,8 @@ HEAP  → manual lifetime
 		/ direct std::string s("hi");
 		/ aggregate int arr[3] = {1, 2, 3};
 		/ brace std::string s{"hi"}; int arr{1, 2, 3};
-		- it catches bug such as narrowing conversions int x{2.3}; decimal part doesn't get lost silently.
+		- it catches bug such as narrowing conversions int x{2.3}; 
+			decimal part doesn't get lost silently.
 		- it works well with containers: std::vector<int> v{1,2,3};
 
 		ex03:
@@ -62,7 +63,8 @@ HEAP  → manual lifetime
 		METHODS: obj behaviour
 		find implemantation to check
 
-		IDENTIFY OWNERSHIP: does obj own data or just reference it. If it reference it means data must exist before the obj of that class.
+		IDENTIFY OWNERSHIP: does obj own data or just reference it. 
+		If it reference it means data must exist before the obj of that class.
 
 		MEMORY ALLOCATED
 		       ↓
@@ -75,7 +77,8 @@ HEAP  → manual lifetime
 		MEMORY RELEASED
 
 		getType() returns const std::string& instead of std::string;
-		This avoids copying the string on every attack() call. The double const — one on the return type, one trailing on the method;
+		This avoids copying the string on every attack() call. 
+		The double const — one on the return type, one trailing on the method;
 
 
 		ex04:
@@ -94,12 +97,14 @@ HEAP  → manual lifetime
 		~member functions like: .find(), .substr(), .size(), .empty()
 		substr(start, len) ~ returns substring 
 		bad(); 
-		~bad() vs fail() — fail() also triggers on normal EOF, making it too noisy for a post-read check. bad() only fires on real hardware/OS errors.
+		~bad() vs fail() — fail() also triggers on normal EOF, 
+		making it too noisy for a post-read check. bad() only fires on real hardware/OS errors.
 
 		~non-memeber function: getline - for extracting a line by reading from a stream;
 		std::getline strips the newline delimiter, so you have to put it back.
 
-		std::string instead of char arrays : creates empty string that expands automatically - no managed buffer sizes
+		std::string instead of char arrays : 
+		creates empty string that expands automatically - no managed buffer sizes
 
 		basic command-line handling in C++
 
@@ -107,7 +112,8 @@ HEAP  → manual lifetime
 		using library abstractions instead pointer arithmetic;
 		algorothim at higher level: find -  copy substr - append replacement
 
-		safer text manipulation: const std::string& text -> read-only reference, no expensive copy ->pass by const ref.
+		safer text manipulation: const std::string& text 
+		-> read-only reference, no expensive copy ->pass by const ref.
 
 		RAII-Resource Acquisition Is Initialization.
 		style resource handling without you even noticing it
@@ -169,4 +175,54 @@ A MEMBER function pointer also stores the address of a function,
 			how to transform input into a control-flow structure?
 			string->indx->switch->behaviour
 
+
+## 02: O.C.F.
+
+	NUMBERS: FLOATING POINTS
+
+	scientific notation
+
+<< bitwise shift operator: if I want to store integer in a class, 
+it needs to be pushed passed 8 frictional bits 
 		
+		ex00:
+		int fpn - raw value;
+		int _fbn - value that determines the fractional part of
+		a number in a bit sequence. Places the decimal point,
+	
+		ex01: creating the container
+	storing of the fixed-point-number and conversion
+	 two consturctors to convert numb into fixed-point
+	 two methods to convert back.
+	 << overload: insertion operator- call toFloat() when it seas fixed obj.
+
+		ex02: operator overloading.
+		because compiler doesn't know how to act with obj and do operations, we give him instructions with 4 groups of overload;
+		 teaching the container to behave like a number
+	class behaves like a real numeric type; 
+	the object stores a scaled integer, not a real number. 
+	With fractional bits = 8, scale is 256 so the real value = fb / 256; it's about manipulating raw integer.
+
++ / - -> instead of casting to float and relying on processor's FloatingPointUnit:
+	instead, bit shifting and raw ints;
+
+increment/decrement overload:
+post-increment a++ -> gives the current value tu use in the line
+but increment the variable the nex time it's used.
+
+	ex03: 
+	1 class mechanics - handle const memebers : Fixed const _x, _y;
+		const changes the class functioning - _x & _y can't be modified after creation:
+		so instead of assigning values inside {} I need to use init list at moment of birth.
+
+		the CopyAssignm. oper., because of const attributes _x, _y, we can't overwrite them with new data, but cast param to void to supress warnings and return curr obj.
+
+	2 the Algorythm: binary space partitioning:
+
+		## Half-space - Cross Product method;
+
+		sign() - > calcs 2D Cross Product of two vectors; which side of the line a point is on.
+		Cross Product is positive if P is on left side and negative if on right or
+		0 if it sits on the line.
+
+		The point will be inside if all signs are positive or all negative, if mixed then I know point coressed over an edge.
