@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:50:40 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/27 23:21:56 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:55:09 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ public:
 	Fixed &operator=(const Fixed &assign);
 	~Fixed();
 
-	int getRawBits(void) const;
-	void setRawBits(int const raw);
+	int		getRawBits(void) const;
+	void	setRawBits(int const raw);
 
 private:
-	int _fpn;//fixed-point number
-	static const int _fbn = 8;//number of fractional bits
+	int					_fpn; //fixed-point number
+	static const int	_fbn = 8; //numbers of fractional bits
 };
 
 #endif
