@@ -5,15 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/31 13:43:36 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/03 21:34:12 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/03 21:26:53 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/03 22:45:31 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClapTrap.hpp"
 
 ClapTrap::ClapTrap()
-: _Name("default"), _HitPoints(10), _EnergyPoints(10), _AttackDamage(0) {
+: _Name("default"), _HitPoints(10), _EnergyPoints(10), _AttackDamage(10) {
 	std::cout << "Default Constructor called" << std::endl;
 }
 
@@ -55,11 +55,10 @@ void ClapTrap::attack(const std::string& target) {
 
 void ClapTrap::takeDamage(unsigned int amount) {
 	std::cout << _Name << " got damage" << std::endl;
-	if ((int)amount >= _HitPoints)
+	if ((int)amount >=_HitPoints)
 		_HitPoints = 0;
 	else
 		_HitPoints -= amount;
-
 }
 
 void ClapTrap::beRepaired(unsigned int amount) {
@@ -73,6 +72,6 @@ void ClapTrap::beRepaired(unsigned int amount) {
 	}
 	_EnergyPoints--;
 	_HitPoints += amount;
-	std::cout << "ClapTrap " << _Name << " got repaired with amount " << amount
-		<< " hitpoints, with total of " << _HitPoints << std::endl;
+	std::cout << "ClapTrap " << _Name << " got repaired with amount "
+				<< amount << " hitpoints, with total of " << _HitPoints << std::endl;
 }
