@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:40:26 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 19:09:21 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:18:05 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,13 @@ DiamondTrap::DiamondTrap(const std::string &name) : ClapTrap(name + "+_clap_name
 }
 
 void DiamondTrap::attack(const std::string &target) {
-	ScavTrap::attack(target);
+	if (_HitPoints <= 0 || _EnergyPoints <= 0) {
+		std::cout << "DiamondTrap" << _Name << "can't attack without points" << std::endl;
+		return ;
+	}
+	std::cout << "DiamondTrap " << _Name << " attacks "
+		 << target << " causing " << _AttackDamage << " points damage" << std::endl;
+	_EnergyPoints--; 
 }
 
 void DiamondTrap::WhoAmI() {
