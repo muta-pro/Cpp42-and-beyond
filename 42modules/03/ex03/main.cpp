@@ -5,33 +5,31 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/03 21:27:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 16:01:29 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/04 17:39:27 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/04 19:04:13 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "DiamondTrap.hpp"
 #include "ScavTrap.hpp"
+#include "FragTrap.hpp"
+#include "ClapTrap.hpp"
 
-int main()
-{
-	std::cout << "*CLAPTRAP*" << std::endl;
-	ClapTrap base("Kurosawa");
-	base.attack("target");
-	base.takeDamage(3);
-	base.beRepaired(1);
+int main() {
+	std::cout << "\n* DIAMONDTRAP *" << std::endl;
+	DiamondTrap bot("Neo");
+	bot.WhoAmI();
+	bot.attack("Smith");
+	bot.takeDamage(20);
+	bot.beRepaired(5);
 
-	std::cout << "\n*SCAVTRAP*" << std::endl;
-	ScavTrap guard("Poll");
-	guard.attack("enemy");
-	guard.takeDamage(15);
-	guard.beRepaired(5);
+	std::cout << "\n* COPY *" << std::endl;
+	DiamondTrap copy(bot);
+	DiamondTrap assign;
+	assign = bot;
+	assign.WhoAmI();
 
-	guard.guardGate();
+	std::cout << "\n* LEAVING SCOPE *" << std::endl;
 
-	ScavTrap copy(guard);
-	ScavTrap assign;
-	assign = guard;
-
-	std::cout << "\n*LEAVING SCOPE*" << std::endl;
 	return (0);
 }

@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-NAME = scavtrap
-SRC = main.cpp ClapTrap.cpp ScavTrap.cpp
+NAME = diamondtrap
+SRC = main.cpp ClapTrap.cpp ScavTrap.cpp FragTrap.cpp DiamondTrap.cpp
 OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 $(NAME) : $(OBJ)

@@ -5,33 +5,40 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/03 21:27:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 16:01:29 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/04 16:04:40 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/04 17:35:27 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScavTrap.hpp"
+#include "FragTrap.hpp"
 
 int main()
 {
-	std::cout << "*CLAPTRAP*" << std::endl;
+	std::cout << "\n* CLAPTRAP *" << std::endl;
 	ClapTrap base("Kurosawa");
 	base.attack("target");
 	base.takeDamage(3);
 	base.beRepaired(1);
 
-	std::cout << "\n*SCAVTRAP*" << std::endl;
+	std::cout << "\n* SCAVTRAP *" << std::endl;
 	ScavTrap guard("Poll");
 	guard.attack("enemy");
 	guard.takeDamage(15);
 	guard.beRepaired(5);
-
 	guard.guardGate();
 
-	ScavTrap copy(guard);
-	ScavTrap assign;
-	assign = guard;
+	std::cout << "\n* FRAGTRAP *" << std::endl;
+	FragTrap frog("wth");
+	frog.attack("spider");
+	frog.takeDamage(50);
+	frog.beRepaired(7);
+	frog.highFiveGives();
 
-	std::cout << "\n*LEAVING SCOPE*" << std::endl;
+	FragTrap copy(frog);
+	FragTrap assign;
+	assign = frog;
+
+	std::cout << "\n* LEAVING SCOPE *" << std::endl;
+
 	return (0);
 }
