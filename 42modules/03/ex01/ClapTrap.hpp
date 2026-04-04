@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/31 13:43:33 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/03 22:48:50 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/03 21:27:05 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/03 23:11:11 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class ClapTrap{
 			void attack(const std::string &target);
 			void takeDamage(unsigned int amount);
 			void beRepaired(unsigned int amount);
-	private:
+	protected:
 		std::string	_Name;
 		int			_HitPoints;
 		int			_EnergyPoints;
