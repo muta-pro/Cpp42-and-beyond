@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:02:15 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 17:35:54 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 15:30:51 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class FragTrap : public ClapTrap {
 			FragTrap &operator=(const FragTrap &assign);
 			~FragTrap();
 
-			void highFiveGives(void);
+			void highFiveGuys(void);
 };
 
 #endif

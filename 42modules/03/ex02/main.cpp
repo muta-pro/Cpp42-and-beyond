@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:04:40 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 17:35:27 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 15:31:04 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ int main()
 	guard.guardGate();
 
 	std::cout << "\n* FRAGTRAP *" << std::endl;
-	FragTrap frog("wth");
+	FragTrap frog("FROG");
 	frog.attack("spider");
 	frog.takeDamage(50);
 	frog.beRepaired(7);
-	frog.highFiveGives();
+	frog.highFiveGuys();
 
 	FragTrap copy(frog);
 	FragTrap assign;

@@ -1,5 +1,55 @@
 ## module 3;
 
 ex00:
+- class models a game entitiy ;
+- object has a state defined by attributes;
+	these state change throuh member functions: data and actiond on data;
+--> implementation of C.O.F.: construction. obj initial state;
+	methods:
+- attack()->action - changes the state of an object (decrease energy points)
+- takedamage()-> reduces hitpoints to min 0 if damage: state degradation
+- berepaired()-> increases hitpoints if enough energy to be reduced: state changes
+->main()
+	- This verifies that objects can be created in different ways
+	- checks that an already existing object can receive the state of another object through the assignment operator.
+	- repeated actions consume energy
+	- checks whether a dead ClapTrap is prevented from repairing
+	- checks repair in normal state with fresh obj
+	- testing the energy limit: once energy is exhausted, further actions must fail
 
-Constructor init
+The object behavior depends on its internal state, especially hit points and energy points.
+
+
+ex01: building new class on top of the existing one
+
+concept-> Cosntruction chain: 
+ for derived object, constructor creates first base class part;
+ the child class doesn't inherit automatically cosntrucor, it calls parent class contructor;
+
+-> for attributes to be available to child classes we use protect keyword instead of private;
+-> derived obj reuses parents class data and methods instead of duplicating them.
+-> so it's basically like one object but with layers
+In modern C++, you could write:
+
+void attack(const std::string &target) override;
+
+But in older C++, override still happens even if you do not write the keyword.
+
+ex03: introduces multiple inheritance- > virtual inharitance
+	classic diamond inheritance shape.
+ - multiple inheritance creates ambiguity
+ 	concept: class can inherit traits from more derived classes-> trait composition.
+ 	- it has 2 Names: it's own and inherited to show that an obj has his own
+ 	identity but also a base one.
+ -> derived class may keep its own state while also managing inherited state explicitly
+
+ conflict resolution between parent classes: in multiple inherit. u don't take the whole block,
+ but the parent's version is chosen -> attack() from ScavTrap class.
+ so : it is a ClapTrap class with with data and behaviout from child classes available while
+ having it's own identity.
+  -> WhoAmI() clearly tests the multiple identity tracking.
+
+  virtual: solves duplicate base subobject ambiguity -> one shared ClapTrap base
+  explicit qualification solves same-function-name ambiguity
+
+  Once ClapTrap is virtual base -> hybrid class must contruct it

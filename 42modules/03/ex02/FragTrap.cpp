@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:02:15 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 17:49:28 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 15:30:59 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ FragTrap::~FragTrap() {
 	std::cout << "FragTrap Destructor called" << std::endl;
 }
 
-void FragTrap::highFiveGives() {
-	std::cout << "FragTrap" << _Name << "requests high five" << std::endl;
+void FragTrap::highFiveGuys() {
+	std::cout << "FragTrap " << _Name << " requests high five" << std::endl;
 }
 

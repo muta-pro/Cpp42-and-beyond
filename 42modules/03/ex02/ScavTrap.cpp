@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:02:15 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 17:05:31 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 15:31:08 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ ScavTrap::ScavTrap(const ScavTrap &copy) : ClapTrap(copy) {
 }
 
 ScavTrap &ScavTrap::operator=(const ScavTrap &assign) {
-	std::cout << "ScavTrap Assignment operator called\n" << std::endl;
+	std::cout << "ScavTrap Assignment operator called" << std::endl;
 	if (this != &assign)
 		ClapTrap::operator=(assign);
 	return (*this);
@@ -36,11 +36,11 @@ ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name) {
 	_HitPoints = 100;
 	_EnergyPoints = 50;
 	_AttackDamage = 20;
-	std::cout << "ScavTrap name Constructor called\n" << std::endl;
+	std::cout << "ScavTrap name Constructor called" << std::endl;
 }
 
 ScavTrap::~ScavTrap() {
-	std::cout <<  "ScavTrap destructor called\n" << std::endl;
+	std::cout <<  "ScavTrap destructor called" << std::endl;
 }
 
 void ScavTrap::attack(const std::string &target) {
@@ -49,7 +49,7 @@ void ScavTrap::attack(const std::string &target) {
 		return ;
 	}
 	std::cout << "ScavTrap " << _Name << " attacks " << target << " depriving points:"
-				<< _AttackDamage << "\n" << std::endl;
+				<< _AttackDamage << std::endl;
 	_EnergyPoints--;
  }
 

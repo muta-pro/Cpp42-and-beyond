@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 17:52:10 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 16:08:20 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ ClapTrap::ClapTrap(const ClapTrap &copy) {
 }
 
 ClapTrap &ClapTrap::operator=(const ClapTrap &assign) {
-	std::cout << "\nClapTrap Assignment operator called" << std::endl;
+	std::cout << "ClapTrap Assignment operator called" << std::endl;
 	if (this != &assign) {
 		_Name = assign._Name;
 		_HitPoints = assign._HitPoints;
@@ -44,13 +44,12 @@ ClapTrap::~ClapTrap() {
 
 void ClapTrap::attack(const std::string& target) {
 	if (_HitPoints <= 0 || _EnergyPoints <=0) {
-		std::cout << "ClapTrap " << _Name << " can't attack without points \n"
-					 << std::endl;
+		std::cout << "ClapTrap " << _Name << " can't attack without points" << std::endl;
 		return ;
 	}
 	_EnergyPoints--;
-	std::cout << _Name << " attacks " << target << " depriving points:" 
-				<< _AttackDamage << "\n" << std::endl;
+	std::cout << "ClapTrap" << _Name << " attacks " << target << " depriving points:" 
+				<< _AttackDamage << std::endl;
 }
 
 void ClapTrap::takeDamage(unsigned int amount) {
@@ -63,11 +62,11 @@ void ClapTrap::takeDamage(unsigned int amount) {
 
 void ClapTrap::beRepaired(unsigned int amount) {
 	if (_HitPoints <= 0) {
-		std::cout << _Name << " can't repair, not enough hitpoints " << std::endl;
+		std::cout << "ClapTrap" << _Name << " can't repair, not enough hitpoints " << std::endl;
 		return ;
 	}
 	if (_EnergyPoints <= 0) {
-		std::cout << _Name << " can't repair, not enough energy points " << std::endl;
+		std::cout << "ClapTrap" << _Name << " can't repair, not enough energy points " << std::endl;
 		return ;
 	}
 	_EnergyPoints--;

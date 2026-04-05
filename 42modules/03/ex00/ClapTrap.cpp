@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 13:43:36 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/03 21:34:12 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 13:24:18 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ ClapTrap::ClapTrap(const ClapTrap &copy) {
 }
 
 ClapTrap &ClapTrap::operator=(const ClapTrap &assign) {
-	std::cout << "\nAssignment operator called" << std::endl;
+	std::cout << "Assignment operator called" << std::endl;
 	if (this != &assign) {
 		_Name = assign._Name;
 		_HitPoints = assign._HitPoints;
@@ -44,13 +44,13 @@ ClapTrap::~ClapTrap() {
 
 void ClapTrap::attack(const std::string& target) {
 	if (_HitPoints <= 0 || _EnergyPoints <=0) {
-		std::cout << "ClapTrap " << _Name << " can't attack without points \n"
+		std::cout << _Name << " can't attack without points \n"
 					 << std::endl;
 		return ;
 	}
 	_EnergyPoints--;
 	std::cout << _Name << " attacks " << target << " depriving points:" 
-				<< _AttackDamage << "\n" << std::endl;
+				<< _AttackDamage << std::endl;
 }
 
 void ClapTrap::takeDamage(unsigned int amount) {
@@ -73,6 +73,6 @@ void ClapTrap::beRepaired(unsigned int amount) {
 	}
 	_EnergyPoints--;
 	_HitPoints += amount;
-	std::cout << "ClapTrap " << _Name << " got repaired with amount " << amount
-		<< " hitpoints, with total of " << _HitPoints << std::endl;
+	std::cout << _Name << " got repaired with amount " << amount
+				<< " hitpoints, with total of " << _HitPoints << std::endl;
 }

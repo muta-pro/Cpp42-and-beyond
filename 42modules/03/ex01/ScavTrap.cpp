@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 21:29:04 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/04 15:57:41 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 13:54:26 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ ScavTrap::ScavTrap(): ClapTrap("default") {
 	_HitPoints = 100;
 	_EnergyPoints = 50;
 	_AttackDamage = 20;
-	std::cout << "ScavTrap Default Constructor called\n" << std::endl;
+	std::cout << "ScavTrap Default Constructor called" << std::endl;
 }
 
 ScavTrap::ScavTrap(const ScavTrap &copy) : ClapTrap(copy) {
-	std::cout << "ScavTrap Copy Constructor called\n" << std::endl;
+	std::cout << "ScavTrap Copy Constructor called" << std::endl;
 }
 
 ScavTrap &ScavTrap::operator=(const ScavTrap &assign) {
-	std::cout << "ScavTrap Assignment operator called\n" << std::endl;
+	std::cout << "ScavTrap Assignment operator called" << std::endl;
 	if (this != &assign)
 		ClapTrap::operator=(assign);
 	return (*this);
@@ -35,11 +35,11 @@ ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name) {
 	_HitPoints = 100;
 	_EnergyPoints = 50;
 	_AttackDamage = 20;
-	std::cout << "ScavTrap name Constructor called\n" << std::endl;
+	std::cout << "ScavTrap name Constructor called" << std::endl;
 }
 
 ScavTrap::~ScavTrap() {
-	std::cout <<  "ScavTrap destructor called\n" << std::endl;
+	std::cout <<  "ScavTrap destructor called" << std::endl;
 }
 
 void ScavTrap::attack(const std::string &target) {
@@ -47,8 +47,8 @@ void ScavTrap::attack(const std::string &target) {
 		std::cout << "ScavTrap " << _Name << " can't attack without points" << std::endl;
 		return ;
 	}
-	std::cout << "ScavTrap " << _Name << " attacks " << target << " depriving points:"
-				<< _AttackDamage << "\n" << std::endl;
+	std::cout << "ScavTrap " << _Name << " attacks " << target << " depriving points: "
+				<< _AttackDamage << std::endl;
 	_EnergyPoints--;
  }
 
