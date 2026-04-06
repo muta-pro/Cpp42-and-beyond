@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/05 16:08:20 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/05 17:57:24 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ ClapTrap::~ClapTrap() {
 }
 
 void ClapTrap::attack(const std::string& target) {
-	if (_HitPoints <= 0 || _EnergyPoints <=0) {
+	if (_HitPoints <= 0 || _EnergyPoints <= 0) {
 		std::cout << "ClapTrap " << _Name << " can't attack without points" << std::endl;
 		return ;
 	}
