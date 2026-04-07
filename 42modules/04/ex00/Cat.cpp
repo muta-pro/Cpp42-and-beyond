@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 19:35:06 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:02:36 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ std::string Cat::getType() const {
 	return (this->_type);
 }
 
-void Cat::makeSound() {
+void Cat::makeSound() const {
 	std::cout << "MJAAAUUUUUU" << std::endl;
 }

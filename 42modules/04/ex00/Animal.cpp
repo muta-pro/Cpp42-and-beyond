@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:25:15 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 19:35:23 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:07:31 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ Animal::~Animal() {
 	std::cout << "Animal Destructor called" << std::endl;
 }
 
-void Animal::makeSound() {
+void Animal::makeSound() const {
 	std::cout << "Animal " << _type << " makes sound" << std::endl;
 }
 
+std::string Animal::getType() const {
+	return (this->_type);
+}

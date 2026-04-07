@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:25:18 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 19:17:38 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:01:01 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -25,7 +25,8 @@ class Animal{
 			Animal &operator=(const Animal &assign);
 			virtual ~Animal();
 
-			virtual void makeSound();
+			virtual void makeSound() const;
+			std::string getType() const;
 	
 	protected:
 		std::string _type;

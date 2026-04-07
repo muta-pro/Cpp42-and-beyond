@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 19:36:23 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:08:36 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ std::string Dog::getType() const {
 	return (this->_type);
 }
 
-void Dog::makeSound() {
-	std::cout << "MJAAAUUUUUU" << std::endl;
+void Dog::makeSound() const {
+	std::cout << "AWAWAWAWAW" << std::endl;
 }
