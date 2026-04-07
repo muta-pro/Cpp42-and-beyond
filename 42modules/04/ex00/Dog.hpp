@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:27:03 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/05 17:29:28 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:31:44 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 
 #include "Animal.hpp"
 
-class Dog : public Animal{
+class Dog : public Animal {
 	public:
 			Dog();
 			Dog(const Dog &copy);
 			Dog &operator=(const Dog &assign);
 			~Dog();
-	private:
+
+			void makeSound();
+			std::string getType() const;
 };
 
 #endif

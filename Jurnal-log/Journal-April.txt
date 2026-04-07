@@ -22,11 +22,11 @@ The object behavior depends on its internal state, especially hit points and ene
 
 ex01: building new class on top of the existing one
 
-concept-> Cosntruction chain: 
- for derived object, constructor creates first base class part;
+concept-> Construction chain: 
+ for derived object, constructor creates first base-class part;
  the child class doesn't inherit automatically cosntrucor, it calls parent class contructor;
 
--> for attributes to be available to child classes we use protect keyword instead of private;
+-> for attributes to be available to child classes we use 'protect' keyword instead of 'private';
 -> derived obj reuses parents class data and methods instead of duplicating them.
 -> so it's basically like one object but with layers
 In modern C++, you could write:
@@ -53,3 +53,7 @@ ex03: introduces multiple inheritance- > virtual inharitance
   explicit qualification solves same-function-name ambiguity
 
   Once ClapTrap is virtual base -> hybrid class must contruct it
+
+04:
+
+ ## Polymorphism:

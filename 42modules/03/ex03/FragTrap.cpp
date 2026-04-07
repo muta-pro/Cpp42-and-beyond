@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:59 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 02:27:07 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 15:10:32 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -50,5 +50,5 @@ FragTrap::~FragTrap() {
 }
 
 void FragTrap::highFiveGuys() {
-	std::cout << "FragTrap" << _Name << "requests high five" << std::endl;
+	std::cout << "FragTrap " << _Name << "requests high five" << std::endl;
 }

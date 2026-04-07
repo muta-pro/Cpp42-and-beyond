@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 02:20:08 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 15:11:09 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void ClapTrap::attack(const std::string& target) {
 		return ;
 	}
 	_EnergyPoints--;
-	std::cout << "ClapTrap" << _Name << " attacks " << target << " depriving points:" 
+	std::cout << "ClapTrap " << _Name << " attacks " << target << " depriving points:" 
 				<< _AttackDamage << std::endl;
 }
 
@@ -62,11 +62,11 @@ void ClapTrap::takeDamage(unsigned int amount) {
 
 void ClapTrap::beRepaired(unsigned int amount) {
 	if (_HitPoints <= 0) {
-		std::cout << "ClapTrap" << _Name << " can't repair, not enough hitpoints " << std::endl;
+		std::cout << "ClapTrap " << _Name << " can't repair, not enough hitpoints " << std::endl;
 		return ;
 	}
 	if (_EnergyPoints <= 0) {
-		std::cout << "ClapTrap" << _Name << " can't repair, not enough energy points " << std::endl;
+		std::cout << "ClapTrap " << _Name << " can't repair, not enough energy points " << std::endl;
 		return ;
 	}
 	_EnergyPoints--;
