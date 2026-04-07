@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/05 17:57:24 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 02:20:08 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ ClapTrap::ClapTrap()
 	std::cout << "ClapTrap Default Constructor called" << std::endl;
 }
 
-ClapTrap::ClapTrap(const ClapTrap &copy) {
+ClapTrap::ClapTrap(const ClapTrap &copy) : _Name(copy._Name), _HitPoints(copy._HitPoints),
+_EnergyPoints(copy._EnergyPoints), _AttackDamage(copy._AttackDamage) {
 	std::cout << "ClapTrap Copy Constructor called " << std::endl;
-	*this = copy;
 }
 
 ClapTrap &ClapTrap::operator=(const ClapTrap &assign) {

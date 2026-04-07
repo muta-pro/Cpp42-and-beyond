@@ -6,18 +6,21 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:39:47 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/05 15:35:56 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 01:48:37 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScavTrap.hpp"
 
-ScavTrap::ScavTrap(): ClapTrap("default") {
+const int ScavTrap::C_HitPoints;
+const int ScavTrap::C_EnergyPoints;
+const int ScavTrap::C_AttackDamage;
 
+ScavTrap::ScavTrap(): ClapTrap("default") {
+	std::cout << "ScavTrap Default Constructor called" << std::endl;
 	_HitPoints = 100;
 	_EnergyPoints = 50;
 	_AttackDamage = 20;
-	std::cout << "ScavTrap Default Constructor called" << std::endl;
 }
 
 ScavTrap::ScavTrap(const ScavTrap &copy) : ClapTrap(copy) {
@@ -35,20 +38,21 @@ ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name) {
 	_HitPoints = 100;
 	_EnergyPoints = 50;
 	_AttackDamage = 20;
-	std::cout << "ScavTrap name Constructor called" << std::endl;
+	std::cout << "ScavTrap Name Constructor called" << std::endl;
 }
 
 ScavTrap::~ScavTrap() {
-	std::cout <<  "ScavTrap destructor called" << std::endl;
+	std::cout <<  "ScavTrap Destructor called" << std::endl;
 }
 
 void ScavTrap::attack(const std::string &target) {
 	if (_HitPoints <= 0 || _EnergyPoints <= 0) {
-		std::cout << "ScavTrap " << _Name << " can't attack without points" << std::endl;
+		std::cout << "ScavTrap " << _Name << " can't attack without points"
+					<< std::endl;
 		return ;
 	}
-	std::cout << "ScavTrap " << _Name << " attacks " << target << " depriving points:"
-				<< _AttackDamage << std::endl;
+	std::cout << "ScavTrap " << _Name << " attacks "
+				 << target << " depriving points:" << _AttackDamage << std::endl;
 	_EnergyPoints--;
  }
 

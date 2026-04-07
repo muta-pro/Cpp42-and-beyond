@@ -6,26 +6,23 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:40:26 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/05 16:55:47 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/07 02:21:49 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DiamondTrap.hpp"
 
 DiamondTrap::DiamondTrap() : ClapTrap("def_clap_name"),
-				ScavTrap(), FragTrap(), _Name("default") {
+ScavTrap(), FragTrap(), _Name("default") {
 	std::cout << "DiamondTrap default Constructor called" << std::endl;
-	_HitPoints = 100;
-	_EnergyPoints = 50;
-	_AttackDamage = 30;
+	_HitPoints = FragTrap::_HitPoints;
+	_EnergyPoints = ScavTrap::_EnergyPoints;
+	_AttackDamage = FragTrap::_AttackDamage;
 }
 
-DiamondTrap::DiamondTrap(const DiamondTrap &copy) : ClapTrap(copy.ClapTrap::_Name),
-				ScavTrap(copy), FragTrap(copy), _Name(copy._Name) {
+DiamondTrap::DiamondTrap(const DiamondTrap &copy)
+: ClapTrap(copy.ClapTrap::_Name), ScavTrap(copy), FragTrap(copy), _Name(copy._Name) {
 	std::cout << "DiamondTrap copy Constructor called" << std::endl;
-	_HitPoints = copy._HitPoints;
-	_EnergyPoints = copy._EnergyPoints;
-	_AttackDamage = copy._AttackDamage;
 }
 
 DiamondTrap& DiamondTrap::operator=(const DiamondTrap &assign) {
@@ -44,10 +41,7 @@ DiamondTrap::~DiamondTrap() {
 
 DiamondTrap::DiamondTrap(const std::string &name) : ClapTrap(name + "_clap_name"),
 				ScavTrap(name), FragTrap(name), _Name(name) {
-	std::cout << "DiamondTrap default Constructor called" << std::endl;
-	_HitPoints = 100;
-	_EnergyPoints = 50;
-	_AttackDamage = 30;
+	std::cout << "DiamondTrap Name Constructor called" << std::endl;
 }
 
 void DiamondTrap::attack(const std::string &target) {
