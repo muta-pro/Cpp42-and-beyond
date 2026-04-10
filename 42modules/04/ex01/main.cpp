@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 18:52:32 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 19:04:23 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 19:09:25 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -53,8 +53,12 @@ int main()
 		Lessy.getIdea(0);
 
 		Dog Max =  Lessy; //copy constructor
-		std::cout << "Max's "
-		
+		Max.getIdea(0);
+		std::cout << "Max's idea: " << std::endl;
+		Max.setIdea(0, "I wanna steak");
+		std::cout << "Lessy's idea: " << std::endl;
+		std::cout << "Max's idea: " << std::endl;
+
 		std::cout << "Leaving local scope, deleting both objs" << std::endl;
 	}
 
