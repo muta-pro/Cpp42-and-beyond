@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 14:03:33 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 18:23:15 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,12 @@ Cat::~Cat() {
 
 void Cat::makeSound() const {
 	std::cout << "MJAAAUUUUUU" << std::endl;
+}
+
+void Cat::setIdea(int indx, const std::string &idea) {
+	this->_brain->setIdea(indx, idea);
+}
+
+std::string Cat::getIdea(int indx) const {
+	std::cout << this->_brain->getIdea(indx) << std::endl;
 }

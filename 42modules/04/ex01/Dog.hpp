@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:27:03 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 13:46:10 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 18:17:48 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ class Dog : public Animal {
 			~Dog();
 
 			void makeSound() const;
+			void setIdea(int indx, const std::string &idea);
+			std::string getIdea(int indx) const;
 			
 	private:
 			Brain* _brain;

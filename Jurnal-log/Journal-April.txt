@@ -89,3 +89,10 @@ concept:
 		the contents using.
 		 - also for the assignment we ensure to copy values inside brain,
 		 not just swap pointers.
+
+		 we have 2 arrays:
+	1- Brain arr[]: tests DEEP COPY-> exercise teaches how to copy big data from one heap allocation to another, without sharing pointers.
+	2- pointers arr[]: tests polymorphic destruction: putting two subclass
+	objs into generic array, then loop to delete: no leaks of brain because
+	base class destructor is virtual.
+	Also, this array avoids Object-slicing -> copiler would remove brain from the subclass in order to fit it into a smaller size slot made from base Animal class. While arr of pointers are all memory address size pointing to differnet objs.

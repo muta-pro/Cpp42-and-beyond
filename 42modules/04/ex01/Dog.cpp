@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 14:02:04 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 18:22:07 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,12 @@ Dog::~Dog() {
 
 void Dog::makeSound() const {
 	std::cout << "AWAWAWAWAW" << std::endl;
+}
+
+void Dog::setIdea(int indx, const std::string &idea) {
+	this->_brain->setIdea(indx, idea);
+}
+
+std::string Dog::getIdea(int indx) const {
+	std::cout << this->_brain->getIdea(indx) << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 18:31:23 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 14:23:00 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 18:17:41 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* 
@@ -23,10 +23,6 @@ class Brain {
 			Brain (const Brain  &copy);
 			Brain  &operator=(const Brain  &assign);
 			~Brain ();
-
-			void setIdea(int indx, const std::string &idea);
-			std::string getIdea(int indx) const;
-
 	private:
 			std::string _ideas[100];
 };

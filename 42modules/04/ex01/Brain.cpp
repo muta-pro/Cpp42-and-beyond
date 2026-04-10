@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 18:31:28 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/10 14:30:27 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/10 18:18:43 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,3 @@ Brain &Brain::operator=(const Brain &assign) {
 Brain::~Brain() {
 	std::cout << "Brain destructor called" << std::endl;
 }
-
-void Brain::setIdea(int indx, const std::string &idea) {
-	if (indx >= 0 && indx <= 100)
-		this->_ideas[indx] = idea;
-}
-
-std::string Brain::getIdea(int indx) const {
-	if (indx >= 0 && indx <= 100)
-		return (this->_ideas[indx]);
-	return ("Index out of bonds");
-}
-
