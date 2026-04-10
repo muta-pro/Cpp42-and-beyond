@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WrongCat.hpp                                       :+:      :+:    :+:   */
+/*   Cat.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/09 12:09:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/09 18:12:33 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/05 17:27:13 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/10 14:30:54 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WRONGCAT_HPP
-#define WRONGCAT_HPP
+#ifndef CAT_HPP
+#define CAT_HPP
 
-#include "WrongAnimal.hpp"
+#include "Animal.hpp"
+#include "Brain.hpp"
 
-class WrongCat : public WrongAnimal {
+class Cat : public Animal {
 	public:
-			WrongCat();
-			WrongCat(const WrongCat &copy);
-			WrongCat &operator=(const WrongCat &assign);
-			~WrongCat();
+			Cat();
+			Cat(const Cat &copy);
+			Cat &operator=(const Cat &assign);
+			~Cat();
 
 			void makeSound() const;
+			
+	private:
+			Brain* _brain; //composition - has-A relationship
+			//holds a pointer to ideas
 };
 
 #endif

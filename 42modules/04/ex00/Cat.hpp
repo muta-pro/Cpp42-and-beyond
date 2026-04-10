@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:27:13 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 20:01:24 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/09 18:00:36 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ class Cat : public Animal {
 			~Cat();
 
 			void makeSound() const;
-			std::string getType() const;
 };
 
 #endif
