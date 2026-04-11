@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Dog.hpp                                            :+:      :+:    :+:   */
+/*   WrongAnimal.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/05 17:27:03 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/11 12:32:39 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/09 18:16:35 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+ 
+ #ifndef WRONGANIMAL_HPP
+ #define WRONGANIMAL_HPP
 
-#ifndef DOG_HPP
-#define DOG_HPP
+#include <iostream>
+#include <string>
 
-#include "Animal.hpp"
-#include "Brain.hpp"
-
-class Dog : public Animal {
+class WrongAnimal{
 	public:
-			Dog();
-			Dog(const Dog &copy);
-			Dog &operator=(const Dog &assign);
-			~Dog();
+			WrongAnimal();
+			WrongAnimal(const WrongAnimal &copy);
+			WrongAnimal &operator=(const WrongAnimal &assign);
+			~WrongAnimal();
 
 			void makeSound() const;
-			void setIdea(int indx, const std::string &idea);
-			void getIdea(int indx) const;
-	private:
-			Brain* _brain;
-};
+			std::string getType() const;
 
-#endif
+	protected:
+		std::string _type;
+};
+ 
+ #endif

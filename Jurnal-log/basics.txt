@@ -126,3 +126,19 @@ the derived class atteibute overwrites the base one by compiler.
 the former one needs to explicitly state it's class to be called Baseclass::_Attribute;
 	-Wshadow : warining if a name hides another name
 	-Wno-Shadow : suppressing the warnings
+
+
+Lvalues - Rvalues - References
+
+When you type "I want to go home", C++ treats this as a hard-coded string literal (an array of constant characters). It is a temporary value (an rvalue).
+So if a parameter is a string reference in must be const, because that temporary value should not be modified.
+
+with inheritance :
+
+object has
+1- static type - what compiler sees from variable declaration:
+	generic pointer
+
+2- dynamic type - real obj created at runtime:
+	specific object created
+

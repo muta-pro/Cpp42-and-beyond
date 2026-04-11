@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Brain.hpp                                          :+:      :+:    :+:   */
+/*   AMateria.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/09 18:31:23 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/11 12:28:14 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/11 15:26:07 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/11 20:10:14 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* 
-Encapsulation is a strict rule so if not explicit attrbute is private by default
-*/
-#ifndef BRAIN_HPP
-#define BRAIN_HPP
+
+#ifndef AMATERIA_HPP
+#define AMATERIA_HPP
 
 #include <iostream>
 #include <string>
+#include "ICharacter.hpp"
 
-class Brain {
+class AMateria {
 	public:
-			Brain ();
-			Brain (const Brain  &copy);
-			Brain  &operator=(const Brain  &assign);
-			~Brain ();
+			AMateria (std::string const &type);
+			AMateria (const AMateria  &copy);
+			AMateria  &operator=(const AMateria  &assign);
+			virtual ~AMateria ();
 
-			void setIdea(int indx, const std::string &idea);
-			std::string getIdea(int indx) const;
-	private:
-			std::string _ideas[100];
+			std::string const & getType() const;
+			virtual AMateria* clone() const = 0; //prototype pattern
+			virtual void use(ICharacter& target);
+	protected:
+		std::string _type;
+
 };
-
 
 #endif

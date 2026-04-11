@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Dog.hpp                                            :+:      :+:    :+:   */
+/*   Cure.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/05 17:27:03 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/11 12:32:39 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/11 15:35:55 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/11 20:10:06 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DOG_HPP
-#define DOG_HPP
+#ifndef CURE_HPP
+#define CURE_HPP
 
-#include "Animal.hpp"
-#include "Brain.hpp"
+#include "AMateria.hpp"
 
-class Dog : public Animal {
+class Cure : public AMateria {
 	public:
-			Dog();
-			Dog(const Dog &copy);
-			Dog &operator=(const Dog &assign);
-			~Dog();
+			Cure();
+			Cure(const Cure  &copy);
+			Cure &operator=(const Cure  &assign);
+			~Cure();
 
-			void makeSound() const;
-			void setIdea(int indx, const std::string &idea);
-			void getIdea(int indx) const;
-	private:
-			Brain* _brain;
+			virtual AMateria* clone() const;
+			virtual void use(ICharacter& target);
 };
 
 #endif

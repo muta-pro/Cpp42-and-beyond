@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-NAME = Brain
-SRC = main.cpp Animal.cpp Cat.cpp Dog.cpp WrongCat.cpp WrongAnimal.cpp Brain.cpp
+NAME = Interface
+SRC = main.cpp AMateria.cpp
 OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 $(NAME) : $(OBJ)

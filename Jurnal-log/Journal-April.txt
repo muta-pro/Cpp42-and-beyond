@@ -95,4 +95,45 @@ concept:
 	2- pointers arr[]: tests polymorphic destruction: putting two subclass
 	objs into generic array, then loop to delete: no leaks of brain because
 	base class destructor is virtual.
-	Also, this array avoids Object-slicing -> copiler would remove brain from the subclass in order to fit it into a smaller size slot made from base Animal class. While arr of pointers are all memory address size pointing to differnet objs.
+	Also, this array avoids Object-slicing -> compiler would remove brain from the subclass in order to fit it into a smaller size slot made from base Animal class. While arr of pointers are all memory address size pointing to differnet objs.
+
+concept: Delegation.
+
+Brain: owns raw data ->  array strings (ideas)
+
+Dog: messanger -> it receives the idea and passes to brain
+
+ex02: Abstract base class 
+
+	generic class that has one pure virtual function: it's incomplete and cannot exist as an object;
+	- gives shared the design and sometimes implementaion
+
+
+ex03: interface vs abstract
+
+	patterns: 
+
+	1 - PROTOTYPE PATTERN (cloning) : polymorphic copy for abstract base classes without knowing the type:
+	-> the object must copy itself according to its real runtime type.
+
+	USE OF BASE POINTERS*
+	program handles materias thorugh base-class pointers, that way one invenotry can hold different derived types, as long as it's coming from a base one:
+		AMaateria* m;
+
+	problem - real type is hidden behind base pointer, needs a way to copy it.
+		when we want to clone the pointer we create another Ice - but must perserve the real dynamic type:
+	THIS MEANS: if we declare AMateria copy; - we are changing the derived object value to a base object, it must remain Ice object that the pointer is pointing to, not a base-class object. again - OBJECT SLICING, because the derived-class specific identity gets lost, only base-class gets copied.
+	Vut also because abstract class can't be instantiated.
+
+
+
+	2 - interface-based design class - defines rules for other concrete classes - functions that are a must.
+
+
+
+	
+	
+
+
+
+
