@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WrongAnimal.hpp                                    :+:      :+:    :+:   */
+/*   Animal.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/07 14:24:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/09 18:16:35 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/05 17:25:18 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/07 20:01:01 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
- 
- #ifndef WRONGANIMAL_HPP
- #define WRONGANIMAL_HPP
+/*
+class accessed polymorphically : via baseclass pointers -> heap dynamic alloc
+here we introduce polymorphic destruction*/
+#ifndef ANIMAL_HPP
+# define ANIMAL_HPP
 
-#include <iostream>
-#include <string>
+# include <iostream>
+# include <string>
 
-class WrongAnimal{
+class Animal{
 	public:
-			WrongAnimal();
-			WrongAnimal(const WrongAnimal &copy);
-			WrongAnimal &operator=(const WrongAnimal &assign);
-			~WrongAnimal();
+			Animal();
+			Animal(const Animal &copy);
+			Animal &operator=(const Animal &assign);
+			virtual ~Animal();
 
-			void makeSound() const;
+			virtual void makeSound() const;
 			std::string getType() const;
-
+	
 	protected:
 		std::string _type;
 };
- 
- #endif
+
+#endif

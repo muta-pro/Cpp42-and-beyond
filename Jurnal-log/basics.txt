@@ -100,8 +100,7 @@ int fixed_div(int a, int b)
     return (a * SCALE) / b;
 }
 
-to store a float/int with scale fractional bits is 8 ,
-means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;
+to store a float/int with scale fractional bits is 8 , means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;
 
 but to convert back float we devide 256;
 
@@ -112,17 +111,13 @@ to convert back to int we remove fractional bits, shift right;
 Floating point numbers in memory: (-1)^sign × 1.mantissa × 2^(exponent - bias127)
 
 A floating-point number is basically scientific notation in binary.
-The mantissa part is the precision part, the exponent part is the range part.
-Float stores the closest representable approximation.
+The mantissa part is the precision part, the exponent part is the range part. Float stores the closest representable approximation.
 
 ## Inheritance - Is-A relationship
 ## Encapsulation - and access modifiers : protected - base class and subclasses
-## Polymorphism and Virtual Fucntions : makesound() - many forms - > therefore
-	 virtual destructor is needed;
-	without it the subclass destructor never fires,
-	when I try to delete it via baseclass pointer:
-	Deleting a derived object through a base-class pointer requires a virtual
-	destructor in the base class.
+## Polymorphism and Virtual Fucntions : makesound() - many forms - > therefore virtual destructor is needed;
+	without it the subclass destructor never fires, when I try to delete it via baseclass pointer:
+	Deleting a derived object through a base-class pointer requires a virtual destructor in the base class.
 ## object lifecycle - order in whch memory is claimed and released
 
 
@@ -131,3 +126,19 @@ the derived class atteibute overwrites the base one by compiler.
 the former one needs to explicitly state it's class to be called Baseclass::_Attribute;
 	-Wshadow : warining if a name hides another name
 	-Wno-Shadow : suppressing the warnings
+
+
+Lvalues - Rvalues - References
+
+When you type "I want to go home", C++ treats this as a hard-coded string literal (an array of constant characters). It is a temporary value (an rvalue).
+So if a parameter is a string reference in must be const, because that temporary value should not be modified.
+
+with inheritance :
+
+object has
+1- static type - what compiler sees from variable declaration:
+	generic pointer
+
+2- dynamic type - real obj created at runtime:
+	specific object created
+

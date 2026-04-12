@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WrongCat.hpp                                       :+:      :+:    :+:   */
+/*   Cure.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/09 12:09:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/09 18:12:33 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/11 15:35:55 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/11 20:10:06 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WRONGCAT_HPP
-#define WRONGCAT_HPP
+#ifndef CURE_HPP
+#define CURE_HPP
 
-#include "WrongAnimal.hpp"
+#include "AMateria.hpp"
 
-class WrongCat : public WrongAnimal {
+class Cure : public AMateria {
 	public:
-			WrongCat();
-			WrongCat(const WrongCat &copy);
-			WrongCat &operator=(const WrongCat &assign);
-			~WrongCat();
+			Cure();
+			Cure(const Cure  &copy);
+			Cure &operator=(const Cure  &assign);
+			~Cure();
 
-			void makeSound() const;
+			virtual AMateria* clone() const;
+			virtual void use(ICharacter& target);
 };
 
 #endif

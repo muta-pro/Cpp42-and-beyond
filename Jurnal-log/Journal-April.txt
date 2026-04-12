@@ -22,11 +22,11 @@ The object behavior depends on its internal state, especially hit points and ene
 
 ex01: building new class on top of the existing one
 
-concept-> Cosntruction chain: 
- for derived object, constructor creates first base class part;
+concept-> Construction chain: 
+ for derived object, constructor creates first base-class part;
  the child class doesn't inherit automatically cosntrucor, it calls parent class contructor;
 
--> for attributes to be available to child classes we use protect keyword instead of private;
+-> for attributes to be available to child classes we use 'protect' keyword instead of 'private';
 -> derived obj reuses parents class data and methods instead of duplicating them.
 -> so it's basically like one object but with layers
 In modern C++, you could write:
@@ -52,25 +52,88 @@ ex03: introduces multiple inheritance- > virtual inharitance
   virtual: solves duplicate base subobject ambiguity -> one shared ClapTrap base
   explicit qualification solves same-function-name ambiguity
 
-  Once ClapTrap is virtual base -> hybrid class must contruct it:
-  	 because two subclasses inherent the base class as virtual public class, then
-  	 it means that base class is virtual base, for that reason hybrid class is
-  	 responsible for constructing the shared parent class subobject.
+  Once ClapTrap is virtual base -> hybrid class must contruct it
 
- Hybridclass() : Parentclass(), Subclass(), _att() {}
+04:
 
- 	so, order of the initializer  does not define the construction order.
- 	C++ construction order:
+ ## Polymorphism:
+ - it can instruct how to use specific memeber functions of the base class; here comes a virtual function -> therefore also a virtual destructor.
+modern features here:
+	- override / = default for contructors / std::unique_ptr-> manual memory menagement (raw pointers)
+	- direct memeber init.
+	these keywords force compiler to fire warnings if syntax is wrong.
+	- auto main() -> int
 
- 	1 - virtual bases
- 	2 - direct bases the order they are declared in the classes
- 	3 - memeber in order they are declared
- 	4 - constructor body
+STATIC/EARLY BINDING VS DYNAMIC/LATE BIDING
 
- Copy constructor works for hybrid if has own members:
- 	Hybrid class::HC(const H &copy) : BaseClass(copy), memebr(copy.memeber){}
+-> UPCASTING: allocating an instance of a subclass with a pointer of a baseclass.
+	That done, the compiler reads it as an Baseclass
 
-To inherit trates from different subclasses, hybrid class uses class-level
-stat-profile constats from subclasses profile that it choses to follow. But
-the memebers remain inheritated from base class.
+-> V-Table: created virtual table with virtual fucntion. letting the compiler check what is the class of the object, even though the pointer is Baseclass. This way it dinamically binds it to subclass::virtualfunvtion();
+Memory gets saftely cleared because it calles the sublass destructor as well.
+so VIRTUAL makes the compiler check the structure beneahe the syntax.
+
+Static binding - > without virtual
+
+ex01: memory menagement -> Composition & Deep Copy.
+	we are working with a pointer *Brain, that two subclasses contain.
+
+concept:
+	1- Composition: Has-A Relationship.
+	menas combining smaller objects to create a complex one.
+
+	2 - Shallow copy trap: by deafault copy two objects can share the same
+		memory address, after tryint ot delete the pointer _brain, it will cause a double-free.
+		Deep copy allows to allocate new memory for an object that you copy content into: 
+		 - menas allocate a brand new instance of Brain and copy
+		the contents using.
+		 - also for the assignment we ensure to copy values inside brain,
+		 not just swap pointers.
+
+		 we have 2 arrays:
+	1- Brain arr[]: tests DEEP COPY-> exercise teaches how to copy big data from one heap allocation to another, without sharing pointers.
+	2- pointers arr[]: tests polymorphic destruction: putting two subclass
+	objs into generic array, then loop to delete: no leaks of brain because
+	base class destructor is virtual.
+	Also, this array avoids Object-slicing -> compiler would remove brain from the subclass in order to fit it into a smaller size slot made from base Animal class. While arr of pointers are all memory address size pointing to differnet objs.
+
+concept: Delegation.
+
+Brain: owns raw data ->  array strings (ideas)
+
+Dog: messanger -> it receives the idea and passes to brain
+
+ex02: Abstract base class 
+
+	generic class that has one pure virtual function: it's incomplete and cannot exist as an object;
+	- gives shared the design and sometimes implementaion
+
+
+ex03: interface vs abstract
+
+	patterns: 
+
+	1 - PROTOTYPE PATTERN (cloning) : polymorphic copy for abstract base classes without knowing the type:
+	-> the object must copy itself according to its real runtime type.
+
+	USE OF BASE POINTERS*
+	program handles materias thorugh base-class pointers, that way one invenotry can hold different derived types, as long as it's coming from a base one:
+		AMaateria* m;
+
+	problem - real type is hidden behind base pointer, needs a way to copy it.
+		when we want to clone the pointer we create another Ice - but must perserve the real dynamic type:
+	THIS MEANS: if we declare AMateria copy; - we are changing the derived object value to a base object, it must remain Ice object that the pointer is pointing to, not a base-class object. again - OBJECT SLICING, because the derived-class specific identity gets lost, only base-class gets copied.
+	Vut also because abstract class can't be instantiated.
+
+
+
+	2 - interface-based design class - defines rules for other concrete classes - functions that are a must.
+
+
+
+	
+	
+
+
+
 

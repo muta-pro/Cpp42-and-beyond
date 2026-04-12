@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:27:03 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 20:01:29 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/09 18:00:41 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ class Dog : public Animal {
 			~Dog();
 
 			void makeSound() const;
-			std::string getType() const;
 };
 
 #endif

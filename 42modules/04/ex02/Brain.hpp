@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WrongCat.hpp                                       :+:      :+:    :+:   */
+/*   Brain.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/09 12:09:35 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/09 18:12:33 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/04/09 18:31:23 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/04/11 12:28:14 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+/* 
+Encapsulation is a strict rule so if not explicit attrbute is private by default
+*/
+#ifndef BRAIN_HPP
+#define BRAIN_HPP
 
-#ifndef WRONGCAT_HPP
-#define WRONGCAT_HPP
+#include <iostream>
+#include <string>
 
-#include "WrongAnimal.hpp"
-
-class WrongCat : public WrongAnimal {
+class Brain {
 	public:
-			WrongCat();
-			WrongCat(const WrongCat &copy);
-			WrongCat &operator=(const WrongCat &assign);
-			~WrongCat();
+			Brain ();
+			Brain (const Brain  &copy);
+			Brain  &operator=(const Brain  &assign);
+			~Brain ();
 
-			void makeSound() const;
+			void setIdea(int indx, const std::string &idea);
+			std::string getIdea(int indx) const;
+	private:
+			std::string _ideas[100];
 };
+
 
 #endif

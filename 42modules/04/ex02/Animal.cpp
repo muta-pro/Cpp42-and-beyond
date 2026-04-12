@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 17:25:15 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/09 18:21:22 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/11 14:51:18 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,6 @@ Animal& Animal::operator=(const Animal &assign) {
 
 Animal::~Animal() {
 	std::cout << "Animal Destructor called" << std::endl;
-}
-
-void Animal::makeSound() const {
-	std::cout << _type << " makes generic animal sound" << std::endl;
 }
 
 std::string Animal::getType() const {
