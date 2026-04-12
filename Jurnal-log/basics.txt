@@ -113,7 +113,9 @@ Floating point numbers in memory: (-1)^sign × 1.mantissa × 2^(exponent - bias1
 A floating-point number is basically scientific notation in binary.
 The mantissa part is the precision part, the exponent part is the range part. Float stores the closest representable approximation.
 
-## Inheritance - Is-A relationship
+## Inheritance - Is-A relationship : UNIVERSAL INCLUSIVE POLYMORPHISM
+	~~~inheritance is used to create a hierarchy of objects that represent a concept~~~~
+	virtual and pure virtual methodes are used to define points of extention for subclasses.
 ## Encapsulation - and access modifiers : protected - base class and subclasses
 ## Polymorphism and Virtual Fucntions : makesound() - many forms - > therefore virtual destructor is needed;
 	without it the subclass destructor never fires, when I try to delete it via baseclass pointer:
