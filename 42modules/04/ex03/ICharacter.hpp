@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 16:06:04 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/11 16:09:38 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:51:55 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@
 class AMateria;
 class ICharacter {
 	public:
-			ICharacter();
-			ICharacter(const ICharacter &copy);
-			ICharacter &operator=(const ICharacter &assign);
-			~ICharacter();
+			virtual ~ICharacter() {}
 
 			virtual std::string const & getName() const = 0;
 			virtual void equip(AMateria* m) = 0;

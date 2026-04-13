@@ -6,13 +6,13 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 15:35:52 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/11 20:08:25 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/12 20:27:56 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cure.hpp"
 
-Cure::Cure() : AMateria("Cure") {
+Cure::Cure() : AMateria("cure") {
 	std::cout << "Cure constructor called" << std::endl;
 }
 

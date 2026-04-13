@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 NAME = Interface
-SRC = main.cpp AMateria.cpp
+SRC = main.cpp AMateria.cpp Character.cpp Cure.cpp Ice.cpp MateriaSource.cpp
 OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 $(NAME) : $(OBJ)

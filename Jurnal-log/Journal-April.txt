@@ -129,6 +129,19 @@ ex03: interface vs abstract
 
 	2 - interface-based design class - defines rules for other concrete classes - functions that are a must.
 
+concept: inventory menagement and Factory pattern
+
+1 - character class  - fixed-size array pattern
+	equip() - fills first empty slot(NULL)
+	unequip() - set slots to null - doesn't delete (x caller)
+	use() - calls materia->use()
+	deep copy cleanup old one first
+
+2 - Materiasource class - type-based creaton
+	learnmateria() - sotres clone as template
+	creatematria() - returns clone of templete by type
+
+
 
 
 	
