@@ -48,7 +48,7 @@ Concept:
 3. METHODS (what the object can do)
 4. OWNERSHIP (who owns what memory)
 
-~stram objects : all hold a state of the obj
+~stream objects : all hold a state of the obj
 std::ios - Base class for streams (type-dependent components)
 
 std::ios_base::iostate -type of stream state flags - error state flags
@@ -100,7 +100,7 @@ int fixed_div(int a, int b)
     return (a * SCALE) / b;
 }
 
-to store a float/int with scale fractional bits is 8 , means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;
+~~~to store a float/int with scale fractional bits is 8 , means shift by 8 << = n * 256 = n 2^8; for floant we round it because storing int;
 
 but to convert back float we devide 256;
 
@@ -110,18 +110,21 @@ to convert back to int we remove fractional bits, shift right;
 
 Floating point numbers in memory: (-1)^sign × 1.mantissa × 2^(exponent - bias127)
 
-A floating-point number is basically scientific notation in binary.
+~~~A floating-point number is basically scientific notation in binary.
 The mantissa part is the precision part, the exponent part is the range part. Float stores the closest representable approximation.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Inheritance - IS-A relationship : UNIVERSAL INCLUSIVE POLYMORPHISM
 
-## Inheritance - Is-A relationship : UNIVERSAL INCLUSIVE POLYMORPHISM
-	~~~inheritance is used to create a hierarchy of objects that represent a concept~~~~
+~~~inheritance is used to create a hierarchy of objects that represent a concept~~~~
 	virtual and pure virtual methodes are used to define points of extention for subclasses.
-## Encapsulation - and access modifiers : protected - base class and subclasses
-## Polymorphism and Virtual Fucntions : makesound() - many forms - > therefore virtual destructor is needed;
-	without it the subclass destructor never fires, when I try to delete it via baseclass pointer:
-	Deleting a derived object through a base-class pointer requires a virtual destructor in the base class.
-## object lifecycle - order in whch memory is claimed and released
 
+## Encapsulation - and access modifiers : protected - base class and subclasses
+
+## Polymorphism and Virtual Fucntions : makesound() - many forms - >
+	therefore virtual destructor is needed; without it the subclass destructor never fires, when I try to delete it via baseclass pointer:
+	Deleting a derived object through a base-class pointer requires a virtual destructor in the base class.
+
+## object lifecycle - order in whch memory is claimed and released
 
 Shadowing warning : if two variables from different classes share the same name
 the derived class atteibute overwrites the base one by compiler.
@@ -130,17 +133,46 @@ the former one needs to explicitly state it's class to be called Baseclass::_Att
 	-Wno-Shadow : suppressing the warnings
 
 
+==
 Lvalues - Rvalues - References
 
 When you type "I want to go home", C++ treats this as a hard-coded string literal (an array of constant characters). It is a temporary value (an rvalue).
 So if a parameter is a string reference in must be const, because that temporary value should not be modified.
+==
 
-with inheritance :
+~~~with inheritance : object has
+1- static type - what compiler sees from variable declaration: generic pointer
 
-object has
-1- static type - what compiler sees from variable declaration:
-	generic pointer
+2- dynamic type - real obj created at runtime: specific object created
 
-2- dynamic type - real obj created at runtime:
-	specific object created
+##Inheritance-based polymorphysm - runrtime: base-class+virtual functions
+	functions called through base* at runtime.
+	depends on the actual object type, not the pointer type - uses vtable;
 
+Properties:
+
+Flexible (can swap types at runtime)
+Requires inheritance hierarchy
+Slight runtime overhead
+Uses pointers/references and virtual functions
+
+Good when needed common interface, store different objs in same container
+
+this type can have Abstract or Interface kind og class:
+Abstract - implemented functions + memeber vars
+shares behaviour and structure;
+
+Interface - all virtual and no state - pure contract;
+
+##Template-based polymorphism - compile-time: generic programing 
+no need for base class - it's a type with required fucntion
+relies on structure, not hierarchy
+
+Propreties:
+
+Static
+zero overhead
+type checked at compiletime
+via templates
+
+good when performance needed, generic reusable code like STL

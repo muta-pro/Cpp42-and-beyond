@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/26 15:39:44 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/03/28 14:27:59 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/04/19 10:44:42 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,32 +18,12 @@ Fixed::Fixed (void) : _fpn(0) {
 
 Fixed::Fixed (const int n) {
 	std::cout << "Int constructor called" << std::endl;
-	// int maxSafeInt = INT_MAX >> _fbn;
-	// int minSafeInt = INT_MIN >> _fbn;
-	// if (n > maxSafeInt || n < minSafeInt)
-	// {
-	// 	std::cerr << "WARNING: value " << n << " too large." << std::endl;
-	// 	if (n > maxSafeInt)
-	// 		_fpn = INT_MAX;
-	// 	else
-	// 		_fpn = INT_MIN;
-	// }
-	// else
 		_fpn = n << _fbn;
 }
 
 Fixed::Fixed (const float fpn) {
 	std::cout << "Float constructor called" << std::endl;
 	float scaled = fpn * (1 << _fbn);
-	// if (scaled > INT_MAX || scaled < INT_MIN)
-	// {
-	// 	std::cerr << "WARNING: Float value " << fpn << " too large." << std::endl;
-	// 	if (scaled > INT_MAX)
-	// 		_fpn = INT_MAX;
-	// 	else
-	// 		_fpn = INT_MIN;
-	// }
-	// else
 		_fpn = static_cast<int>(roundf(scaled));
 
 }

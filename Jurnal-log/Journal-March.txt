@@ -1,238 +1,429 @@
-| Module | Days | Notes                      |
-| ------ | ---- | -------------------------- |
-| CPP00  | 2    | Class basics, canon form   |
-| CPP01  | 2    | Memory, refs, pointers     |
-| CPP02  | 2    | Operator overloading       |
-| CPP03  | 3    | Inheritance, constructors  |
-| CPP04  | 2    | Polymorphism, virtual dtor |
+# C++ Learning Journal: 42 CPP Modules
 
-00: group data and funcitons together:
-	OBJECT - concrete variable created from a class.
+A chronicle of my journey through C++ fundamentals, from basic OOP concepts to advanced polymorphism and memory management.
 
-	C++ object is close to a struct variable, but stronger:
-	-it holds data
-	-it can also have functions attached to it
-	-it can automatically initialize and clean itself
+---
 
-	CONSTRUCTOR - function that runs automatically when obj is created:
-	it is an object's starting setup function.
-	Constructor with reference memeber must use init list.
+## Module Overview
 
-	METHOD - function that belongs to a class and is called on an obj.
-	meaning is tied to an object.
+| Module | Duration | Focus Area                 |
+|--------|----------|----------------------------|
+| CPP00  | 2 days   | Class basics, canon form   |
+| CPP01  | 2 days   | Memory, refs, pointers     |
+| CPP02  | 2 days   | Operator overloading       |
+| CPP03  | 3 days   | Inheritance, constructors  |
+| CPP04  | 2 days   | Polymorphism, virtual dtor |
 
-01: visualizing memory: where objects live and how to access them.
+---
 
-	STACK - HEAP - REERENCES -POINTERS
+## CPP00: Object-Oriented Foundations
 
-	reference - must be set at construction, always exist
-	pointer - can be null and set later
+### Core Concept: Grouping Data and Functions Together
 
-STACK → automatic lifetime
-HEAP  → manual lifetime
+**Objects** are concrete variables created from a class. A C++ object is similar to a struct but more powerful:
+- Holds data
+- Has functions attached to it
+- Can automatically initialize and clean itself
 
+### Key Concepts
 
-	* brace uniform initialization unifies older init syntaxes:
-		/ copy std::string s = "hi";
-		/ direct std::string s("hi");
-		/ aggregate int arr[3] = {1, 2, 3};
-		/ brace std::string s{"hi"}; int arr{1, 2, 3};
-		- it catches bug such as narrowing conversions int x{2.3}; 
-			decimal part doesn't get lost silently.
-		- it works well with containers: std::vector<int> v{1,2,3};
+#### Constructor
+A function that runs automatically when an object is created—the object's starting setup function.
 
-		ex03:
-		when to use a reference vs a pointer as a member variable?
-		consepts - reference memeber: opposite to pointer member
-		must be initialized immediately
-		cannot be null
-		cannot later refer to another document
-		good when the object is mandatory
-//
-		one shared obj with changing internal state;
-		one class holding reference to that obj
-		one class holding pointer to that obj
+**Important Rule:** Constructors with reference members must use initialization lists.
 
-		DATA: obj memory - _title string
-						 - _name string , _doc (ref)
+#### Method
+A function that belongs to a class and is called on an object. Its meaning is intrinsically tied to that object.
 
-		CONSTR: Classname(...)
-		when creating obj of that class what we must provide (...)
-		implementation shows then init list of memebers
+---
 
-		METHODS: obj behaviour
-		find implemantation to check
+## CPP01: Memory Management
 
-		IDENTIFY OWNERSHIP: does obj own data or just reference it. 
-		If it reference it means data must exist before the obj of that class.
+### Core Concept: Visualizing Memory
 
-		MEMORY ALLOCATED
-		       ↓
-		CONSTRUCTOR RUNS
-		       ↓
-		OBJECT IS USED (methods called)
-		       ↓
-		DESTRUCTOR RUNS
-		       ↓
-		MEMORY RELEASED
+Understanding where objects live and how to access them.
 
-		getType() returns const std::string& instead of std::string;
-		This avoids copying the string on every attack() call. 
-		The double const — one on the return type, one trailing on the method;
+### Memory Regions
 
+**STACK** → Automatic lifetime  
+**HEAP** → Manual lifetime
 
-		ex04:
-		CONCEPT: reading a file into a string with std::getline
-		construct an object that represents the file.
-		creating input/output file streams instead of C file APIs:
-		~objs type:
-			std::ifstream for reading files
+### References vs. Pointers
 
-			std::ofstream for writing files
+#### References
+- Must be set at construction
+- Always exist (cannot be null)
+- Cannot be reassigned to refer to another object
 
-		std::string for storing and manipulating text
+#### Pointers
+- Can be null
+- Can be set later
+- Can be reassigned
 
-		using methods attached to the object:
+### Brace Uniform Initialization `{}`
 
-		~member functions like: .find(), .substr(), .size(), .empty()
-		substr(start, len) ~ returns substring 
-		bad(); 
-		~bad() vs fail() — fail() also triggers on normal EOF, 
-		making it too noisy for a post-read check. bad() only fires on real hardware/OS errors.
+Unifies older initialization syntaxes:
+```cpp
+// Copy initialization
+std::string s = "hi";
 
-		~non-memeber function: getline - for extracting a line by reading from a stream;
-		std::getline strips the newline delimiter, so you have to put it back.
+// Direct initialization
+std::string s("hi");
 
-		std::string instead of char arrays : 
-		creates empty string that expands automatically - no managed buffer sizes
+// Aggregate initialization
+int arr[3] = {1, 2, 3};
 
-		basic command-line handling in C++
+// Brace initialization (modern)
+std::string s{"hi"};
+int arr{1, 2, 3};
+```
 
-		object-oriented standard library usage:
-		using library abstractions instead pointer arithmetic;
-		algorothim at higher level: find -  copy substr - append replacement
+**Benefits:**
+- Catches bugs like narrowing conversions: `int x{2.3};` won't silently lose the decimal part
+- Works seamlessly with containers: `std::vector<int> v{1, 2, 3};`
 
-		safer text manipulation: const std::string& text 
-		-> read-only reference, no expensive copy ->pass by const ref.
+---
 
-		RAII-Resource Acquisition Is Initialization.
-		style resource handling without you even noticing it
+### Ex03: Reference vs. Pointer Members
 
-		nested types and constants: classes can define types, constants inside themselves. ::
-		std::string::size_type -> namespace scope syntax:
-		class types contain tensted types, constants, memeber functions;
-		size_type belongs to std::string
+**Key Question:** When to use a reference vs. a pointer as a member variable?
 
-		~npos - special constant: not found.
+#### Reference Member Characteristics
+- Opposite to pointer member
+- Must be initialized immediately
+- Cannot be null
+- Cannot later refer to another object
+- **Use when:** The object is mandatory and won't change
 
-## MEMBER FUNCTION POINTERS
+#### Exercise Pattern
+One shared object with changing internal state:
+- One class holding a reference to that object
+- One class holding a pointer to that object
 
-A regular function pointer stores the address of a free function:
+#### Object Lifecycle
+```
+MEMORY ALLOCATED
+       ↓
+CONSTRUCTOR RUNS
+       ↓
+OBJECT IS USED (methods called)
+       ↓
+DESTRUCTOR RUNS
+       ↓
+MEMORY RELEASED
+```
 
-      void (*fp)() = &someFunction;
-      fp();                          // call it
+#### Const Return Optimization
+```cpp
+const std::string& getType() const;
+```
+Returns `const std::string&` instead of `std::string` to avoid copying the string on every call.
 
-A MEMBER function pointer also stores the address of a function,
-  but it belongs to a class, so it always needs an object to run on:
+**Double const:**
+- One on the return type (prevents modification of returned data)
+- One trailing on the method (indicates method doesn't modify object state)
 
-      void (Harl::*mp)() = &Harl::debug;
-      (myObject.*mp)();              // call via object
-      (ptr->*mp)();                  // call via pointer  <- we use this
+---
 
-			ex05:
-			How do I map a string to one of the class’s member functions?
-			how to connect a string command to a class method?
-			~ parallel arrays : mapping index i in levels[] & actions[];
+### Ex04: File I/O and String Manipulation
 
-			## void (Class::*)func.name(); -takes no args
-			pointer to member function.
-			-initializer list an array of level names
-			-declare and fill an array of member-function pointers
-			-find matching index
-			-call the function at that index :
-				(ptr->*mp)(); 
-				this->* is the pointer-to-member dereference operator.
+**Concept:** Reading a file into a string with `std::getline`
 
-			memb func here are private -> means can't be called directly, but only through complain();
+#### File Stream Objects
+Instead of C file APIs, use object-oriented streams:
+- `std::ifstream` for reading files
+- `std::ofstream` for writing files
+- `std::string` for storing and manipulating text
 
-			levels - labels -> message of logging systems
+#### Important Methods
 
-			We need an object with memb func pointer to call a funciton:
-			(this->*actions[i])();
-			
-			this -> pointer to current object inside memb func;
-			actions[i] -> pointer to memb. func. stored in arr;
+**String methods:**
+- `.find()` - locate substrings
+- `.substr(start, len)` - extract substrings
+- `.size()` - get length
+- `.empty()` - check if empty
 
-		works like a lookup table -> usefull for:
-	~ command tables
-	~ event handlers
-	~ callback systems
-	~ virtual dispatch
-	~ state machines
-	~ plugin systems
+**Stream methods:**
+- `.bad()` - check for serious I/O errors
+- `.fail()` - check for any error (including EOF, too noisy for post-read checks)
 
-			ex:06
-			how to transform input into a control-flow structure?
-			string->indx->switch->behaviour
+**Note:** `bad()` vs `fail()` — `fail()` also triggers on normal EOF, making it too noisy for post-read checks. `bad()` only fires on real hardware/OS errors.
 
+**Non-member function:**
+- `std::getline(stream, string)` - extract a line from stream
 
-## 02: O.C.F.
+**Important:** `std::getline` strips the newline delimiter, so you must add it back manually if needed.
 
-	NUMBERS: FLOATING POINTS
+#### Key Advantages
 
-	scientific notation
+**`std::string` over `char[]`:**
+- Creates empty string that expands automatically
+- No manual buffer size management
 
-<< bitwise shift operator: if I want to store integer in a class, 
-it needs to be pushed passed 8 frictional bits 
-		
-		ex00:
-		int fpn - raw value;
-		int _fbn - value that determines the fractional part of
-		a number in a bit sequence. Places the decimal point,
-	
-		ex01: creating the container
-	storing of the fixed-point-number and conversion
-	 two consturctors to convert numb into fixed-point
-	 two methods to convert back.
-	 << overload: insertion operator- call toFloat() when it seas fixed obj.
+**Object-oriented library usage:**
+- Using library abstractions instead of pointer arithmetic
+- Higher-level algorithms: find → copy substring → append replacement
 
-		ex02: operator overloading.
-		because compiler doesn't know how to act with obj and do operations, we give him instructions with 4 groups of overload;
-		 teaching the container to behave like a number
-	class behaves like a real numeric type; 
-	the object stores a scaled integer, not a real number. 
-	With fractional bits = 8, scale is 256 so the real value = fb / 256; it's about manipulating raw integer.
+**Safer text manipulation:**
+```cpp
+const std::string& text  // Read-only reference, no expensive copy
+```
 
-+ / - -> instead of casting to float and relying on processor's FloatingPointUnit:
-	instead, bit shifting and raw ints;
+#### RAII Pattern
+**Resource Acquisition Is Initialization**
 
-increment/decrement overload:
-post-increment a++ -> gives the current value tu use in the line
-but increment the variable the nex time it's used.
+Style of resource handling that manages cleanup automatically without explicit effort.
 
-	ex03: 
-	1 class mechanics - handle const memebers : Fixed const _x, _y;
-		const changes the class functioning - _x & _y can't be modified after creation:
-		so instead of assigning values inside {} I need to use init list at moment of birth.
+#### Nested Types and Constants
 
-		the CopyAssignm. oper., because of const attributes _x, _y, we can't overwrite them with new data, but cast param to void to supress warnings and return curr obj.
+Classes can define types and constants inside themselves using `::` (scope resolution operator).
 
-	2 the Algorythm: binary space partitioning:
+```cpp
+std::string::size_type  // size_type belongs to std::string namespace
+std::string::npos       // Special constant meaning "not found"
+```
 
-		## Half-space - Cross Product method;
-		algorithm relies only on addition, subtraction, and multiplication. It is extremely fast, avoids all division errors, and perfectly utilizes the overloaded operators I wrote in ex02.
+---
 
-		Vector math: sign() - > calcs determinant of 2D Matrix- 2D Cross Product of two vectors; which side of the line a point is on.
-			1- create vector 1 : line end point to target point;
-			2- create vector 2 : actual point to point segment;
-		i get a signle number, but only sign matters (x1*y2)-(x2*y1);
-		Depending on the main() and how triangle is drawn we check both sides;
-		I use strict < > , because if on the line should return false;
+### Ex05: Member Function Pointers
 
-		Cross Product is positive if P is on left side and negative if on right or
-		0 if it sits on the line.
+**Core Question:** How do I map a string to one of the class's member functions?
 
-		The point will be inside if all signs are positive or all negative, if mixed then I know point coressed over an edge.
+#### Regular vs. Member Function Pointers
 
-		other possible choices were Barycentric coordinates or angle summation;
-		Barycentric coordinates, require division, which introduces a risk of dividing by zero and losing precision. Angle summation requires heavy floating-point trigonometry like acos(), which defeats the purpose of writing a fixed-point math class.
+**Regular function pointer:**
+```cpp
+void (*fp)() = &someFunction;
+fp();  // Call it
+```
+
+**Member function pointer:**
+Stores the address of a function that belongs to a class, so it always needs an object to run on:
+```cpp
+void (Harl::*mp)() = &Harl::debug;
+(myObject.*mp)();   // Call via object
+(ptr->*mp)();       // Call via pointer ← we use this
+```
+
+#### Implementation Pattern: Parallel Arrays
+
+```cpp
+void (Class::*funcName)();  // Pointer to member function taking no args
+```
+
+**Steps:**
+1. Initialize an array of level names
+2. Declare and fill an array of member-function pointers
+3. Find matching index
+4. Call the function at that index: `(this->*actions[i])();`
+
+**Note:** `this->*` is the pointer-to-member dereference operator.
+
+#### Why This Pattern?
+
+Member functions here are private → can't be called directly from outside, only through the `complain()` method.
+
+Levels serve as labels for logging system messages.
+
+**Calling mechanism:**
+```cpp
+(this->*actions[i])();
+```
+- `this` → pointer to current object inside member function
+- `actions[i]` → pointer to member function stored in array
+
+#### Use Cases (Lookup Table Pattern)
+
+- Command tables
+- Event handlers
+- Callback systems
+- Virtual dispatch
+- State machines
+- Plugin systems
+
+---
+
+### Ex06: String to Control Flow
+
+**Core Question:** How to transform input into a control-flow structure?
+
+**Pattern:** `string → index → switch → behavior`
+
+---
+
+## CPP02: Operator Overloading & Fixed-Point Numbers
+
+### Core Concept: Orthodox Canonical Form (OCF)
+
+Understanding floating-point representation and teaching custom types to behave like built-in numbers.
+
+### Numbers: Floating-Point Representation
+
+**Scientific notation** with bitwise operations.
+
+#### Bitwise Shift Operator `<<`
+If I want to store an integer in a class, it needs to be pushed past 8 fractional bits.
+
+---
+
+### Ex00: Fixed-Point Number Basics
+
+**Class Members:**
+- `int _fpn` - raw value (fixed-point number)
+- `int _fbn` - fractional bits number (determines position of decimal point in bit sequence)
+
+The `_fbn` value determines how many bits represent the fractional part of a number.
+
+---
+
+### Ex01: Creating the Container
+
+**Goal:** Store and convert fixed-point numbers
+
+**Components:**
+- Two constructors to convert numbers into fixed-point format
+- Two methods to convert back
+- `<<` overload: insertion operator calls `toFloat()` when it sees a fixed object
+
+---
+
+### Ex02: Operator Overloading
+
+**Why?** The compiler doesn't know how to perform operations on custom objects, so we give it instructions.
+
+#### Four Groups of Overloads
+
+Teaching the container to behave like a number so the class acts like a real numeric type.
+
+**Key insight:** The object stores a scaled integer, not a real number.
+
+With `fractionalBits = 8`, scale is 256:
+- Real value = `fixedBits / 256`
+- It's all about manipulating raw integers
+
+#### Arithmetic Operators `+` `/` `-`
+
+Instead of casting to float and relying on processor's Floating Point Unit:
+- Use bit shifting and raw integer operations
+
+#### Increment/Decrement Overload
+
+**Post-increment (`a++`):**
+- Returns the current value to use in the current line
+- Increments the variable for the next time it's used
+
+**Pre-increment (`++a`):**
+- Increments immediately
+- Returns the new value
+
+---
+
+### Ex03: BSP - Binary Space Partitioning
+
+#### Part 1: Class Mechanics with Const Members
+
+**Challenge:** Handle const members: `Fixed const _x, _y;`
+
+Const changes class functioning—`_x` and `_y` can't be modified after creation.
+
+**Solution:** Instead of assigning values inside `{}`, use initialization list at moment of construction.
+
+**Copy assignment operator:** Because of const attributes `_x`, `_y`, we can't overwrite them with new data. Cast parameter to void to suppress warnings and return current object.
+
+#### Part 2: The Algorithm - Binary Space Partitioning
+
+**Method:** Half-space / Cross Product method
+
+**Why this algorithm?**
+- Relies only on addition, subtraction, and multiplication
+- Extremely fast
+- Avoids all division errors
+- Perfectly utilizes the overloaded operators from ex02
+
+#### Vector Math: The `sign()` Function
+
+Calculates the determinant of a 2D matrix—the 2D cross product of two vectors.
+
+**Purpose:** Determine which side of a line a point is on.
+
+**Steps:**
+1. Create vector 1: line endpoint to target point
+2. Create vector 2: actual point-to-point segment
+3. Calculate: `(x1 * y2) - (x2 * y1)`
+
+**Result:** Single number where only the sign matters:
+- Positive → point is on the left side
+- Negative → point is on the right side
+- Zero → point sits on the line
+
+#### Triangle Point-in-Triangle Test
+
+Depending on how the triangle is drawn in `main()`, check both sides.
+
+Use strict `<` and `>` (not `<=` or `>=`) because if the point is on the line, it should return false.
+
+**Logic:**
+- Cross product is positive if P is on left side
+- Cross product is negative if P is on right side
+- Cross product is zero if P sits on the line
+
+**The test:** Point is inside if all signs are positive OR all negative. If mixed, the point crossed over an edge.
+
+#### Why Not Other Methods?
+
+**Barycentric coordinates:**
+- Require division
+- Risk of dividing by zero
+- Lose precision
+
+**Angle summation:**
+- Requires heavy floating-point trigonometry like `acos()`
+- Defeats the purpose of writing a fixed-point math class
+
+---
+
+## CPP03: Inheritance and Constructors
+
+*Coming soon...*
+
+---
+
+## CPP04: Polymorphism and Virtual Destructors
+
+*Coming soon...*
+
+---
+
+## Key Learnings
+
+### Memory Management
+- Understanding stack vs. heap allocation
+- When to use references vs. pointers
+- RAII pattern for automatic resource cleanup
+
+### Object-Oriented Design
+- Proper constructor/destructor patterns
+- Const correctness for performance and safety
+- Member function pointers for flexible dispatch
+
+### Operator Overloading
+- Making custom types behave like built-in types
+- Fixed-point arithmetic without floating-point operations
+- Efficient geometric algorithms using only integer math
+
+### Best Practices
+- Prefer `const` references to avoid unnecessary copies
+- Use initialization lists for const and reference members
+- Choose algorithms that avoid division and floating-point operations when precision matters
+
+---
+
+## Resources & References
+
+- 42 School C++ Modules (CPP00-CPP04)
+- The C++ Programming Language - Bjarne Stroustrup
+- Effective C++ - Scott Meyers
+
+---
+
+*Last updated: [Current progress through CPP02]*
