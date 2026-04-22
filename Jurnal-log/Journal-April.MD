@@ -10,9 +10,9 @@ A chronicle of my journey through C++ fundamentals, from basic OOP concepts to a
 |--------|----------|----------------------------|
 | CPP00  | 2 days   | Class basics, canon form   |
 | CPP01  | 2 days   | Memory, refs, pointers     |
-| CPP02  | 2 days   | Operator overloading       |
-| CPP03  | 3 days   | Inheritance, constructors  |
-| CPP04  | 2 days   | Polymorphism, virtual dtor |
+| CPP02  | 3 days   | Operator overloading       |
+| CPP03  | 6 days   | Inheritance, constructors  |
+| CPP04  | 6 days   | Polymorphism, virtual dtor |
 
 ---
 
