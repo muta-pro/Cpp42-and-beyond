@@ -316,6 +316,12 @@ Instead of casting to float and relying on processor's Floating Point Unit:
 - Increments immediately
 - Returns the new value
 
+**An operator expression is resolved based on the type of the left operand first.**
+Meaning a memeber operator is called always on the left operand.
+For the compiler order matters:   `3 * v1` & `v1 * 3` is not symmetric.
+That is why non-memeber operators remove assymmetry.
+It is about matching syntax shapes to function signatures.
+
 ---
 
 ### Ex03: BSP - Binary Space Partitioning
