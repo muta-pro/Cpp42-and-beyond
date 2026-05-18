@@ -6,11 +6,12 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 12:43:38 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:15:48 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 Bureaucrat::Bureaucrat() : _name("default"), _grade(150) {}
 //name here is const so can only be in init in member list
@@ -67,4 +68,15 @@ std::ostream &operator<<(std::ostream &out, const Bureaucrat &b)
 {
 	out << b.getName() << ", bureaucrat grade " << b.getGrade() << std::endl;
 	return out;
+}
+
+void signForm(Form &f) {
+	try {
+		f.beSigned(*this);
+		std::cout << _name << " signed " << f.getName() << std::endl;
+	}
+	catch (Form::TooHighExc &e) {
+		std::cout << _name << " cannot sign " << f.getName()
+		<< " because " << e.what() << std::endl;
+	}
 }

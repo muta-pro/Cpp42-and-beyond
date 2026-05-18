@@ -6,17 +6,30 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 12:07:16 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:15:52 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 int main()
 {
 	try {
-		Bureaucrat OK ("OK", 34);
-		std::cout << OK << std::endl;
+		Bureaucrat A ("A", 5);
+		Bureaucrat B ("B", 50);
+		Bureaucrat C ("C", 100);
+		std::cout << A;
+		std::cout << B;
+		std::cout << C;
+		std::cout << std::endl;
+
+		Form High ("TOP SECRET", 10, 5);
+		Form Low ("RANDOM", 100, 50);
+
+		std::cout << High;
+		std::cout << Low;
+		std::cout << std::endl;
 	}
 	catch (std::exception &e) {
 		std::cerr << "Except: " << e.what() << std::endl;
