@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 14:08:18 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/19 00:25:07 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ class Bureaucrat {
 			int _grade;
 };
 
-std::ostream &operator<<(std::ostream& os, const Bureaucrat& b);
+std::ostream &operator<<(std::ostream &out, const Bureaucrat& b);
 
 #endif
