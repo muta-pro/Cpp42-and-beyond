@@ -1,72 +1,93 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Form.cpp                                           :+:      :+:    :+:   */
+/*   AForm.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 00:01:58 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/19 23:36:49 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Form.hpp"
+#include "AForm.hpp"
 #include "Bureaucrat.hpp"
+#include <iostream>
+#include <cstdlib>
 
-Form::Form() : _name("default"), _isSigned(false), _gradeS(150), _gradeE(150) {}
+AForm::AForm() : _name("default"), _isSigned(false), _gradeS(150), _gradeE(150) {}
 
-Form::Form(const std::string &name, int gradeS, int gradeE) : _name(name),
+AForm::AForm(const std::string &name, int gradeS, int gradeE) : _name(name),
 	_isSigned(false), _gradeS(gradeS), _gradeE(gradeE) {
 		if (gradeS < 1 || _gradeE < 1)
-			throw Form::TooHighExc();
+			throw AForm::TooHighExc();
 		if (gradeS > 150 || _gradeE > 150)
-			throw Form::TooLowExc();
+			throw AForm::TooLowExc();
 	}
 
-Form::Form(const Form &copy) : _name(copy._name), _isSigned(copy._isSigned),
+AForm::AForm(const AForm &copy) : _name(copy._name), _isSigned(copy._isSigned),
 	_gradeS(copy._gradeS), _gradeE(copy._gradeE) {}
 
-Form &Form::operator=(const Form &assign) {
+AForm &AForm::operator=(const AForm &assign) {
 	if (this != &assign) {
 		_isSigned = assign._isSigned;
 	}
 	return *this;
 }
 
-Form::~Form() {}
+AForm::~AForm() {}
 
-const std::string &Form::getName() const {
+const std::string &AForm::getName() const {
 	return _name;
 }
 
-bool Form::getIsSigned() const {
+bool AForm::getIsSigned() const {
 	return _isSigned;
 }
 
-int Form::getGradeS() const {
+int AForm::getGradeS() const {
 	return _gradeS;
 }
 
-int Form::getGradeE() const {
+int AForm::getGradeE() const {
 	return _gradeE;
 }
 //interaction
-void Form::beSigned(const Bureaucrat &b) {
+void AForm::beSigned(const Bureaucrat &b) {
 	if (b.getGrade() > _gradeS) {
-		throw Form::TooLowExc();
+		throw AForm::TooLowExc();
 	}
 	_isSigned = true;
+	return ;
 }
 
-const char* Form::TooHighExc::what() const throw() {
+const char* AForm::TooHighExc::what() const throw() {
 	return "Form grade is too high";
 }
 
-const char* Form::TooLowExc::what() const throw() {
+const char* AForm::TooLowExc::what() const throw() {
 	return "Form grade is too low";
 }
 
-std::ostream &operator<<(std::ostream &out, const Form &f) {
+void AForm::execute(const Bureaucrat &b) const
+{
+	if (_isSigned == false)
+		throw (AForm::NotSignedExc());
+	if (b.getGrade() > _gradeE)
+		throw (AForm::TooLowExc());
+	beExec();
+	return ;
+}
+
+const char *AForm::AlreadySignedExc::what() const throw() {
+	return ("Form already signed");
+}
+
+const char *AForm::NotSignedExc::what() const throw() {
+	return ("Form has not be signed");
+}
+
+std::ostream &operator<<(std::ostream &out, const AForm &f) {
 	out << "\nForm: " << f.getName()
 		<< ", Signed: " << (f.getIsSigned() ? "Yes" : "No")
 		<< ", Grade required to sign: " << f.getGradeS()

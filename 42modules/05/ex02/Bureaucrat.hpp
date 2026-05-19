@@ -6,18 +6,18 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 14:08:18 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/19 23:17:56 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef Bureaucrat_HPP
 #define Bureaucrat_HPP
 
-#include <iostream>
+#include "AForm.hpp"
 #include <string>
-#include <exception>
 
-class Form;
+
+class AForm;
 
 class Bureaucrat {
 	public:
@@ -31,7 +31,9 @@ class Bureaucrat {
 			int getGrade() const;
 
 			void incGrade();
+			void incGrade(int i);
 			void decGrade();
+			void decGrade(int i);
 			//exception classes - nested class
 			//public means - access level(base methods remain pubblic)
 			class TooHighExc : public std::exception {
@@ -44,11 +46,15 @@ class Bureaucrat {
 				virtual const char *what() const throw();
 			};
 
-			void signForm(Form &f);
+			void signForm(AForm &f) const;
+			void execForm(AForm &f) const;
+
+			static const int highestG = 1;
+			static const int lowestG = 150;
 
 	private:
-			const std::string _name;
-			int _grade;
+			const std::string	_name;
+			int					_grade;
 };
 
 std::ostream &operator<<(std::ostream& os, const Bureaucrat& b);
