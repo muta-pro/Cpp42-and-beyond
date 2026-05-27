@@ -919,4 +919,13 @@ References and const make interfaces safe and expressive.
 Fixed-point numbers show how representation can be designed manually instead of taken for granted.
 
 
-## 
+## Error handling : diagonstics library
+
+**EXCEPTRIONS HANDLING** <exceptions>
+    1- LOGICAL ERRORS - consequence of a faulty program logic - preventible
+    2- RUNTIME ERRORS - dute to events beyond the scope of the program - unpredictable
+    3- SYSTEM ERRORS - OS errors, streams I/O, low-level API's
+    4- ASSERTION
+
+
+

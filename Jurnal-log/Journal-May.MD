@@ -1,6 +1,6 @@
 # C++ Learning Journal: 42 CPP Modules
  
-A chronicle of my journey through C++ fundamentals, from basic OOP concepts to advanced polymorphism and memory management.
+A chronicle of my journey through C++ fundamentals, from basic CPP concepts to advanced polymorphism and memory management.
  
 ---
  
@@ -20,25 +20,30 @@ A chronicle of my journey through C++ fundamentals, from basic OOP concepts to a
 05:
 ex00 - <exceptions> std::exeption -> base class;
 
+**TRY** - anticipation
+**THROW** - signal occurance
+**CATCH** - handle
+
 	std::bad_alloc - new
 	std::bad_cast - dynamic_cast
 	std::logic_error - internal logic
 	std::runtime_error
 
 
-~ exception class is design to be thrown and caught:
+# exception class is design to be thrown and caught:
 	they are used with **throw** and caught in **catch** blocks. 
 	- it inherite from the base class : public std::exception
-	- it creates a nested class - inside the main class who's rules becomes logically tied to exception.
-	- default public method waht() returns error message
+	- it creates a **nested class** - inside the main class who's rules becomes logically tied to exception.
+	- default public **method what() returns error message**
 		virtual: use my custom method version
 		const char* - standard C string return message
 		throw(): exception specification (promise to compiler that this fucntion won't call excep itself while other is handeled, to avoid crash)
 
-- the flow:
+# the flow: stack unwinding
 	throw happens - handeled by the class
-	program stops it's normal path - constructor aborts building the obj
-	skips all until the matching catch block : exceptions are matched by their data type
+	program stops it's normal path - constructor aborts building the obj -> call all it's destructors in local scope
+	->never throw from a destructor - would terminate the program
+	->skips all until the matching catch block : exceptions are matched by their data type
 	in the main we use base class match without specific type, it works because of inheritance and we just want the log message.
 	specific type is used in cases when we want to fix the problem or change the behaviour.
 	after chatch block finshes, the program continues.
