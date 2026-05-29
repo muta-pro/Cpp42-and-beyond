@@ -31,25 +31,51 @@ ex00 - <exceptions> std::exeption -> base class;
 
 
 # exception class is design to be thrown and caught:
-	they are used with **throw** and caught in **catch** blocks. 
-	- it inherite from the base class : public std::exception
-	- it creates a **nested class** - inside the main class who's rules becomes logically tied to exception.
-	- default public **method what() returns error message**
-		virtual: use my custom method version
-		const char* - standard C string return message
-		throw(): exception specification (promise to compiler that this fucntion won't call excep itself while other is handeled, to avoid crash)
+	they are used with throw and caught in catch blocks. 
+	-> it inherits from the base class : public std::exception
+	-> it creates a nested class inside the main class who's rules becomes logically tied to exception.
+	->> default public method what(): returns error message;
+		-virtual: use my custom method version
+		-const char* - standard C string return message
+		-what() const - won't modify exception object
+		-throw(): exception specification(promise that what() won't call excep itself while curr exc is handeled, to avoid crash)
 
 # the flow: stack unwinding
 	throw happens - handeled by the class
-	program stops it's normal path - constructor aborts building the obj -> call all it's destructors in local scope
-	->never throw from a destructor - would terminate the program
-	->skips all until the matching catch block : exceptions are matched by their data type
-	in the main we use base class match without specific type, it works because of inheritance and we just want the log message.
-	specific type is used in cases when we want to fix the problem or change the behaviour.
-	after chatch block finshes, the program continues.
+	program stops it's normal path: constructor aborts building the obj 
+	-> call all it's destructors in local scope: never throw from a destructor - would terminate the program
+	->skips all until the matching catch block : exceptions are matched by their DATA TYPE
+	->in the main we use base class match without specific type, it works because of inheritance and we just want the log message.
+	->specific type is used in cases when we want to fix the problem or change the behaviour.
+	->after chatch block finshes, the program continues.
 
-- catching by & and with *virtual* custom overriden what() -> **dynamic dispatch** 
+catching by & and with *virtual* custom overriden what()
+is **dynamic dispatch** 
+
+# hpp: clues
+because of const name: it must be set at instantiation if obj is created.
+because obj must instantiate a valid grade range an exception must be thrown if invalid.
+**to fullfill these requirements we need a parameterised consturctor that will initialise:**
+inside the block we check if valid, then assign. while name must be set at construction.
+
+# cpp: flow
+MAIN : TRIES(suspects) -> CLASS : THROWS(alarm) -> MAIN : CATCHES(the fix)
+
+the order of catch matching matters: always order from most specific(derived classes) to most generic(base classes)
+
+base class catch is a common use for log errors or to move on
+
+specific type when planning to fix a problem or react differently.
+
+
+
 
 ex01
+# DEPENDENCY : USES-A
+Form and Bureaucrat interact with Form -> Association
 
-Form and Bureaucrat interact
+WE HAVE BeSigned() and IsSigned() where they interact by reference.
+
+**The Bureaucrat asks the Form to sign it using form.beSigned(*this)*. The Form checks the Bureaucrat's credentials. If the credentials are bad, the Form throws an exception.**
+
+This is exactly why we can use a forward declaration (class Bureaucrat;) inside Form.hpp instead of #include "Bureaucrat.hpp". We are just telling the compiler: "Hey, a class called Bureaucrat exists. I'm going to take a reference to it in a function later, but I don't own one, so you don't need to build it right now." If they had a "HAS-A" relationship, the forward declaration wouldn't work, because the compiler would need to know exactly how many bytes of memory a Form takes up to put it inside the Bureaucrat object.

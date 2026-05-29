@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 12:43:38 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/29 13:33:14 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Bureaucrat::Bureaucrat() : _name("default"), _grade(150) {}
 Bureaucrat::Bureaucrat(const std::string &name, int grade) : _name(name) {
 	if (grade < 1)
 		throw Bureaucrat::TooHighExc();
+		//creates exception obj that is referenced in catch
 	if (grade > 150)
 		throw Bureaucrat::TooLowExc();
 	_grade = grade;

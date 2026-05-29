@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 00:25:07 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/29 13:41:34 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ class Bureaucrat {
 			Bureaucrat &operator=(const Bureaucrat &assign);
 			~Bureaucrat();
 
-			const std::string &getName() const;
-			int getGrade() const;
+			const std::string	&getName() const;
+			int					getGrade() const;
 
 			void incGrade();
 			void decGrade();
@@ -38,19 +38,18 @@ class Bureaucrat {
 			public:
 				virtual const char *what() const throw();
 			};
-
 			class TooLowExc : public std::exception {
 			public:
 				virtual const char *what() const throw();
 			};
 
-			void signForm(Form &f);
+			void	signForm(Form &f);//needs to know about Form
 
 	private:
-			const std::string _name;
-			int _grade;
+			const	std::string _name;
+			int		_grade;
 };
 
-std::ostream &operator<<(std::ostream &out, const Bureaucrat& b);
+std::ostream	&operator<<(std::ostream &out, const Bureaucrat& b);
 
 #endif

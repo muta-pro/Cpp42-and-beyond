@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/28 19:59:56 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/29 12:25:40 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,27 @@ class Bureaucrat {
 			Bureaucrat &operator=(const Bureaucrat &assign);
 			~Bureaucrat();
 
-			const std::string &getName() const;
-			int getGrade() const;
+			const std::string	&getName() const;
+			int		getGrade() const;
 
-			void incGrade();
-			void decGrade();
+			void	incGrade();
+			void	decGrade();
 			//exception classes - nested class
 			//public means - access level(base methods remain pubblic)
 			class TooHighExc : public std::exception {
 			public:
 				virtual const char *what() const throw();
 			};
-
 			class TooLowExc : public std::exception {
 			public:
 				virtual const char *what() const throw();
 			};
 
 	private:
-			const std::string _name; //const means pass during instantiation
-			int _grade;//is also passed during instantiation
+			const	std::string _name; //const means pass during instantiation
+			int		_grade;//is also passed during instantiation
 };
 
-std::ostream &operator<<(std::ostream &out, const Bureaucrat& b);
+std::ostream	&operator<<(std::ostream &out, const Bureaucrat& b);
 
 #endif

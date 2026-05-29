@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 00:07:15 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/29 14:21:41 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main()
 	catch (std::exception &e) {
 		std::cerr << "Except: " << e.what() << std::endl;
 	}
-	std::cout << "\nSigning Forms\n" << std::endl;
+	std::cout << "\nSigning Forms....\n" << std::endl;
 	try {
 		Bureaucrat A ("A", 5);
 		Bureaucrat B ("B", 50);
@@ -51,16 +51,16 @@ int main()
 	catch (std::exception &e) {
 		std::cerr << "Except. catch: " << e.what() << std::endl;
 	}
-	std::cout << "\nGrade variation:\n" << std::endl;
+	std::cout << "\n~Grade variation:\n" << std::endl;
 	try {
 		Bureaucrat C ("C", 50);
-		std::cout << "Start: " << C << std::endl;
+		std::cout << "\nStart: " << C << std::endl;
 		std::cout << "C gets decrement: " << std::endl;
 		C.decGrade();
 		C.decGrade();
 		std::cout << C; 
 		Bureaucrat D ("D", 150);
-		std::cout << "Start: " << D << std::endl;
+		std::cout << "\nStart: " << D << std::endl;
 		std::cout << "D gets increment: " << std::endl;
 		D.incGrade();
 		std::cout << D;
@@ -69,9 +69,10 @@ int main()
 	catch (std::exception &e) {
 		std::cerr << "Except. catch: " << e.what() << std::endl;
 	}
-	std::cout << "Exception handling: Bureaucrat with grade 0 \n" << std::endl;
+	std::cout << "\n~~Exception handling: Bureaucrat with grade 0 \n" << std::endl;
 	try {
 		Bureaucrat zero ("high", 0);
+		std::cerr << "skip" << std::endl;
 	}
 	catch (Bureaucrat::TooHighExc &e) {
 		std::cerr  << "Except. catch: " << e.what() << std::endl;

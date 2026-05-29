@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:04 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/18 23:57:17 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/29 13:47:46 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 
-class Bureaucrat;
+class Bureaucrat;//forward decl
 
 class Form {
 	public:
@@ -27,30 +27,28 @@ class Form {
 		Form &operator=(const Form &assign);
 		~Form();
 
-		const std::string &getName() const;
-		int getGradeS() const;
-		int getGradeE() const;
-		bool getIsSigned() const;
-
-		void beSigned(const Bureaucrat &b);
+		const std::string	&getName() const;
+		int					getGradeS() const; //const for const obj call
+		int					getGradeE() const;
+		bool				getIsSigned() const;
 
 		class TooHighExc : public std::exception {
 		public:
 			virtual const char *what() const throw();
 		};
-
 		class TooLowExc : public std::exception {
 		public:
 			virtual const char *what() const throw();
 		};
 
+		void	beSigned(const Bureaucrat &b);//needs to know about Bureau.
 	private:
-		const std::string _name;
-		bool  _isSigned;
-		const int _gradeS;
-		const int _gradeE;
+		bool				_isSigned;
+		const std::string	_name;
+		const int			_gradeS;
+		const int			_gradeE;
 };
 
-std::ostream &operator<<(std::ostream &out, const Form &f);
+std::ostream	&operator<<(std::ostream &out, const Form &f);
 
 #endif
