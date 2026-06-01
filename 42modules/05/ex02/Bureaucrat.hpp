@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/30 15:20:06 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/01 10:03:27 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ class Bureaucrat {
 			int					getGrade() const;
 
 			void incGrade();
-			void incGrade(int i);
 			void decGrade();
-			void decGrade(int i);
 			//exception classes - nested class
 			//public means - access level(base methods remain pubblic)
 			class TooHighExc : public std::exception {

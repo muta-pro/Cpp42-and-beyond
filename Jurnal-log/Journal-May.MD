@@ -79,3 +79,29 @@ WE HAVE BeSigned() and IsSigned() where they interact by reference.
 **The Bureaucrat asks the Form to sign it using form.beSigned(*this)*. The Form checks the Bureaucrat's credentials. If the credentials are bad, the Form throws an exception.**
 
 This is exactly why we can use a forward declaration (class Bureaucrat;) inside Form.hpp instead of #include "Bureaucrat.hpp". We are just telling the compiler: "Hey, a class called Bureaucrat exists. I'm going to take a reference to it in a function later, but I don't own one, so you don't need to build it right now." If they had a "HAS-A" relationship, the forward declaration wouldn't work, because the compiler would need to know exactly how many bytes of memory a Form takes up to put it inside the Bureaucrat object.
+
+Since Bureaucrat acts like a caller - trying to do risky job - we cave throw catch blocks inside cpp implementation.
+Because of encapusaltion - each class should handle their own business.
+
+ex02 : authorized behaviour
+encoding rules into code : permission levels ->abstract class
+objects behave like real things : follow same rules different behaviour
+force error handling
+# template for many forms - base abstract class AForm
+
+-template defines common behaviour
+-each concrete class implements unique action
+-handling of multiple forms and features/behaviours
+
+polymorphic excution: each subclass creates different execution of the form using same method.
+
+# static type vs dynamic type: 
+static array of pointers to AForm - new Form alloc
+dynamic forms[i++] -> execute forms - at runtime
+	correct implemetnation chosen at runtime based on type
+
+
+possible to add different forms.
+same checks - different actions;
+
+
