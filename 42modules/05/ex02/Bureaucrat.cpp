@@ -6,12 +6,12 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 23:39:10 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/01 09:57:08 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
 
 Bureaucrat::Bureaucrat() : _name("default"), _grade(150) {}
 //name here is const so can only be in init in member list
@@ -66,17 +66,32 @@ const char* Bureaucrat::TooLowExc::what() const throw() {
 
 std::ostream &operator<<(std::ostream &out, const Bureaucrat &b)
 {
-	out << b.getName() << " bureaucrat grade \n" << b.getGrade() << std::endl;
+	out << b.getName() << " bureaucrat grade: \n" << b.getGrade() << std::endl;
 	return out;
 }
 
-void Bureaucrat::signForm(Form &f) {
+void Bureaucrat::signForm(AForm &f) const {
 	try {
 		f.beSigned(*this);
 		std::cout << _name << " signed " << f.getName() << std::endl;
 	}
-	catch (Form::TooHighExc &e) {
+	catch (std::exception &e) {
 		std::cout << _name << " cannot sign " << f.getName()
+		<< " because " << e.what() << std::endl;
+	}
+}
+//takes ref from baseclass then calls concrete class exec and catches possible exc
+void Bureaucrat::execForm(AForm &f) const {
+	try {
+		f.execute(*this);
+		std::cout << _name << " executed " << f.getName() << std::endl;
+	}
+	catch (AForm::NotSignedExc &e) {
+		std::cout << _name << " cannot execute " << f.getName()
+		<< " because " << e.what() << std::endl;
+	}
+	catch (AForm::TooLowExc &e) {
+		std::cout << _name << " couldn't execute " << f.getName()
 		<< " because " << e.what() << std::endl;
 	}
 }

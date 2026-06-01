@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 NAME = Form
-SRC = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp  PresidentialPardonForm.cpp
+SRC = main.cpp Bureaucrat.cpp AForm.cpp ShubberyCreationForm.cpp RobotomyRequestForm.cpp  PresidentialPardonForm.cpp
 OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 $(NAME) : $(OBJ)

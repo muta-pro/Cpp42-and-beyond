@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 23:19:26 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 23:27:17 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/01 08:54:39 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,17 @@
 
 # include "AForm.hpp"
 
-class ShubberyCreationForm {
+class ShubberyCreationForm : public AForm {
 	public:
 			ShubberyCreationForm();
-			ShubberyCreationForm(const std::string &other);
+			ShubberyCreationForm(const std::string &target);
 			ShubberyCreationForm(const ShubberyCreationForm &copy);
 			ShubberyCreationForm &operator=(const ShubberyCreationForm &assign);
-			~ShubberyCreationForm();
+			virtual ~ShubberyCreationForm();
 
-			const std::string &getTarget() const;
-
-			void beExec() const;
-
-			static const int gradeS = 145;
-			static const int gradeE = 137;
+			virtual void	beExec(const Bureaucrat &executor) const;
 	private:
 		std::string 				_target;
-		static const std::string	_shubbery;
-		static const std::string	_shubberyAlt;
 };
 
 #endif

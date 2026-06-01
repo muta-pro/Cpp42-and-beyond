@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/29 13:41:34 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/30 13:05:38 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ class Bureaucrat {
 			void	signForm(Form &f);//needs to know about Form
 
 	private:
-			const	std::string _name;
-			int		_grade;
+			const std::string	_name;
+			int					_grade;
 };
 
 std::ostream	&operator<<(std::ostream &out, const Bureaucrat& b);

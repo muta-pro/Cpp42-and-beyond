@@ -6,31 +6,27 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 23:19:55 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 23:27:57 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/01 08:53:19 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PPF_HPP
-# define PPF_HPP
+#include "PresidentialPardonForm.hpp"
+#include "Bureaucrat.hpp"
 
-# include "AForm.hpp"
+PresidentialPardonForm::PresidentialPardonForm(const std::string &target)
+	: AForm("PresidentialPardonForm", 25, 5), _target(target) {}
 
-class PresidentialPardonForm : public AForm {
-	public:
-			PresidentialPardonForm();
-			PresidentialPardonForm(const std::string &other);
-			PresidentialPardonForm(const PresidentialPardonForm &copy);
-			PresidentialPardonForm &operator=(const PresidentialPardonForm &assign);
-			~PresidentialPardonForm();
+PresidentialPardonForm::PresidentialPardonForm(const PresidentialPardonForm &copy)
+	: AForm(copy), _target(copy._target) {}
 
-			const std::string &getTarget() const;
+PresidentialPardonForm &PresidentialPardonForm::operator=(const PresidentialPardonForm &assign) {
+	AForm::operator=(assign);
+	return *this;
+}
 
-			void beExec() const;
+PresidentialPardonForm::~PresidentialPardonForm() {}
 
-			static const int gradeS = 25;
-			static const int gradeE = 5;
-	private:
-		std::string _target;
-};
-
-#endif
+void PresidentialPardonForm::beExec(const Bureaucrat &executor) const {
+	(void)executor;
+	std::cout << _target << " has been pardoned by Zaphod Beeblebox. " << std::endl;
+}

@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/19 23:36:49 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/05/30 15:19:33 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void AForm::beSigned(const Bureaucrat &b) {
 		throw AForm::TooLowExc();
 	}
 	_isSigned = true;
-	return ;
 }
 
 const char* AForm::TooHighExc::what() const throw() {
@@ -68,14 +67,14 @@ const char* AForm::TooHighExc::what() const throw() {
 const char* AForm::TooLowExc::what() const throw() {
 	return "Form grade is too low";
 }
-
-void AForm::execute(const Bureaucrat &b) const
-{
-	if (_isSigned == false)
-		throw (AForm::NotSignedExc());
-	if (b.getGrade() > _gradeE)
-		throw (AForm::TooLowExc());
-	beExec();
+//template method
+void AForm::execute(const Bureaucrat &executor) const
+{//check happens one in base class
+	if (!_isSigned)
+		throw (NotSignedExc());
+	if (executor.getGrade() > _gradeE)
+		throw (TooLowExc());
+	beExec(executor); //virtual call
 	return ;
 }
 
