@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/03 16:57:41 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/03 12:50:42 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,6 @@ int main()
 	}
 	catch (std::exception &e) {
 		std::cout << "Caught: " << e.what() << std::endl;
-	}
-	try {
-		ShubberyCreationForm tree("direct_test");
-		A.execute(tree);
-	}
-	catch (std::exception &e) {
-		std::cout << "Exception caught: " << e.what() << std::endl;
 	}
 	return 0;
 }

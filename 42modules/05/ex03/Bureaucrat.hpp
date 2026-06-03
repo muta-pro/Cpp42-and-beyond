@@ -1,0 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Bureaucrat.hpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/06/01 10:03:27 by imutavdz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef Bureaucrat_HPP
+#define Bureaucrat_HPP
+
+#include "AForm.hpp"
+#include <string>
+
+
+class AForm;
+
+class Bureaucrat {
+	public:
+			Bureaucrat();
+			Bureaucrat(const std::string &name, int grade);
+			Bureaucrat(const Bureaucrat &copy);
+			Bureaucrat &operator=(const Bureaucrat &assign);
+			~Bureaucrat();
+
+			const std::string	&getName() const;
+			int					getGrade() const;
+
+			void incGrade();
+			void decGrade();
+			//exception classes - nested class
+			//public means - access level(base methods remain pubblic)
+			class TooHighExc : public std::exception {
+			public:
+				virtual const char *what() const throw();
+			};
+			class TooLowExc : public std::exception {
+			public:
+				virtual const char *what() const throw();
+			};
+
+			void	signForm(AForm &f) const;
+			void	execForm(AForm &f) const; //attment to exec form
+	private:
+			const std::string	_name;
+			int					_grade;
+};
+
+std::ostream	&operator<<(std::ostream& os, const Bureaucrat& b);
+
+#endif
