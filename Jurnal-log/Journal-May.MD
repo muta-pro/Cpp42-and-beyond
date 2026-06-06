@@ -104,4 +104,13 @@ dynamic forms[i++] -> execute forms - at runtime
 possible to add different forms.
 same checks - different actions;
 
+ex03: create obj from a string
+# factory method
+A factory function receives a name and creates the correct subclass object.
+We don't create forms manually. The caller doesn't have to know the class name. It tells what it needs then the factory class calls the appropriate class.
+If/else avoided by using dispatch table:
+to arrays that loops in a makeForm that returns a pointer to a newly created AForm object.
+So intern's job is object creation.
+Polymorphism: it retruns a generic form that can be any of the children forms of AForm class;
+
 

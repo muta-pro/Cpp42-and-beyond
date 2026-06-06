@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 08:59:11 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/03 12:50:42 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/06 15:24:38 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ShubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
+#include "Intern.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -22,66 +23,30 @@
 int main()
 {
 	srand(time(NULL));
+	Intern intern;
 
-	Bureaucrat A("A", 5);
-	Bureaucrat B("B", 75);
-	std::cout << A << B;
+	AForm *form01 = intern.makeForm("RobotomyRequestForm", "Bender");
+	AForm *form02 = intern.makeForm("PresidentialPardonForm", "Go");
 
-	ShubberyCreationForm shrubbery("park");
-	std::cout << shrubbery << std::endl;
-
-	A.signForm(shrubbery);
-	A.execForm(shrubbery);
-
-	RobotomyRequestForm robot("Marvin");
-	std::cout << robot << std::endl;
-
-	A.signForm(robot);
-	A.execForm(robot);
-
-	PresidentialPardonForm pardon("Prisoner");
-	std::cout << pardon << std::endl;
-
-	A.signForm(pardon);
-	A.execForm(pardon);
-
-	RobotomyRequestForm robot2("Target");
-	B.signForm(robot2);
-
-	ShubberyCreationForm tree("home");
-	A.execForm(tree);
-
-	ShubberyCreationForm tree2("garden");
-	B.signForm(tree2);
-	B.execForm(tree2);
-
-	std::cout << "\n Bureaucrat construction and inc/dec grades\n" << std::endl;
-
-	try {
-		Bureaucrat top("top", 0);
-		top.incGrade();
+	if (form01) {
+		std::cout << *form01 << std::endl;
+		delete form01;
 	}
-	catch (std::exception &e) {
-		std::cout << "Caught: " << e.what() << std::endl;
+	if (form02) {
+		std::cout << *form02 << std::endl;
+		delete form02;
 	}
-	try {
-		Bureaucrat bottom("bottom", 150);
-		bottom.decGrade();
-	}
-	catch (std::exception &e) {
-		std::cout << "Caught: " << e.what() << std::endl;
-	}
-	try {
-		Bureaucrat tooHigh("BOB", 0);
-	}
-	catch (std::exception &e) {
-		std::cout << "Caught: " << e.what() << std::endl;
-	}
-	try {
-		Bureaucrat tooLow("BOBY", 151);
-	}
-	catch (std::exception &e) {
-		std::cout << "Caught: " << e.what() << std::endl;
+
+	AForm *badFrom = intern.makeForm("BAD", "no one");
+	(void)badFrom;
+
+	Bureaucrat boss("Boss", 1);
+	//receives a pointer from intern and then uses it
+	AForm *form03 = intern.makeForm("ShubberyCreationForm", "Turtle");
+	if (form03) {
+		boss.signForm(*form03);
+		boss.execForm(*form03);
+		delete form03;
 	}
 	return 0;
 }
