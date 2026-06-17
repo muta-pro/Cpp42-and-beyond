@@ -31,7 +31,7 @@ ex00 - <exceptions> std::exeption -> base class;
 
 
 # exception class is design to be thrown and caught:
-	they are used with throw and caught in catch blocks. 
+	they are used with throw and catch in catch blocks. 
 	-> it inherits from the base class : public std::exception
 	-> it creates a nested class inside the main class who's rules becomes logically tied to exception.
 	->> default public method what(): returns error message;
@@ -80,7 +80,7 @@ WE HAVE BeSigned() and IsSigned() where they interact by reference.
 
 This is exactly why we can use a forward declaration (class Bureaucrat;) inside Form.hpp instead of #include "Bureaucrat.hpp". We are just telling the compiler: "Hey, a class called Bureaucrat exists. I'm going to take a reference to it in a function later, but I don't own one, so you don't need to build it right now." If they had a "HAS-A" relationship, the forward declaration wouldn't work, because the compiler would need to know exactly how many bytes of memory a Form takes up to put it inside the Bureaucrat object.
 
-Since Bureaucrat acts like a caller - trying to do risky job - we cave throw catch blocks inside cpp implementation.
+Since Bureaucrat acts like a caller - trying to do risky job - we gave throw catch blocks inside cpp implementation.
 Because of encapusaltion - each class should handle their own business.
 
 ex02 : authorized behaviour
