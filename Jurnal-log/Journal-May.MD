@@ -30,7 +30,7 @@ ex00 - <exceptions> std::exeption -> base class;
 	std::runtime_error
 
 
-# exception class is design to be thrown and caught:
+# exception class is designed to be thrown and caught:
 	they are used with throw and catch in catch blocks. 
 	-> it inherits from the base class : public std::exception
 	-> it creates a nested class inside the main class who's rules becomes logically tied to exception.
