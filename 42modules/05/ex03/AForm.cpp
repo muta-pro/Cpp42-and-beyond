@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/06 15:05:33 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:14:29 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ const char* AForm::TooHighExc::what() const throw() {
 const char* AForm::TooLowExc::what() const throw() {
 	return "Form grade is too low";
 }
-//template method
+//template method pattern
 void AForm::execute(const Bureaucrat &executor) const
 {//check happens one in base class
 	if (!_isSigned)

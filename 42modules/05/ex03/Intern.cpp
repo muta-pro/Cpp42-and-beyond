@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 17:03:12 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/06 15:03:44 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:14:27 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ AForm *Intern::makeForm(std::string fName, std::string fTarget) const {
 		"RobotomyRequestForm",
 		"ShubberyCreationForm"
 	};
-	//means pointers to functions that take string nad return AForm*
+	//means pointers to functions that take string and return AForm*
 	AForm *(*creators[3])(std::string) = {
 		&Intern::createPPF, 
 		&Intern::createRRF, 

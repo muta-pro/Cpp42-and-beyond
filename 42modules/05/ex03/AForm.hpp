@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:04 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/03 12:53:09 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/19 15:16:08 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class AForm {
 
 	private:
 		const std::string	_name;
-		bool					_isSigned;
+		bool				_isSigned;
 		const int			_gradeS;
 		const int			_gradeE;
 };

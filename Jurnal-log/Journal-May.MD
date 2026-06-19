@@ -70,7 +70,7 @@ specific type when planning to fix a problem or react differently.
 
 
 
-ex01
+	ex01
 # DEPENDENCY : USES-A
 Form and Bureaucrat interact with Form -> Association
 
@@ -83,8 +83,12 @@ This is exactly why we can use a forward declaration (class Bureaucrat;) inside 
 Since Bureaucrat acts like a caller - trying to do risky job - we gave throw catch blocks inside cpp implementation.
 Because of encapusaltion - each class should handle their own business.
 
-ex02 : authorized behaviour
+	ex02 : authorized behaviour
+	one abstract, beExec() is pure virtual, base class AForm delegating 3 concrete forms with own actions.
+	Bureaucrat can sign and execute them.
+	execute() uses template method: validation
 encoding rules into code : permission levels ->abstract class
+contains exceptions classes because of form logic.
 objects behave like real things : follow same rules different behaviour
 force error handling
 # template for many forms - base abstract class AForm
@@ -95,6 +99,10 @@ force error handling
 
 polymorphic excution: each subclass creates different execution of the form using same method.
 
+execute() - validation and delegation
+beExec() - virtual dispatch
+execForm() - public interface - bureaucrat 
+
 # static type vs dynamic type: 
 static array of pointers to AForm - new Form alloc
 dynamic forms[i++] -> execute forms - at runtime
@@ -104,13 +112,19 @@ dynamic forms[i++] -> execute forms - at runtime
 possible to add different forms.
 same checks - different actions;
 
-ex03: create obj from a string
+	ex03: create obj from a string
 # factory method
 A factory function receives a name and creates the correct subclass object.
 We don't create forms manually. The caller doesn't have to know the class name. It tells what it needs then the factory class calls the appropriate class.
 If/else avoided by using dispatch table:
-to arrays that loops in a makeForm that returns a pointer to a newly created AForm object.
+two arrays that loops in a makeForm that returns a pointer to a newly created AForm object.
 So intern's job is object creation.
 Polymorphism: it retruns a generic form that can be any of the children forms of AForm class;
+
+## rand() - fake random number generator
+	srand(n) - sets the starting point - without it program runs the same squence 
+	time(NULL) - returns current Unix timestamp - starting point number -> robotomy result varies.
+	rand() % 2 gives 0 or 1: in real life we'd use <random> or /dev/urandom
+
 
 
