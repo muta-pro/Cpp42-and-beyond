@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:40:26 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/04/07 02:21:49 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/19 13:55:00 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 DiamondTrap::DiamondTrap() : ClapTrap("def_clap_name"),
 ScavTrap(), FragTrap(), _Name("default") {
 	std::cout << "DiamondTrap default Constructor called" << std::endl;
-	_HitPoints = FragTrap::_HitPoints;
-	_EnergyPoints = ScavTrap::_EnergyPoints;
-	_AttackDamage = FragTrap::_AttackDamage;
+	_HitPoints = FragTrap::C_HitPoints;
+	_EnergyPoints = ScavTrap::C_EnergyPoints;
+	_AttackDamage = FragTrap::C_AttackDamage;
 }
 
 DiamondTrap::DiamondTrap(const DiamondTrap &copy)
@@ -42,6 +42,10 @@ DiamondTrap::~DiamondTrap() {
 DiamondTrap::DiamondTrap(const std::string &name) : ClapTrap(name + "_clap_name"),
 				ScavTrap(name), FragTrap(name), _Name(name) {
 	std::cout << "DiamondTrap Name Constructor called" << std::endl;
+	//force the correct values using static cosnts
+	_HitPoints = FragTrap::C_HitPoints;
+	_EnergyPoints = ScavTrap::C_EnergyPoints;
+	_AttackDamage = FragTrap::C_AttackDamage;
 }
 
 void DiamondTrap::attack(const std::string &target) {

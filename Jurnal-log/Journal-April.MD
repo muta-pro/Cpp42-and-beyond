@@ -145,6 +145,14 @@ class FragTrap : virtual public ClapTrap
 1. **Duplicate base subobject:** Solved by virtual inheritance
 2. **Same-function-name:** Solved by explicit qualification (e.g., `ScavTrap::attack()`)
 
+#### Constructor overwriting problem: 
+    
+    when Diamond obj is created - constructors are called in an order that each call overwrites the values of shared variables of the previous. 
+
+    SOLUTION is the use of static const vars in parent class to set correct values.
+    Because of virtual inheritance, ScavTrap::_EnergyPoints is not a separate variable. It points to the exact same shared foundation variable that FragTrap just changed to 100.
+
+
 ---
 
 ## CPP04: Polymorphism and Virtual Destructors
