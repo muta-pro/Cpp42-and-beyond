@@ -40,8 +40,8 @@ ex00 - <exceptions> std::exeption -> base class;
 		-what() const - won't modify exception object
 		-throw(): exception specification(promise that what() won't call excep itself while curr exc is handeled, to avoid crash)
 
-# the flow: stack unwinding
-	throw happens - handeled by the class
+# the throw flow: stack unwinding
+**throw by value happens** - handeled by the class
 	program stops it's normal path: constructor aborts building the obj 
 	-> call all it's destructors in local scope: never throw from a destructor - would terminate the program
 	->skips all until the matching catch block : exceptions are matched by their DATA TYPE
@@ -49,8 +49,8 @@ ex00 - <exceptions> std::exeption -> base class;
 	->specific type is used in cases when we want to fix the problem or change the behaviour.
 	->after chatch block finshes, the program continues.
 
-catching by & and with *virtual* custom overriden what()
-is **dynamic dispatch** 
+**catching by &** and with *virtual* custom overriden what() polymorphism is **dynamic dispatch** :
+	the fucntion that runs is decided by the obj not the type
 
 # hpp: clues
 because of const name: it must be set at instantiation if obj is created.
@@ -71,8 +71,10 @@ specific type when planning to fix a problem or react differently.
 
 
 	ex01
-# DEPENDENCY : USES-A
+# DEPENDENCY : USES-A - weakest class relashionship
 Form and Bureaucrat interact with Form -> Association
+
+different from *aggregation* - a pointer/reference memeber - but owner doesn't control obj's lifetime
 
 WE HAVE BeSigned() and IsSigned() where they interact by reference.
 
@@ -83,8 +85,8 @@ This is exactly why we can use a forward declaration (class Bureaucrat;) inside 
 Since Bureaucrat acts like a caller - trying to do risky job - we gave throw catch blocks inside cpp implementation.
 Because of encapusaltion - each class should handle their own business.
 
-	ex02 : authorized behaviour
-	one abstract, beExec() is pure virtual, base class AForm delegating 3 concrete forms with own actions.
+	ex02 : authorized behaviour. no generic Form
+## one abstract, beExec() is pure virtual, base class AForm delegating 3 concrete forms with own actions.
 	Bureaucrat can sign and execute them.
 	execute() uses template method: validation
 encoding rules into code : permission levels ->abstract class
@@ -103,23 +105,32 @@ execute() - validation and delegation
 beExec() - virtual dispatch
 execForm() - public interface - bureaucrat 
 
-# static type vs dynamic type: 
+# static type vs dynamic type: polymorphism and virtual
 static array of pointers to AForm - new Form alloc
 dynamic forms[i++] -> execute forms - at runtime
 	correct implemetnation chosen at runtime based on type
 
-
+# open-closed principle (class is open for extention but closed for modification)
 possible to add different forms.
+AForm::execute();
 same checks - different actions;
 
 	ex03: create obj from a string
-# factory method
+# factory pattern method - allocating memory
 A factory function receives a name and creates the correct subclass object.
 We don't create forms manually. The caller doesn't have to know the class name. It tells what it needs then the factory class calls the appropriate class.
 If/else avoided by using dispatch table:
 two arrays that loops in a makeForm that returns a pointer to a newly created AForm object.
 So intern's job is object creation.
 Polymorphism: it retruns a generic form that can be any of the children forms of AForm class;
+
+Function Pointer Array
+ - create array of x things: creators[3]
+ - * creators[3]: things are pointers, to funcitons
+ - (std::string) : these functions take string as param
+ - * AFrom: will return pointer to base abstract class 
+
+these creation functions are static -> they don't get the * this pointer. 
 
 ## rand() - fake random number generator
 	srand(n) - sets the starting point - without it program runs the same squence 
