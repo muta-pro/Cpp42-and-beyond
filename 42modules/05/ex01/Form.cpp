@@ -6,14 +6,12 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/29 14:13:35 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/23 00:16:30 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Form.hpp"
 #include "Bureaucrat.hpp"
-
-Form::Form() : _isSigned(false), _name("default"), _gradeS(150), _gradeE(150) {}
 
 Form::Form(const std::string &name, int gradeS, int gradeE) :
 	_isSigned(false), _name(name), _gradeS(gradeS), _gradeE(gradeE) {
@@ -23,17 +21,12 @@ Form::Form(const std::string &name, int gradeS, int gradeE) :
 			throw Form::TooLowExc();
 	}
 
-Form::Form(const Form &copy) : _isSigned(copy._isSigned), _name(copy._name),
-	_gradeS(copy._gradeS), _gradeE(copy._gradeE) {}
-
 Form &Form::operator=(const Form &assign) {
 	if (this != &assign) {
 		_isSigned = assign._isSigned;
 	}
 	return *this;
 }
-
-Form::~Form() {}
 
 const std::string	&Form::getName() const {
 	return _name;

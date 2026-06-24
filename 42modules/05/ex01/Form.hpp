@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 12:45:04 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/29 13:47:46 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/23 00:22:00 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ class Bureaucrat;//forward decl
 
 class Form {
 	public:
-		Form();
+		Form() = default;
 		Form(const std::string &name, int gradeS, int gradeE);
-		Form(const Form &copy);
+		Form(const Form &copy) = default;
 		Form &operator=(const Form &assign);
-		~Form();
+		~Form() = default;
 
 		const std::string	&getName() const;
 		int					getGradeS() const; //const for const obj call
@@ -34,14 +34,14 @@ class Form {
 
 		class TooHighExc : public std::exception {
 		public:
-			virtual const char *what() const throw();
+			const char *what() const noexcept override;
 		};
 		class TooLowExc : public std::exception {
 		public:
-			virtual const char *what() const throw();
+			const char *what() const noexcept override;
 		};
 
-		void	beSigned(const Bureaucrat &b);//needs to know about Bureau.
+		[[nodiscard]] bool	beSigned(const Bureaucrat &b) noexcept;//needs to know about Bureau.
 	private:
 		bool				_isSigned;
 		const std::string	_name;

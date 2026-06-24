@@ -1,15 +1,17 @@
-CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g -fsanitize=address -MMD -MP
 NAME = Form
 SRC = main.cpp Bureaucrat.cpp Form.cpp
 OBJ = $(SRC:.cpp=.o)
+DEP = $(OBJ:.o=.d)
 all: $(NAME)
 $(NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+-include $(DEP)
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(DEP)
 fclean: clean
 	$(RM) $(NAME)
 re: fclean all

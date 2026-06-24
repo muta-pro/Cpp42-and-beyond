@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:49:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/05/30 13:05:38 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/23 00:20:18 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ class Form;
 
 class Bureaucrat {
 	public:
-			Bureaucrat();
+			Bureaucrat() = default;
 			Bureaucrat(const std::string &name, int grade);
-			Bureaucrat(const Bureaucrat &copy);
+			Bureaucrat(const Bureaucrat &copy) = default;
 			Bureaucrat &operator=(const Bureaucrat &assign);
-			~Bureaucrat();
+			~Bureaucrat() = default;
 
 			const std::string	&getName() const;
 			int					getGrade() const;
@@ -36,14 +36,17 @@ class Bureaucrat {
 			//public means - access level(base methods remain pubblic)
 			class TooHighExc : public std::exception {
 			public:
-				virtual const char *what() const throw();
+				const char *what() const noexcept override;
 			};
 			class TooLowExc : public std::exception {
 			public:
-				virtual const char *what() const throw();
+				const char *what() const noexcept override;
 			};
 
 			void	signForm(Form &f);//needs to know about Form
+
+			static constexpr int minGrade = 1;
+			static constexpr int maxGrade = 150;
 
 	private:
 			const std::string	_name;
