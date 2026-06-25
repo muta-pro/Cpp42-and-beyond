@@ -61,7 +61,32 @@ also if used in algorithms when iterator value is non unsigned char.
 # handling numeric limits <limits>
 	to check max allowable values before cast: 
 	std::numeric_limits<int>max()/min()
+overflow:
+- parsing -> if too big std::stoi autmatically throws out_of_range exception
+- downcasting -> from double to int/float: <limits>
 
 # architecture: 
-**internal linkage** - static functions
-Detection: 
+solution for helper fucntions option 1 - **anonymus namespace**
+namespace {pervent naming collisions}
+
+solution option 2 - **internal linkage** - static functions
+
+Detection:  process of elimination
+
+conversion:
+Standard C++ scalar conversion truncates floating-point numbers when casting to integer types. - char becomes ASCII
+
+ex01: 
+# type punning/ raw mem reinterpret.
+
+reinterpret_cast<type> :
+serialize: treat mem add as positive number
+deserialize: the reverse
+safety:
+ => uintptr_t <cstdlib>
+ 	*unsigned int ptr type*
+ensures the same size as pointer: never to lose data when casting
+
+ex02:
+# RunTime type identification
+	dynamic_cast & polymorphism

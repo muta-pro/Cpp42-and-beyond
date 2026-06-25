@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:13:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/25 05:30:04 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/25 06:37:12 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace {
 	void	printFromFloat(float n) {
 
 		std::cout << "char: ";
-		if (n < 0 || n > 127) {
+		if (std::isnan(n) || n < 0 || n > 127) {
 			std::cout << "impossible\n";
 		} else {
 			char	c = static_cast<char>(n);
@@ -81,9 +81,13 @@ namespace {
 			std::cout << "double: " << d << "\n";
 			std::cout << "float: " << n << "f\n";
 		}
-		else if (n == static_cast<int>(n)) {
+		else if (!std::isnan(n) && !std::isinf(n) && n == static_cast<int>(n)) {
 			std::cout << "double: " << d << ".0\n";
 			std::cout << "float: " << n << ".0f\n";
+		}
+		else {
+			std::cout << "double: " << d << "\n";
+			std::cout << "float: " << n << "f\n";
 		}
 	}
 	void printFromInt(int n) {
@@ -104,14 +108,16 @@ namespace {
 	}
 	
 	void printFromDouble(double n) {
-		char	c = static_cast<char>(n);
 		std::cout << "char: ";
-		if (n < 0 || n > 127) {
+		if (std::isnan(n) || n < 0 || n > 127) {
 			std::cout << "impossible\n";
-		} else if (!std::isprint(c)) {
-			std::cout << "Non displayable\n";
 		} else {
-			std::cout << "'" << c << "'\n";
+			char	c = static_cast<char>(n);
+			if (!std::isprint(c)) {
+				std::cout << "Non displayable\n";
+			} else {
+				std::cout << "'" << c << "'\n";
+			}
 		}
 		if (n > std::numeric_limits<int>::max() || n < std::numeric_limits<int>::min()
 				|| n != n)
@@ -120,19 +126,28 @@ namespace {
 			int		a = static_cast<int>(n);
 			std::cout << "int: " << a << "\n";
 		}
-		if (n > std::numeric_limits<float>::max())
+		if (n != n)
+			std::cout << "float: nanf\n";
+		else if (n > std::numeric_limits<float>::max())
 			std::cout << "float: inff\n";
 		else if (n < -std::numeric_limits<float>::max())
 			std::cout << "float: -inff\n";
 		else {
 			float	f = static_cast<float>(n);
-			if (f == static_cast<int>(f))
+			if (f < static_cast<float>(std::numeric_limits<int>::max())
+				&& f > static_cast<float>(std::numeric_limits<int>::min())
+					&& f == static_cast<int>(f))
 				std::cout << "float: " << f << ".0f\n";
 			else
 				std::cout << "float: " << f << "f\n";
 		}
-		std::cout << "double: " << n << "\n";
+		if (!std::isnan(n) && !std::isinf(n)
+				&& n == static_cast<int>(n) && n < 1000000 && n > -1000000)
+			std::cout << "double: " << n << ".0\n";
+		else
+			std::cout << "double: " << n << "\n";
 	}
+	
 	void printFromChar(char c) {
 		double	d = static_cast<double>(c);
 		int		a = static_cast<int>(c);
