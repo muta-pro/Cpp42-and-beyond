@@ -1,12 +1,12 @@
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g -fsanitize=address -MDD -MP
+CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g -fsanitize=undefined,float-cast-overflow -MMD -MP
 NAME = convert
 SRC = ScalarConverter.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 DEP = $(OBJ:.o=.d)
 all: $(NAME)
-	$(NAME) : $(OBJ)
-		$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+$(NAME) : $(OBJ)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 -include $(DEP)

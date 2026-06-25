@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:13:37 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/23 19:17:29 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/25 05:26:05 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <limits>
+#include <cmath>
+#include <cctype>
 
 class ScalarConverter {
 	public:

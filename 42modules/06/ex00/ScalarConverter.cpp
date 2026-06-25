@@ -6,46 +6,147 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:13:34 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/24 13:36:17 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/25 05:30:04 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
 
-static  e_type detecType(std::string &s) {
+namespace {
+	enum e_type {CHAR_T, INT_T, FLOAT_T, DOUBLE_T, UNKNOWN_T};
 
-}
+	e_type 	detectType(const std::string &s) {
+		if (s == "nan" || s == "+inf" || s == "-inf")
+			return DOUBLE_T;
+		if (s == "nanf" || s == "-inff" || s == "+inff")
+			return FLOAT_T;
+		if (s.length() == 1 && !std::isdigit(s[0]))
+			return CHAR_T;
+		bool hasD = false;
+		bool hasF = false;
+		bool hasDigit = false;
 
-static void printFromFloat(float n) {
-	std::cout << "float: " << n;
-}
-static void printFromInt(int n) {
-	char c = static_cast<char>(n);
-	float f = static_cast<char>(n);
-	double d = static_cast<char>(n);
-
-	std::cout << "char :";
-	if (n < 0 || n > 127) {
-		std::cout << "impossible\n";
-	} else if (!std::isprint(c)) {
-		std::cout << "Non displayable\n";
-	} else {
-		std::cout << "'" << c << "'\n";
+		size_t i = 0;
+		if (s[i] == '+' || s[i] == '-') {
+			i++;
+		}
+		if (i == s.length())
+			return UNKNOWN_T;
+		for (; i < s.length(); i++) {
+			if (std::isdigit(s[i]))
+				hasDigit = true;
+			else if (s[i] == '.') {
+				if (hasD)
+					return UNKNOWN_T;
+				hasD = true;
+			}
+			else if (s[i] == 'f') {
+				if (hasF || i != s.length() - 1 || !hasD || !hasDigit) {
+					return UNKNOWN_T;
+				}
+				hasF = true;
+			}
+			else
+				return UNKNOWN_T;
+		}
+		if (!hasDigit)
+			return UNKNOWN_T;
+		if (hasF)
+			return FLOAT_T;
+		if (hasD)
+			return DOUBLE_T;
+		return INT_T;
 	}
-	std::cout << "int: " << n << "\n";
-	std::cout << "float: " << f << "\n";
-	std::cout << "double: " << d << "\n";
-}
+	void	printFromFloat(float n) {
 
-static void printFromDouble(double n) {
-	std::cout << "double: " << n;
-}
-static void printChar(char c) {
-	std::cout << "char: " << c;
+		std::cout << "char: ";
+		if (n < 0 || n > 127) {
+			std::cout << "impossible\n";
+		} else {
+			char	c = static_cast<char>(n);
+			if (!std::isprint(c))
+				std::cout << "Non displayable\n";
+			else
+				std::cout << "'" << c << "'\n";
+		}
+		if (n >= static_cast<float>(std::numeric_limits<int>::max())
+			 || n <= static_cast<float>(std::numeric_limits<int>::min()) || n != n)
+			std::cout << "int: impossible\n";
+		else {
+			int		a = static_cast<int>(n);
+			std::cout << "int: " << a << "\n";
+		}
+		double	d = static_cast<double>(n);
+		if (std::isnan(n) || std::isinf(n)) {
+			std::cout << "double: " << d << "\n";
+			std::cout << "float: " << n << "f\n";
+		}
+		else if (n == static_cast<int>(n)) {
+			std::cout << "double: " << d << ".0\n";
+			std::cout << "float: " << n << ".0f\n";
+		}
+	}
+	void printFromInt(int n) {
+		char	c = static_cast<char>(n);
+		float	f = static_cast<float>(n);
+		double	d = static_cast<double>(n);
+		
+		std::cout << "char: ";
+		if (n < 0 || n > 127) {
+			std::cout << "impossible\n";
+		} else if (!std::isprint(c)) {
+			std::cout << "Non displayable\n";
+		} else
+			std::cout << "'" << c << "'\n";
+		std::cout << "int: " << n << "\n";
+		std::cout << "float: " << f << ".0f\n";
+		std::cout << "double: " << d << ".0\n";
+	}
+	
+	void printFromDouble(double n) {
+		char	c = static_cast<char>(n);
+		std::cout << "char: ";
+		if (n < 0 || n > 127) {
+			std::cout << "impossible\n";
+		} else if (!std::isprint(c)) {
+			std::cout << "Non displayable\n";
+		} else {
+			std::cout << "'" << c << "'\n";
+		}
+		if (n > std::numeric_limits<int>::max() || n < std::numeric_limits<int>::min()
+				|| n != n)
+			std::cout << "int: impossible\n";
+		else {
+			int		a = static_cast<int>(n);
+			std::cout << "int: " << a << "\n";
+		}
+		if (n > std::numeric_limits<float>::max())
+			std::cout << "float: inff\n";
+		else if (n < -std::numeric_limits<float>::max())
+			std::cout << "float: -inff\n";
+		else {
+			float	f = static_cast<float>(n);
+			if (f == static_cast<int>(f))
+				std::cout << "float: " << f << ".0f\n";
+			else
+				std::cout << "float: " << f << "f\n";
+		}
+		std::cout << "double: " << n << "\n";
+	}
+	void printFromChar(char c) {
+		double	d = static_cast<double>(c);
+		int		a = static_cast<int>(c);
+		float	f = static_cast<float>(c);
+
+		std::cout << "char: '" << c << "'\n";
+		std::cout << "int: " << a << "\n";
+		std::cout << "float: " << f << ".0f\n";
+		std::cout << "double: " << d << ".0\n";
+	}
 }
 
 void ScalarConverter::convert(const std::string &s) {
-	int t = detectType(s);
+	e_type t = detectType(s);
 	switch(t) {
 	case INT_T:
 		try 
@@ -53,7 +154,7 @@ void ScalarConverter::convert(const std::string &s) {
 			int val = std::stoi(s);
 			printFromInt(val);
 		} catch (const std::exception &e) {
-			std::cout << "char:impossible\nint:impossible\nfloat:impossible\ndouble:impossible\n";
+			std::cout << "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible\n";
 		}
 		break ;
 	case FLOAT_T:
@@ -62,7 +163,7 @@ void ScalarConverter::convert(const std::string &s) {
 			float val = std::stof(s);
 			printFromFloat(val);
 		} catch (const std::exception &e) {
-			std::cout << "char:impossible\nint:impossible\nfloat:impossible\ndouble:impossible\n";
+			std::cout << "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible\n";
 		}
 		break ;
 	case DOUBLE_T:
@@ -70,27 +171,18 @@ void ScalarConverter::convert(const std::string &s) {
 		{
 			double val = std::stod(s);
 			printFromDouble(val);
-		} catch {
-			std::cout << "char:impossible\nint:impossible\nfloat:impossible\ndouble:impossible\n";
-		}
-	case CHAR_T:
-		{
-			char val = s[0];
-			printFromChar(val);
+		} catch (const std::exception &e) {
+			std::cout << "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible\n";
 		}
 		break ;
-	case PSEUDO_T:
-		try
+	case CHAR_T:
 		{
-
+			printFromChar(s[0]);
+			break ;
 		}
-		}
-		catch (const std::invalid_argument &e) {
-			std::cout << "Err: not a valid number." << std::endl;
-		}
-		catch (const std::out_of_range & e) {
-			std::cout << "impossible" << std::endl;
-		}
+		break ;
+	case UNKNOWN_T:
+		std::cout << "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible\n";
+		break ;
 	}
-	outputCast(val);
 }
