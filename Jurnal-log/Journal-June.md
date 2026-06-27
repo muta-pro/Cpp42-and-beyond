@@ -73,6 +73,12 @@ solution option 2 - **internal linkage** - static functions
 
 Detection:  process of elimination
 
+# NaN - undefined vale of a numeric data type, often floatinf-point ->read more..
+	the check of  variable if it's a NotANumber is done by comparing it t itself - x != x = true;
+	all other comparisons give false/  IEEE 754 defines every relational comparison with NaN as false.
+
+
+
 conversion:
 Standard C++ scalar conversion truncates floating-point numbers when casting to integer types. - char becomes ASCII
 
@@ -88,5 +94,18 @@ safety:
 ensures the same size as pointer: never to lose data when casting
 
 ex02:
-# RunTime type identification
-	dynamic_cast & polymorphism
+# RunTime type identification - RTTI
+**dynamic_cast & software architecture concept: polymorphism**
+
+	* hiding a specific object behind a generic base pointer: Heterogeneous Collections - This makes code infinitely scalable.
+
+polymorphism means - having a base class that covers the subclasses object's type. The way for compiler to find out about the type is by dynamic_casting/
+
+because the generate() returns a pointer to base class - we can't know what obj was created.
+
+# virtual distructor : necessary for dynamic casting
+ - class must be polymorphic : it gets a **VTABLE: virtual method table** holds info about exact class type - during run time compiler peeks at vtable under the base interface.
+
+then we identify by pointer or by reference:
+
+1- by passing the pointer
