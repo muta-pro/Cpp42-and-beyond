@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 08:53:27 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/06/25 10:54:36 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/06/28 11:00:26 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void identify(Base &p) {
 	catch (const std::exception &e) {}
 	try {
 		(void)dynamic_cast<C&>(p);
-		std::cout << "\nreference B";
+		std::cout << "\nreference C";
 		return;
 	}
 	catch (const std::exception &e) {}
@@ -72,7 +72,7 @@ void identify(Base &p) {
 }
 
 int main()
-{
+{	//casting to unsigned int bc time returns 64bits and srand() expects 32bits
 	std::srand(static_cast<unsigned int>(std::time(NULL)));
 
 	for (int i = 0; i < 5; i++) {

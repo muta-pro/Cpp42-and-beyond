@@ -93,6 +93,41 @@ safety:
  	*unsigned int ptr type*
 ensures the same size as pointer: never to lose data when casting
 
+# webserv reference: OS API meets c++ (epoll event loop exapmle)
+	how server handles multiple connections
+	
+	OS gives a struct to register events: - provides generic field to attach user 	data - 64 int or void*	
+	
+	struct os_event {
+		uint32_t event_type;
+		uint64_t user_data;
+	}
+	execution - Client obj lifecycle through OS kernel and back
+	
+	class Client {
+		public:
+		int socket_fd;
+		std::string request_buffer;
+	
+		void handleIncomingData()
+		std::cout << "handle data for socket: " << socket_fd << std::endl;
+	}
+	
+	Client *newClientConnectrion* = new Client();
+	newClientConnection->socket_fd = 5;
+	
+	at this point we want OS to inform when socket 5 has incoming data - os_event config struct -> serializer logic useful
+
+	struct os_event ev;
+	ev.event_type = 1;
+	ev.usr_data = reinterpret_cast<uintptr_t>(newClient);
+	register_event_with_os(newClient->socket_fd, &ev);
+
+	we cast pinter to int and hand it off to OS kernel that puts it into queue and goes to sleep- wakes up when socket 5 has data.
+
+	after client sends HTTP GET request OS sneds list of active events:
+
+
 ex02:
 # RunTime type identification - RTTI
 **dynamic_cast & software architecture concept: polymorphism**
@@ -109,3 +144,8 @@ because the generate() returns a pointer to base class - we can't know what obj 
 then we identify by pointer or by reference:
 
 1- by passing the pointer
+
+2- by reference - we pass an obj in a try/catch block - bc cannot return nullptr, we need to throw exception (std::bad_cast) to move to next type.
+
+casting by pointer is asking a question, and looking at the answer.
+by reference we don't store the answer we just wait for the try/catch block to react, so casting needs to e silenced with (void), because we don't care abput return value;
