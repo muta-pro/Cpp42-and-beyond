@@ -15,11 +15,15 @@ when functions should perform identical operations on different data types;
 used for data structures where internal logic is the same regardless of what data is being stored;
 
 templates are used when:
-- building containers - linkedlist, stack, queue - > class containers to hold anythyng
+- building containers - linkedlist, stack, queue - > class templates to hold anythyng
 
 - generic algorythms - sorting/searching/swapping
 
-- utility/conversion functions
+- utility/conversion functions - overloading func
 
 ex00:
+optimisatoin:
+for swap, instead of making copies, we transfer ownership using **std::move();** -> CAST: LVALUE treated as RVALUE (temp value)
+
+expressions: lvalue and rvalue;
 

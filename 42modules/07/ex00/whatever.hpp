@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 17:06:57 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/07/01 18:33:09 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/07/03 14:03:55 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,16 @@
 
 #include <string>
 #include <iostream>
-#include <.h>
 
 template <typename T>
 void swap(T& a, T& b) {
-	T temp = a;
-	a = b;
-	b = temp;
+	T temp = (std::move(a));
+	a = std::move(b);
+	b = std::move(temp);
 }
 
 template <typename T>
-const T& min(T& a, T& b) {
+const T& min(const T& a, const T& b) {
 	if (a < b)
 		return a;
 	else
@@ -34,7 +33,7 @@ const T& min(T& a, T& b) {
 }
 
 template <typename T>
-const T& max(T& a, T& b) {
+const T& max(const T& a, const T& b) {
 	if (a > b)
 		return a;
 	else
