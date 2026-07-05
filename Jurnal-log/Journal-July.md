@@ -26,4 +26,10 @@ optimisatoin:
 for swap, instead of making copies, we transfer ownership using **std::move();** -> CAST: LVALUE treated as RVALUE (temp value)
 
 expressions: lvalue and rvalue;
+const T&
+T&& binds only to rvalues
+
+ex01:
+iter - temp. func. : 
+ function pointers: address to a fucntion
 
