@@ -21,7 +21,7 @@ templates are used when:
 
 - utility/conversion functions - overloading func
 
-ex00:
+ex00: iter - apply function to every element - func passed as a value
 optimisatoin:
 for swap, instead of making copies, we transfer ownership using **std::move();** -> CAST: LVALUE treated as RVALUE (temp value)
 
@@ -29,7 +29,31 @@ expressions: lvalue and rvalue;
 const T&
 T&& binds only to rvalues
 
-ex01:
-iter - temp. func. : 
+ex01: two-template-param design
+iter - temp. func. : 2 levels of genericity: type to iterate over plus the behaviour over each element;
  function pointers: address to a fucntion
 
+# const/non-const - if we pass a param as void(*f)(T&);
+	-> we have a non const signatre that will break if we call print(cosnt T&); -> F: compiler decuces it as whatever we pass. it has to be something callable like function ();*
+
+**A func that iterates over data without knowing the type of that data, and executes behaviour without knowing what behaviour is** both resolved at compile time;
+
+print alone is a pattern bc pointing to no address - so print<type> is a concrete function - existing in memory with address. sometimes the compiler cannot deduce by itself so i make it explicit for the instantiation
+
+# the syntax: void (*f) (const Point&);* 
+shows a pointer f; it points to a funciton that returns void and has const Point& as param;
+
+# <<operator teahces compiler how ot print point: 
+	std::ostream& os — the stream on the left side of <<, usually std::cout
+	const Point& p — the thing on the right side, your Point
+
+# lambada - funciton with no name - just inline definition/ usa e getta
+
+iter(arr, len, [](const int&x){std::cout << x;});
+
+# sizeof: returns bytes;
+	since we need number of elemnts = just divide tot arr bytes with 4 bytes (one element arr[0]);
+
+ex02: template array - safe, dynamically allocated array that works with any data type; pervents overflows;
+
+the heap : dynamic memory with new - because we will know the elements during runtime - it just gives a pointer to _elements address._ 

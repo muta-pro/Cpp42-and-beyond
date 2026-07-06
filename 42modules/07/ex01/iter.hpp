@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/05 19:46:49 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/07/05 20:46:54 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/07/06 17:51:52 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 #include <stddef.h>
 
 template <typename T, typename F>
-void iter(T& arr, size_t len, F func)
+void iter(T *arr, const size_t len, F func)
 {
-	for(int i = 0; i < len; i++) {
+	for(size_t i = 0; i < len; i++) {
 		func(arr[i]);
 	}
 }
