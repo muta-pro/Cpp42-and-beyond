@@ -1,43 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   whatever.hpp                                       :+:      :+:    :+:   */
+/*   iter.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/01 17:06:57 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/07/03 14:03:55 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/07/05 19:46:49 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/07/05 20:46:54 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WHATEVER_HPP
-#define WHATEVER_HPP
+#ifndef ITER_HPP
+#define ITER_HPP
 
+#include <stddef.h>
 
-#include <string>
-#include <iostream>
-
-template <typename T>
-void swap(T& a, T& b) {
-	T temp = (std::move(a));
-	a = std::move(b);
-	b = std::move(temp);
-}
-
-template <typename T>
-const T& min(const T& a, const T& b) {
-	if (a < b)
-		return a;
-	else
-		return b;
-}
-
-template <typename T>
-const T& max(const T& a, const T& b) {
-	if (a > b)
-		return a;
-	else
-		return b;
+template <typename T, typename F>
+void iter(T& arr, size_t len, F func)
+{
+	for(int i = 0; i < len; i++) {
+		func(arr[i]);
+	}
 }
 
 #endif
