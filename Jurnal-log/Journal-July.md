@@ -21,7 +21,7 @@ templates are used when:
 
 - utility/conversion functions - overloading func
 
-ex00: iter - apply function to every element - func passed as a value
+ex00:
 optimisatoin:
 for swap, instead of making copies, we transfer ownership using **std::move();** -> CAST: LVALUE treated as RVALUE (temp value)
 
@@ -29,7 +29,7 @@ expressions: lvalue and rvalue;
 const T&
 T&& binds only to rvalues
 
-ex01: two-template-param design
+ex01: two-template-param design: iter - apply function to every element - func passed as a value
 iter - temp. func. : 2 levels of genericity: type to iterate over plus the behaviour over each element;
  function pointers: address to a fucntion
 
@@ -51,15 +51,15 @@ shows a pointer f; it points to a funciton that returns void and has const Point
 
 iter(arr, len, [](const int&x){std::cout << x;});
 
-# sizeof: returns bytes;
+# sizeof(): returns bytes;
 	since we need number of elemnts = just divide tot arr bytes with 4 bytes (one element arr[0]);
 
-ex02: template array - safe, dynamically allocated array that works with any data type; pervents overflows;
+ex02: class template array - safe, dynamically allocated array that works with any data type; pervents overflows;
 
 the heap alloccation: dynamic memory with new - because we will know the elements during runtime, unlike stack that knows during compile time - it just gives a pointer to _elements address._ 
 
 Array<int> arr(n); - class manages the memory - allocated in the constructor;
 
-deep copy is crucioal to avoid pointing at the same memory; allocate new memory and copy the values;
+deep copy is crucial to avoid pointing at the same memory; allocate new memory and copy the values;
 
-because accessoing arrays is familiar to native arrays, but class doesn't know yet how to use it - overload[] ;
+because accessing arrays is familiar to native arrays, but class doesn't know yet how to use it - overload[] ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Array.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: imuta <imuta@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:26:45 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/07/07 02:18:03 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/07/07 10:41:40 by imuta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //deep copy must be performed, so double freeing is avoided
@@ -61,7 +61,7 @@ class Array {
 			};
 
 	private:
-		T*				_elements;
+		T*						_elements;
 		unsigned int	_size;
 };
 
