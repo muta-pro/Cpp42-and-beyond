@@ -56,4 +56,10 @@ iter(arr, len, [](const int&x){std::cout << x;});
 
 ex02: template array - safe, dynamically allocated array that works with any data type; pervents overflows;
 
-the heap : dynamic memory with new - because we will know the elements during runtime - it just gives a pointer to _elements address._ 
+the heap alloccation: dynamic memory with new - because we will know the elements during runtime, unlike stack that knows during compile time - it just gives a pointer to _elements address._ 
+
+Array<int> arr(n); - class manages the memory - allocated in the constructor;
+
+deep copy is crucioal to avoid pointing at the same memory; allocate new memory and copy the values;
+
+because accessoing arrays is familiar to native arrays, but class doesn't know yet how to use it - overload[] ;

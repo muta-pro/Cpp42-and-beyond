@@ -6,10 +6,11 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/06 18:26:45 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/07/06 20:08:54 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/07/07 02:18:03 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 //deep copy must be performed, so double freeing is avoided
+//new T[n]() => value-init each element - returns pointer to first &_element
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
 
@@ -18,14 +19,14 @@
 template <typename T>
 class Array {
 	public:
-			Array() : _elements(new T[0]()), _size(0) {}
+			Array() : _elements(NULL), _size(0) {}
 			Array(unsigned int n) : _elements(new T[n]()), _size(n) {}
-			Array(const Array &copy) : _elements(new T[copy.size]()), _size(copy._size) {
+			Array(const Array &copy) : _elements(new T[copy._size]()), _size(copy._size) {
 				for (unsigned int i = 0; i < _size; i++)
 				_elements[i] = copy._elements[i];
 			}
 			Array &operator=(const Array &assign) {
-				if (this != assign) {
+				if (this != &assign) {
 					delete[] _elements;
 					_size = assign._size;
 					_elements = new T[_size]();
@@ -36,18 +37,17 @@ class Array {
 			}
 			~Array() {
 				delete[] _elements;
-				T& operator[](unsigned int index) {
-					if (index >= _size)
-						throw OutOfBoundsException();
-					return _elements[index];
-				const T& operator[](unsigned int index) const {
-					if (index >= _size)
-						throw OutOfBoundsException();
-					return _elements[index];
-				}
 			}
-		}
-
+			T& operator[](unsigned int index) {
+				if (index >= _size)
+					throw OutOfBoundsException();
+				return _elements[index];
+			}
+			const T& operator[](unsigned int index) const {
+				if (index >= _size)
+					throw OutOfBoundsException();
+				return _elements[index];
+			}
 
 			unsigned int size() const {
 				return _size;
