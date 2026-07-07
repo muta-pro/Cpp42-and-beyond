@@ -932,3 +932,17 @@ Fixed-point numbers show how representation can be designed manually instead of 
 ## ADL - argument dependent lookup
 
 ::func(a, b); -> compiler looks only in global scope, not ADL search. to avoid ambiguity and my swap is called.
+
+## STL -
+    Containers  → store data 
+       std::vector - 
+       -fast indx access & push back but slow middle indx insert/remove
+       -to store many values, need sorting, random access, cache-friendly storage
+       std::list - doubly ll: because it gives only bi-directional iterators, no random access - sort() doesn't workl; but fast insert/remove with position
+       std::deque - double ended queue - like vector, used by std::stack internally
+       std::stack
+       std::map
+       std::set
+    Iterators   → point/move through data
+    Algorithms  → operate on iterator ranges
+    Functors    → behavior you can pass to algorithms

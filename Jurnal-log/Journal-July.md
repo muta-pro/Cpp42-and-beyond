@@ -65,3 +65,10 @@ deep copy is crucial to avoid pointing at the same memory; allocate new memory a
 because accessing arrays is familiar to native arrays, but class doesn't know yet how to use it - overload[] ;
 
 assignment operator is used only when obj is assigned to other object, not int to an object;
+
+
+## STL & <algorythms>
+
+	DATA->choose containter->pick algo->respect iterator rules
+
+	instead of manual loop-> use containers
