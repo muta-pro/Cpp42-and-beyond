@@ -63,3 +63,5 @@ Array<int> arr(n); - class manages the memory - allocated in the constructor;
 deep copy is crucial to avoid pointing at the same memory; allocate new memory and copy the values;
 
 because accessing arrays is familiar to native arrays, but class doesn't know yet how to use it - overload[] ;
+
+assignment operator is used only when obj is assigned to other object, not int to an object;

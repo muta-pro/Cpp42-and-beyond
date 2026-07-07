@@ -929,3 +929,6 @@ Fixed-point numbers show how representation can be designed manually instead of 
 
 
 
+## ADL - argument dependent lookup
+
+::func(a, b); -> compiler looks only in global scope, not ADL search. to avoid ambiguity and my swap is called.
