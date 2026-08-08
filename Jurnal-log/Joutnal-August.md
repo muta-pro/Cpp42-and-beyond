@@ -15,7 +15,7 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 | CPP09  | 6 days   |  |
 
 
-
+08:
 
 ## STL & <algorythms>
 
