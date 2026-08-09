@@ -17,8 +17,10 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 08:
 
-## STL & <algorythms>
+## STL: standard template library & <algorythms>
 
 	DATA->choose containter->pick algo->respect iterator rules
 
 	instead of manual loop-> use containers
+
+	
