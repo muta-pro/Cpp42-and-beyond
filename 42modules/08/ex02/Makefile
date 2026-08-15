@@ -1,5 +1,5 @@
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g -fsanitize=address -MMD -MP
+CXXFLAGS = -Wall -Wextra -Werror -Wconversion -std=c++17 -g -fsanitize=undefined, address -MMD -MP
 NAME = find
 SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
