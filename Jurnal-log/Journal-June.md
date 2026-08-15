@@ -1,3 +1,19 @@
+# C++ Learning Journal: 42 CPP Modules
+ 
+A chronicle of my journey through C++ fundamentals, from basic CPP concepts to advanced polymorphism and memory management.
+ 
+---
+ 
+## Module Overview
+ 
+| Module | Duration | Focus Area                 |
+|--------|----------|----------------------------|
+| CPP05  | 2 days   |		Exceptions			 |
+| CPP06  | 2 days   |  	  	Casting				 |
+| CPP07  | 3 days   |  		iter 				 |
+| CPP08  | 6 days   |  |
+| CPP09  | 6 days   |  |
+
 ## CASTING
 
 How I handle data: conversion of **scalar types** -> single value
@@ -50,7 +66,7 @@ static convert() - means it belongs to class not obj. so not instantiable - does
 		<cctype> std::isprint() 
 		int isprint(int ch) - classifies the char if printable
 		return 1, or return 0 if not
-		The behavior is undefined if the value of ch is not representable as unsigned char and is not equal to EOF
+		The behavior is undefined if the value if ch is not representable as unsigned char and is not equal to EOF
 		- for safety always use arg converted to unsigned char
 *bool my_isprint(char ch)
 {
@@ -64,6 +80,8 @@ also if used in algorithms when iterator value is non unsigned char.
 overflow:
 - parsing -> if too big std::stoi autmatically throws out_of_range exception
 - downcasting -> from double to int/float: <limits>
+
+ex:00
 
 # architecture: 
 solution for helper fucntions option 1 - **anonymus namespace**
