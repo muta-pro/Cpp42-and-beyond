@@ -23,4 +23,5 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 	instead of manual loop-> use containers
 
-	
+ex02:
+
