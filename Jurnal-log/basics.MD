@@ -935,8 +935,23 @@ Fixed-point numbers show how representation can be designed manually instead of 
 
 ### data structures;
 
+to navigate any data strucutre use : **iterator**
+as a smart pointer -> can read and write data/move forward;
+
 ## STL - standard template lib
     Containers  → store data collections
+
+Automatic Memory Management: cleanup when out of scope;
+automatic growth when adding items;
+all use iterators; begin() & end();
+
+memeber functions: 
+push_back(n) -> list/vector/deque;
+push_front(n) -> list/deque;
+push(n) -> stack/queue (top or back)
+
+raged-based foor loops: for printing containers;
+
 **sequence containers:** linear storage
     std::array -
         fixed size inplace contiguous array
@@ -957,4 +972,4 @@ Fixed-point numbers show how representation can be designed manually instead of 
 
     Iterators   → objects; point/move through any data
     Algorithms  → operate on iterator ranges to manipulate data
-    Functors    → behavior you can pass to algorithms
+    Functions    → behavior you can pass to algorithms

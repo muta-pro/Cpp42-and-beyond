@@ -1,27 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/02 17:46:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/08/22 18:21:10 by imutavdz         ###   ########.fr       */
+/*   Created: 2026/08/22 19:08:56 by imutavdz          #+#    #+#             */
+/*   Updated: 2026/08/22 19:30:17 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#ifndef EASYFIND_HPP
-#define EASYFIND_HPP
-
-#include <algorithm>
-
-template <typename T>
-typename T::iterator easyfind(T& cont, int n) {
-	typename T::iterator it = std::find(cont.begin(), cont.end(), n);
-	if (it == cont.end()) {
-		throw std::exception();
-	}
-	return it;
-}
-
-#endif

@@ -10,7 +10,7 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 |--------|----------|----------------------------|
 | CPP05  | 2 days   |		Exceptions			 |
 | CPP06  | 2 days   |  	  	Casting				 |
-| CPP07  | 3 days   |  		iter 				 |
+| CPP07  | 3 days   |  		templates 				 |
 | CPP08  | 6 days   |  |
 | CPP09  | 6 days   |  |
 

@@ -8,9 +8,9 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
  
 | Module | Duration | Focus Area                 |
 |--------|----------|----------------------------|
-| CPP05  | 2 days   |		Exceptions			 |
-| CPP06  | 2 days   |  							 |
-| CPP07  | 3 days   |  |
+| CPP05  | 8 days   |		Exceptions			 |
+| CPP06  | 2 days   |  		casting				 |
+| CPP07  | 7 days   |  		Templates		     |
 | CPP08  | 6 days   | 		STL & ALGOS          |
 | CPP09  | 6 days   |  |
 
@@ -22,6 +22,11 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 	DATA->choose containter->pick algo->respect iterator rules
 
 	instead of manual loop-> use containers
+
+ex:00
+# dependent type names;
+
+typename keyword: we are passing entire container class
 
 ex02:
 

@@ -1,3 +1,19 @@
+# C++ Learning Journal: 42 CPP Modules
+ 
+A chronicle of my journey through C++ fundamentals, from basic CPP concepts to advanced polymorphism and memory management.
+ 
+---
+ 
+## Module Overview
+ 
+| Module | Duration | Focus Area                 |
+|--------|----------|----------------------------|
+| CPP05  | 2 days   |		Exceptions			 |
+| CPP06  | 2 days   |  		Casting				 |
+| CPP07  | 7 days   |		Templates			 |
+| CPP08  | 6 days   | 		STL & ALGOS          |
+| CPP09  | 6 days   |  |
+
 ## templates: formula for a generic class/function that can work with any data type without repetition.
 
 using a placeholder type : T;
