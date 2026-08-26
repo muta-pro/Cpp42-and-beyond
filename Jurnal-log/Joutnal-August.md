@@ -23,10 +23,21 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 	instead of manual loop-> use containers
 
+	<algorythms>
+
 ex:00
 # dependent type names;
 
 typename keyword: we are passing entire container class
 
 ex02:
+for largest span:
+
+std::minmax_element -> returns std::pair (two iterators: first is the min, and second is the max)
+
+for shortest span:
+
+The STL way (std::sort): std::sort in modern C++ uses an algorithm called IntroSort (a hybrid of QuickSort, HeapSort, and InsertionSort). It runs in O(N log N) time.
+
+std::adjacent_difference -> stores the calcilated difference od a adjacent pair of the container in a new container;
 
