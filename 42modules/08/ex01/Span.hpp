@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/08/22 19:25:35 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/08/29 15:15:13 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include <algorithm>
 #include <vector>
 #include <stdexcept>
+#include <concepts>
+#include <ranges>
+#include <iterator>
 
 class Span {
 public:
@@ -29,17 +32,21 @@ public:
 	int		shortestS() const;
 	int		longestS() const;
 
-	template <typename It>
-	void AddNumbers(It begin, It end) {
-		if (std::distance(begin, end) > _max_size - _num.size()) {
-			throw std::overflow_error("not enough space to add numbers");
+	template <std::forward_iterator Iter>
+	requires std::coneritble_to<std::iter_reference_t<Iterator>, int>
+	void AddNumber(Iter first, Iter last) {
+		const auto count = std::ranges::distance(first, last);
+		const auto remaining = _capacity - _num.size();
+
+		if (count < 0 || count > static_cast<std::iter_difference_t<Iterator>>(remaining)) {
+			throw std::overflow_error("No space in Span");
 		}
-		_num.insert(_num.end(), _num.begin(), end);
+		_num.insert(_num.end(), first, last);
 	}
 
 private:
-	unsigned int		_max_size;
 	std::vector<int>	_num;
+	std::size_t			_capacity;
 };
 
 #endif

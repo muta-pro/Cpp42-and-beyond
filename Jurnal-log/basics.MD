@@ -971,5 +971,12 @@ raged-based foor loops: for printing containers;
 **unordered associative containters**
 
     Iterators   → objects; point/move through any data
+        they are the bridge between alg and containers
     Algorithms  → operate on iterator ranges to manipulate data
     Functions    → behavior you can pass to algorithms
+
+
+# iterators : utility functions
+    std::distance
+    std::begin/end
+    std::insert
