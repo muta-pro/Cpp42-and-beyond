@@ -980,3 +980,5 @@ raged-based foor loops: for printing containers;
     std::distance
     std::begin/end
     std::insert
+
+# algorythms

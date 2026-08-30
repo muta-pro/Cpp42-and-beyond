@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/08/29 15:15:13 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/08/30 15:22:39 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <algorithm>
 #include <vector>
+#include <list>
+#include <set>
 #include <stdexcept>
 #include <concepts>
 #include <ranges>
@@ -34,7 +36,7 @@ public:
 
 	template <std::forward_iterator Iter>
 	requires std::coneritble_to<std::iter_reference_t<Iterator>, int>
-	void AddNumber(Iter first, Iter last) {
+	void AddRange(Iter first, Iter last) {
 		const auto count = std::ranges::distance(first, last);
 		const auto remaining = _capacity - _num.size();
 

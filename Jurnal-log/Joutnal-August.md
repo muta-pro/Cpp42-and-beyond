@@ -17,7 +17,7 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 08:
 
-## STL: standard template library & <algorythms>
+## STL: standard template library & <algorythms> & containers & iterators
 
 	DATA->choose containter->pick algo->respect iterator rules
 
@@ -25,16 +25,24 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 	<algorythms>
 
-ex:00 
+## ex:00
+
 **add a range / add number**
 # dependent type names;
 
 typename keyword: we are passing entire container class
 
-ex01:
+## ex01: RANGE MEMEBER FUNCTIONS
+
+N -> unsigned int
+sotred values = plain int
+
+# template container/interator
+
 Member Template: nested template inside the class;
 Iter - placeholder
 we ask for two iterators instead of the whole container
+	should accept iterators from any source
 
 **template instantiation**
 
