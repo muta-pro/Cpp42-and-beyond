@@ -46,7 +46,8 @@ we ask for two iterators instead of the whole container
 
 **template instantiation**
 
-
+# <concepts>
+	template <std::forward_iterator Iter> - tells the compiler to accept iterators that read and move forward.
 
 for largest span:
 

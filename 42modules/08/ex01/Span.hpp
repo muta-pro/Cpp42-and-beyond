@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/08/30 15:22:39 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/09/26 20:57:26 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 #define SPAN_HPP
 
 #include <algorithm>
+#include <numeric>
 #include <vector>
-#include <list>
-#include <set>
 #include <stdexcept>
 #include <concepts>
-#include <ranges>
 #include <iterator>
+#include <cstddef>
 
 class Span {
 public:
@@ -31,24 +30,23 @@ public:
 	~Span();
 
 	void	AddNumber(int n);
-	int		shortestS() const;
-	int		longestS() const;
+	int		shortestSpan() const;
+	int		longestSpan() const;
 
 	template <std::forward_iterator Iter>
-	requires std::coneritble_to<std::iter_reference_t<Iterator>, int>
+	requires std::convertible_to<std::iter_value_t<Iter>, int>
 	void AddRange(Iter first, Iter last) {
-		const auto count = std::ranges::distance(first, last);
-		const auto remaining = _capacity - _num.size();
-
-		if (count < 0 || count > static_cast<std::iter_difference_t<Iterator>>(remaining)) {
-			throw std::overflow_error("No space in Span");
-		}
+		auto count = std::distance(first, last);
+		if (count < 0) 
+			throw std::overflow_error("Invalid iterator range");
+		std::size_t spaceLeft = _capacity - _num.size();
+		if (static_cast<std::size_t>(count) > spaceLeft)
+			throw std::overflow_error("Range does not fit");
 		_num.insert(_num.end(), first, last);
 	}
-
 private:
 	std::vector<int>	_num;
-	std::size_t			_capacity;
+	unsigned int		_capacity;
 };
 
 #endif
