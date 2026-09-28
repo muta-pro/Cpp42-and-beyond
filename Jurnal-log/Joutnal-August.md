@@ -62,3 +62,23 @@ std::adjacent_difference -> stores the calcilated difference od a adjacent pair 
 # addNumbers : function overloading
 	the compiler will pick the riht funciton based on args;
 
+## ex:02
+
+For MutantStack, the whole trick is that std::stack hides iterators, but its protected member **c** contains the real container.
+template <typename T>
+class MutantStack : public std::stack<T>
+{
+public:
+    typedef typename std::stack<T>::container_type::iterator iterator;
+
+    iterator begin()
+    {
+        return this->c.begin();
+    }
+
+    iterator end()
+    {
+        return this->c.end();
+    }
+};
+

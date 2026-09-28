@@ -945,12 +945,13 @@ Automatic Memory Management: cleanup when out of scope;
 automatic growth when adding items;
 all use iterators; begin() & end();
 
-memeber functions: 
+# memeber functions: 
+
 push_back(n) -> list/vector/deque;
 push_front(n) -> list/deque;
 push(n) -> stack/queue (top or back)
 
-raged-based foor loops: for printing containers;
+ranged-based foor loops: for printing containers;
 
 **sequence containers:** linear storage
     std::array -
@@ -959,21 +960,40 @@ raged-based foor loops: for printing containers;
        -fast indx access & push back but slow middle indx insert/remove
        -to store many values, need sorting, random access, cache-friendly storage
     std::list/forward list -
-        doubly ll: because it gives only bi-directional iterators, no random access - sort() doesn't workl; but fast insert/remove with position
+        doubly ll: because it gives only bi-directional iterators, no random access - sort(lst.begin(), lst.end()) doesn't workl; but fast insert/remove with position
+        insert does not invalidate existing iterators
+            erase invalidates only erased iterator
+        lst.sort(); works
+        Because std::sort needs random access iterators. list only gives bidirectional iterators.
     std::deque - 
         double ended queue - like vector, used by std::stack internally
+        fast push_front and push_back
+        random access exists
     std::hive -
         collection that resues erased element's memory
 **associative containters** key-value data
-       std::stack
+       std::stack - container adaptor
+                    LIFO: last in, first out
+                    no iterators by default
+        push()
+        pop()
+        top()
+        empty()
+        size()
        std::map
+        key → value
+        sorted by key
+        fast search by key: O(log n)
        std::set
+        unique sorted values
+        fast search
+        duplicates not allowed
 **unordered associative containters**
 
     Iterators   → objects; point/move through any data
         they are the bridge between alg and containers
     Algorithms  → operate on iterator ranges to manipulate data
-    Functions    → behavior you can pass to algorithms
+    Functions   → behavior you can pass to algorithms
 
 
 # iterators : utility functions
@@ -981,4 +1001,32 @@ raged-based foor loops: for printing containers;
     std::begin/end
     std::insert
 
+std::vector<int>::iterator it = v.begin();
+    *it      // access value*
+    ++it     // move forward
+    it != v.end()
+
+    begin() points to first element
+    end() points one past the last element
+
 # algorythms
+
+std::sort
+std::find
+std::minmax_element
+std::copy
+std::for_each
+std::distance
+std::lower_bound
+std::upper_bound
+std::binary_search
+std::equal
+std::lexicographical_compare
+std::reverse
+std::swap
+
+O(1)       constant
+O(log n)   very good search in tree/map/set
+O(n)       scan once
+O(n log n) sorting
+O(n²)      nested loop, often bad
