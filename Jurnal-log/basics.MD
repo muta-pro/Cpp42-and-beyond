@@ -305,10 +305,12 @@ In C++, `class` and `struct` are almost the same, except for default visibility.
 In a `class`:
 
 * members are `private` by default
+* base-class inheritance is `private` by default
 
 In a `struct`:
 
 * members are `public` by default
+* base-class inheritance is `public` by default
 
 So this:
 
@@ -408,16 +410,16 @@ This syntax is unusual, but it exists because member layout depends on the objec
 
 ---
 
-## Heap Preference and Dynamic Allocation
+## Storage Duration and Dynamic Allocation
 
-In C++, stack allocation is usually preferred by default because it is simple, automatic, and safe. But heap allocation is useful in specific cases.
+Prefer an ordinary local object when its lifetime fits the scope. The language calls this automatic storage duration; a machine stack is a common implementation. Dynamic storage is useful when ownership or lifetime requires it. A local vector object can still own dynamically allocated elements.
 
 Heap allocation is often chosen when:
 
 * object size must be dynamic
 * the object must outlive the current scope
 * ownership must be shared or transferred
-* polymorphism requires handling derived objects through base pointers
+* runtime-selected polymorphic objects may need a separate owner
 * the object is very large
 
 Example:
@@ -428,6 +430,8 @@ delete d;
 ```
 
 But raw `new` and `delete` are dangerous because they make lifetime manual. In modern C++, ownership tools replace this more often.
+
+Polymorphism itself does not require heap allocation: a local derived object can be accessed through a base reference. Variable collection size also does not mean I must write `new` myself; containers manage their own dynamic storage.
 
 ### Important note for 42 / C++98
 
@@ -607,8 +611,8 @@ If I store with 8 fractional bits, then multiplying an integer by `256` shifts t
 
 For integers:
 
-* store with left shift by 8
-* `n << 8` means `n * 256`
+* scale by 256 in an arithmetic type wide enough for the input
+* in C++98, left-shifting negative signed values is undefined, and large shifts can exceed the valid range; `n << 8` is not a safe general replacement for checked multiplication
 
 For floats:
 
@@ -619,7 +623,9 @@ For floats:
 To convert back:
 
 * to float: divide by `256`
-* to int: remove the fractional bits, usually with a right shift by 8
+* to int: apply a documented rounding policy; in C++98, right-shifting negative signed values is implementation-defined and need not give truncation toward zero
+
+The short arithmetic examples above illustrate scaling, not a complete numeric type: multiplication can overflow, division needs a zero check, and a float-to-int conversion must first be representable. A cast after overflow cannot repair it.
 
 ---
 
@@ -756,7 +762,7 @@ Animal* a = new Dog();
 delete a;
 ```
 
-If `Animal` does not have a virtual destructor, the `Dog` destructor may never run correctly.
+If `Animal` does not have a virtual destructor, deleting a derived object through that base pointer has undefined behavior.
 
 Rule:
 If a class has virtual functions or is intended as a base polymorphic type, its destructor should usually be virtual.
@@ -813,9 +819,9 @@ Shadowing is legal, but often confusing. It is better to avoid it unless there i
 
 This is one of the deeper C++ foundations.
 
-An **lvalue** is something with an identifiable location in memory. It can appear on the left side of assignment.
+An **lvalue** is an expression that identifies an object or function. Some lvalues can appear on the left side of assignment, but a const object or an array is not a modifiable lvalue.
 
-An **rvalue** is a temporary value or pure result, usually not something I can assign into.
+In modern C++, **rvalue** includes prvalues (pure values, such as `5`) and xvalues (objects whose resources may be reused, such as the expression produced by `std::move(x)`). Expression categories are more precise than "named versus temporary".
 
 Example:
 
@@ -905,7 +911,7 @@ This is a very different model:
 
 ---
 
-# Final Summary
+# Connecting the Earlier Modules
 
 The big lesson is that C++ is a language of **models and lifetimes**.
 
@@ -919,114 +925,154 @@ References and const make interfaces safe and expressive.
 Fixed-point numbers show how representation can be designed manually instead of taken for granted.
 
 
-## Error handling : diagonstics library
+## Language Versions: Label the Tool I Am Learning
 
-**EXCEPTRIONS HANDLING** <exceptions>
-    1- LOGICAL ERRORS - consequence of a faulty program logic - preventible
-    2- RUNTIME ERRORS - dute to events beyond the scope of the program - unpredictable
-    3- SYSTEM ERRORS - OS errors, streams I/O, low-level API's
-    4- ASSERTION
+| Version | Examples relevant to these notes |
+| --- | --- |
+| C++98 | Classes, RAII, exceptions, four named casts, templates, vector/list/deque/map/set/stack, classic iterator algorithms |
+| C++11 | `auto` type deduction, range-for, lambdas, move semantics, `unique_ptr`, `array`, `forward_list`, unordered containers, `noexcept`, `override`, `= default`, `= delete`, `minmax_element` |
+| C++17 | `string_view`, `optional`, `[[nodiscard]]`, `[[fallthrough]]` |
+| C++20 | Concepts, `requires`, ranges algorithms and views, `span` |
 
+An exercise's required language standard is part of its contract. Modern extensions are useful separate practice. `<concepts>` and C++20 syntax cannot be used merely because a C++98 program needs generic behavior. `std::hive` is a C++26 facility, outside this repository's configured C++17/20 scope; header/compiler availability must be checked before experimenting with it.
 
+## Exceptions, Assertions, and Guarantees
 
-## ADL - argument dependent lookup
+Use `<exception>` for `std::exception`, `<stdexcept>` for types such as `logic_error`, `runtime_error`, and `out_of_range`, and `<cassert>` for `assert`.
 
-::func(a, b); -> compiler looks only in global scope, not ADL search. to avoid ambiguity and my swap is called.
+- **Exception:** report an operation that cannot complete, such as an invalid grade or missing search result.
+- **Assertion:** check a programmer assumption during development. Assertions can be disabled with `NDEBUG`; they do not replace validation of external input.
+- **Precondition:** something the caller must satisfy before invoking an operation, such as a valid iterator range.
+- **Invariant:** a rule the object's valid states must always satisfy, such as count not exceeding capacity.
 
-### data structures;
+Throw by value; normally catch by `const` reference to preserve the exception's dynamic type and avoid copying. Order derived catches before base catches. When a handler is found, unwinding destroys completed automatic objects. If a constructor throws, the whole object's destructor does not run, but fully constructed base/member subobjects are destroyed. A raw pointer member does not automatically free the pointed-to allocation.
 
-to navigate any data strucutre use : **iterator**
-as a smart pointer -> can read and write data/move forward;
+| Guarantee | Meaning on failure |
+| --- | --- |
+| Basic | No resource leaks; invariants preserved, though values may change |
+| Strong | Operation has no observable effect if it fails |
+| No-throw | Operation will not emit an exception |
 
-## STL - standard template lib
-    Containers  → store data collections
+`noexcept` is a promise, not an automatic recovery mechanism. An exception escaping a `noexcept` function calls `std::terminate`. Destructors should not emit exceptions, especially during unwinding.
 
-Automatic Memory Management: cleanup when out of scope;
-automatic growth when adding items;
-all use iterators; begin() & end();
+For owning data, build replacement state under an RAII owner, complete the risky work, then commit. Do not delete the old storage first and assume the new allocation will succeed. **Copy-and-swap** can provide strong assignment safety only if construction of the temporary is safe and swapping the relevant state cannot throw.
 
-# memeber functions: 
+## Rule of Three, Five, and Zero
 
-push_back(n) -> list/vector/deque;
-push_front(n) -> list/deque;
-push(n) -> stack/queue (top or back)
+- **Rule of Three (C++98):** manual ownership usually requires coordinated destructor, copy constructor, and copy assignment.
+- **Rule of Five (C++11):** consider move construction and move assignment too when designing such ownership.
+- **Rule of Zero:** let member types such as vector/string/smart pointers handle ownership and special members.
 
-ranged-based foor loops: for printing containers;
+Orthodox Canonical Form is an exercise requirement, not a reason to write unnecessary raw memory management in every application. Span's vector already makes an independent copy of its values. Copying a raw pointer only copies an address.
 
-**sequence containers:** linear storage
-    std::array -
-        fixed size inplace contiguous array
-    std::vector - 
-       -fast indx access & push back but slow middle indx insert/remove
-       -to store many values, need sorting, random access, cache-friendly storage
-    std::list/forward list -
-        doubly ll: because it gives only bi-directional iterators, no random access - sort(lst.begin(), lst.end()) doesn't workl; but fast insert/remove with position
-        insert does not invalidate existing iterators
-            erase invalidates only erased iterator
-        lst.sort(); works
-        Because std::sort needs random access iterators. list only gives bidirectional iterators.
-    std::deque - 
-        double ended queue - like vector, used by std::stack internally
-        fast push_front and push_back
-        random access exists
-    std::hive -
-        collection that resues erased element's memory
-**associative containters** key-value data
-       std::stack - container adaptor
-                    LIFO: last in, first out
-                    no iterators by default
-        push()
-        pop()
-        top()
-        empty()
-        size()
-       std::map
-        key → value
-        sorted by key
-        fast search by key: O(log n)
-       std::set
-        unique sorted values
-        fast search
-        duplicates not allowed
-**unordered associative containters**
+`std::move` from `<utility>` casts an expression to an rvalue category; it does not itself move bytes or transfer ownership. The selected constructor/assignment decides what happens, and copying may still occur. Do not assume the source becomes empty; only rely on the moved-from guarantees of the specific type.
 
-    Iterators   → objects; point/move through any data
-        they are the bridge between alg and containers
-    Algorithms  → operate on iterator ranges to manipulate data
-    Functions   → behavior you can pass to algorithms
+## Casts, Parsing, and Numeric Boundaries
 
+| Cast | Appropriate role | What it does not guarantee |
+| --- | --- | --- |
+| `static_cast` | Explicit supported conversions, including numeric conversion and hierarchy upcasts | No runtime bounds check; a downcast can be invalid |
+| `dynamic_cast` | Runtime-checked hierarchy casts; downcasts require a polymorphic base | Does not keep the source object alive |
+| `const_cast` | Adjust const/volatile qualification | Writing an originally const object is undefined behavior |
+| `reinterpret_cast` | Restricted low-level representation conversions | Does not create an object, serialize it to disk, or grant arbitrary aliasing access |
 
-# iterators : utility functions
-    std::distance
-    std::begin/end
-    std::insert
+Parsing translates text to a value; casting converts an existing typed value. Reject malformed or partly consumed input according to a documented grammar. NaN and infinity need explicit handling; NaN is not an uninitialized value. `x != x` detects NaN under ordinary IEEE behavior; `std::isnan` communicates that intent in C++11.
 
-std::vector<int>::iterator it = v.begin();
-    *it      // access value*
-    ++it     // move forward
-    it != v.end()
+Widen operands **before** arithmetic. A wider destination cannot fix overflow that already happened in `int`. Verify finiteness and representability before floating-to-integer conversion; decimal formatting must not sneak in an unchecked cast. Short-circuit checks must precede the expression they protect.
 
-    begin() points to first element
-    end() points one past the last element
+`uintptr_t`, when provided, is an unsigned integer type capable of representing `void*` for a supported round trip; it need not have exactly the pointer's size. Modern C++ declares it in `<cstdint>` (C++11), not `<cstdlib>`. A recovered pointer is usable only while the original object lives. This is an address round trip, not portable persistent serialization.
 
-# algorythms
+## Template Instantiation and Header Independence
 
-std::sort
-std::find
-std::minmax_element
-std::copy
-std::for_each
-std::distance
-std::lower_bound
-std::upper_bound
-std::binary_search
-std::equal
-std::lexicographical_compare
-std::reverse
-std::swap
+A template describes how to produce a concrete specialization. Dependent operations may only be checked when that member is instantiated. An empty `main` that includes `MutantStack.hpp` does not test assignment or iteration.
 
-O(1)       constant
-O(log n)   very good search in tree/map/set
-O(n)       scan once
-O(n log n) sorting
-O(n²)      nested loop, often bad
+Definitions normally need to be visible where instantiation happens, often in the header or a `.tpp` included by it. A dependent qualified type such as `T::iterator` generally needs `typename`; a member of a dependent base may need `this->` qualification.
+
+Constraints express which operations/types are permitted, but they do not prove runtime values are safe. `convertible_to<double,int>` does not prove a particular double is representable in an int.
+
+A self-contained header includes what it uses. Compile a tiny file that includes only that header and instantiates its relevant operations. Do not rely on an unrelated `<iostream>` or `<vector>` include to supply another declaration indirectly.
+
+## ADL: Argument-Dependent Lookup
+
+An unqualified function call can search namespaces associated with the argument types, in addition to ordinary lookup. `::swap(a,b)` deliberately names the global function and suppresses ADL for that call. Generic library code often uses `using std::swap; swap(a,b);` to allow a type's associated custom swap and retain the standard fallback.
+
+## Containers and Adaptors
+
+Containers organize data and normally own their stored values. If those values are raw pointers, the container owns the pointer values, not the pointed-to objects. `array` has fixed size; `stack` does not expose `begin`/`end`. Automatic growth and iteration are not universal properties of every container-like interface.
+
+| Family | Types | Key distinction |
+| --- | --- | --- |
+| Sequence | vector, deque, list; array and forward_list from C++11 | Values arranged in a sequence |
+| Ordered associative | set, multiset, map, multimap | Keys ordered by a comparator; lookup O(log n) |
+| Unordered associative (C++11) | unordered_set/map and multi variants | Hash lookup average O(1), worst O(n); no sorted order |
+| Container adaptors | stack, queue, priority_queue | Restricted interface over backing storage |
+
+`push_back` adds at the back of vector/list/deque; `push_front` is available for list/deque, and forward_list; `push` belongs to stack/queue/priority_queue. Map and set use insertion APIs suited to their keys. `pop` removes without returning a value; read `top`/`front` first and ensure the adaptor is not empty.
+
+Vector offers contiguous storage and O(1) indexing. Appending is **amortized O(1)**: most appends are cheap, but a growth step can move/copy O(n) elements. List has O(1) insertion at a known node, but locating that node still costs time and traversal has weaker locality.
+
+Vector **size** is the number of elements. **Capacity** is how many elements its allocation can currently hold without reallocation. `reserve` changes capacity without creating elements; `resize` changes size. Neither automatically enforces a custom logical limit such as Span's maximum count.
+
+## Iterators, Ranges, and Lifetimes
+
+An iterator is a position supporting a specified set of operations, not an owning smart pointer. Classic algorithms usually use `[first,last)`, including the first position and excluding the last. Empty means first equals last; dereferencing end is invalid.
+
+| Category | Example operation | Typical source |
+| --- | --- | --- |
+| Input | Single-pass read and increment | Input stream |
+| Output | Write and increment | Back-insertion adaptor |
+| Forward | Multipass read/increment | forward_list (C++11) |
+| Bidirectional | Also decrement | list, ordered set/map |
+| Random access | Also offset/subtract compatible positions | vector, deque, array |
+| Contiguous (C++20) | Also consecutive underlying storage | vector<int>, array |
+
+An input iterator cannot be assumed reusable after a counting pass. Forward iterators support a count-then-copy approach. `std::distance` needs a valid range; it is not a validator for unrelated or unreachable positions.
+
+Mutation can invalidate borrowed positions. Vector reallocation invalidates all iterators/references/pointers; erase invalidates positions at and after the erased element. List insertion preserves iterators and erase invalidates the erased ones. Deque end insertion preserves existing element references but invalidates iterators. Check the exact operation's documented rules.
+
+`const_iterator` prevents writes through the iterator but can itself advance. `const iterator` prevents changing the iterator variable and can still permit writes to the value. A const-container overload should expose the appropriate const iterator type.
+
+## Algorithms and Preconditions
+
+| Tool | Purpose | Requirement or useful fact |
+| --- | --- | --- |
+| `find` | First matching value | O(n); missing value returns last |
+| `sort` | Order a range | Random access and strict weak ordering; O(n log n) comparisons |
+| `min_element`, `max_element` | Extreme positions | O(n); on an empty range return last |
+| `minmax_element` (C++11) | Both extreme positions | O(n); result is a pair of iterators |
+| `copy` | Copy values to an output range | Destination must have space, or use an inserter |
+| `for_each` | Apply callable to each value | Callable must accept element expressions |
+| `lower_bound`, `upper_bound` | Ordered insertion/search positions | Appropriate partitioning; sorted data satisfies the usual preconditions |
+| `binary_search` | Check membership in ordered data | Appropriate ordering/partitioning; does not return a found iterator |
+| `adjacent_difference` | First value followed by consecutive differences | `<numeric>`; default subtraction uses input value type |
+| `reverse` | Reverse a range | Bidirectional iterators |
+
+`std::distance`, `advance`, and iterator adaptors come from `<iterator>`. `insert` is normally a container member; `std::inserter` and `std::back_inserter` adapt writes into insertion. There is no general `std::insert` algorithm.
+
+A comparator for sorting must model **strict weak ordering**. In particular, `comp(x,x)` is false, and ordering must be consistent and transitive. `<=` is not a valid ordinary sort comparator. Binary-search comparisons may be logarithmic while iterator traversal is linear on non-random-access ranges; use a tree container's member lookup when searching its keys.
+
+For Span: longest span is max minus min in O(n). Shortest span comes from adjacent differences in a sorted copy, O(n log n) total. Sorting a copy preserves observable original state. Duplicate values make the shortest gap zero. Convert each operand to the chosen safe arithmetic type before subtracting.
+
+## Complexity and Testing
+
+| Complexity | Typical growth |
+| --- | --- |
+| O(1) | Constant work |
+| O(log n) | Tree search; repeated halving |
+| O(n) | Visit each element |
+| O(n log n) | Efficient comparison sorting |
+| O(n²) | Compare many pairs; may be acceptable for tiny inputs |
+
+Complexity counts how work grows; actual performance also depends on allocation, locality, data size, and element operations. Memory complexity matters too: sorting a copied vector uses O(n) extra element storage.
+
+Use deterministic expected-value tests first, then scale tests. Include zero/one element, duplicates, extremes, valid rejected operations, independent copies, self-assignment, and const access. Tests should exercise template members rather than merely include their declarations.
+
+Compiler warnings catch some mistakes; they do not prove correctness. AddressSanitizer detects many memory errors; UndefinedBehaviorSanitizer detects many invalid operations. Neither catches every defect. Recovery-mode sanitizer diagnostics still indicate a failed check even with exit status 0.
+
+## Beyond CPP08: Ranges, Views, and Composition
+
+C++20 ranges algorithms can work with range objects; views describe lazy operations such as filtering without necessarily owning the elements. `std::span` is a non-owning view of contiguous storage, distinct from the exercise class named Span. A view does not extend the lifetime of its source automatically; some view adaptors can own their source, so inspect the particular type rather than assuming all views borrow.
+
+Iteration exposes representation capabilities. MutantStack can use the protected `c` member as an exercise, but standard adaptors are not polymorphic bases with virtual destructors. Use value objects here; do not delete a derived adaptor through its base pointer. Composition gives an application more control over what it exposes.
+
+For the full CPP08 walkthrough and typed checkpoints, see [Journal-August.md](Journal-August.md). For outstanding defects with evidence, see [Code-review.md](Code-review.md).

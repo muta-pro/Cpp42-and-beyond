@@ -25,16 +25,19 @@ How I handle data: conversion of **scalar types** -> single value
 
 # 4 casts:
 	1. static_cast<type>(value)
-		handles all standard, logical and safe conversions
+		handles supported explicit conversions; numeric bounds and downcast validity are still the programmer's responsibility
 		it navigates upcasting - class hierarchies
-		high safety level - compiler checks conversion at compile time
+		the compiler checks whether the conversion is allowed, not whether every runtime value is safe
 	2. dynamic_cast<type>(value) : polymorphic cast
 		casts pointers and references witihn an inheritance hierarchy (downcasting) : dealing with base and derived classes
 		high safety level - checked at runtime - returning NULL pointer - or throw exep for references
-	3. reinterpret_cast<type>(value) 
+	3. const_cast<type>(value)
 		adds/removes const or volatile qualifiers from variable
 		used with const pointers/references that must be passed to API that expects non-const pointer
 		medium safety level - modifying an originally const value results undefined behaviour
+	4. reinterpret_cast<type>(value)
+		low-level permitted representation conversions such as an address/integer round trip
+		does not remove constness, create an object, or permit arbitrary access through an unrelated type
 
 Rule : defend my intent
 
@@ -50,7 +53,7 @@ std::stringstream
 	string parsing vs casting
 -> to cast a string into any value - first must be parsed into numeric type and then cast that type to other numeric types.
 
-static convert() - means it belongs to class not obj. so not instantiable - does not have a *this pointer*.
+`static convert()` means the function belongs to the class and has no `this` pointer. This alone does not make the class non-instantiable; access control or deleted constructors can do that.
 
  ->modern c++ handles differently the errors and parses the string;
 
@@ -91,9 +94,8 @@ solution option 2 - **internal linkage** - static functions
 
 Detection:  process of elimination
 
-# NaN - undefined vale of a numeric data type, often floatinf-point ->read more..
-	the check of  variable if it's a NotANumber is done by comparing it t itself - x != x = true;
-	all other comparisons give false/  IEEE 754 defines every relational comparison with NaN as false.
+# NaN — a floating-point "not a number" value, not uninitialized storage
+	Under ordinary IEEE behavior, `x != x` is true for NaN. Equality and ordered comparisons with NaN are false; inequality is true. C++11 `std::isnan` expresses the check directly. NaN is not safe to convert to an integer.
 
 
 
@@ -107,9 +109,9 @@ reinterpret_cast<type> :
 serialize: treat mem add as positive number
 deserialize: the reverse
 safety:
- => uintptr_t <cstdlib>
+ => `uintptr_t` from `<cstdint>` in C++11 (or the applicable `<stdint.h>` extension in a C++98 environment)
  	*unsigned int ptr type*
-ensures the same size as pointer: never to lose data when casting
+When provided, this unsigned integer type can represent a void pointer for a supported round trip; it need not have exactly the pointer's size. The original object must still be alive when its recovered pointer is used. An address is not persistent serialization and cannot be reused across arbitrary process runs.
 
 # webserv reference: OS API meets c++ (epoll event loop exapmle)
 	how server handles multiple connections
@@ -156,8 +158,9 @@ polymorphism means - having a base class that covers the subclasses object's typ
 
 because the generate() returns a pointer to base class - we can't know what obj was created.
 
-# virtual distructor : necessary for dynamic casting
- - class must be polymorphic : it gets a **VTABLE: virtual method table** holds info about exact class type - during run time compiler peeks at vtable under the base interface.
+# Polymorphic base and virtual destructor
+ - Runtime-checked hierarchy downcasts require a polymorphic base: one or more virtual functions. A virtual destructor is one way to satisfy that and is needed for safe deletion of derived objects through an owning base pointer. It is not the only virtual function that enables dynamic_cast.
+ - A vtable is a common implementation technique, not a C++ language requirement; avoid assuming a specific memory layout.
 
 then we identify by pointer or by reference:
 
@@ -167,3 +170,31 @@ then we identify by pointer or by reference:
 
 casting by pointer is asking a question, and looking at the answer.
 by reference we don't store the answer we just wait for the try/catch block to react, so casting needs to e silenced with (void), because we don't care abput return value;
+
+## CPP06 — parsing and conversion gaps to practice
+
+### Parsing is a separate contract
+
+Define the accepted grammar: sign, digits, decimal point, optional exponent if required, and float suffix. Check empty input before indexing it. For stoi/stof/stod, inspect the consumed position when accepting general user input; successful conversion alone can accept a valid prefix followed by junk. For strtol/strtod, inspect the end pointer and range-error reporting. Decide how whitespace and trailing characters are handled.
+
+Pass character-classification inputs as unsigned char values (or EOF), including isdigit and isprint. A negative signed char is not a valid argument to these functions.
+
+### Floating-to-integer conversion
+
+Conversion truncates toward zero, but the truncated result must fit the destination. NaN/infinity and out-of-range finite values are not safe casts. Guard every conversion, including those used only for formatting. A float representation of INT_MAX can round upward; avoid treating that rounded value as an exact safe boundary.
+
+The review reproduced an out-of-range cast in ScalarConverter's double-formatting condition using `1000000000000.0`. Checking and printing "int: impossible" earlier does not protect a later independent cast. Use a floating-point test for a fractional part and separate presentation from conversion.
+
+### RTTI and lifetime
+
+A failed pointer downcast returns null; a failed reference downcast throws std::bad_cast. A successful cast verifies type compatibility at that moment, not ownership or lifetime. Deleting the object still invalidates all observing pointers/references. `dynamic_cast<void*>` has a special most-derived-object role; it is distinct from identifying a specific subclass.
+
+### Validation checklist
+
+- Single character, signed number, decimal value, permitted special literals.
+- Empty input, malformed decimal/suffix, trailing junk, and non-ASCII character classification.
+- Exact and nearby integer limits, large finite values, NaN/infinity, and fractional values.
+- Serializer round trip within one live object's lifetime; never dereference an expired pointer.
+- Successful and failed RTTI identification by pointer and by reference.
+
+See [Code-review.md](Code-review.md) for the observed converter diagnostic and [basics.MD](basics.MD) for the four casts.

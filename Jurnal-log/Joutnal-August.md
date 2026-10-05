@@ -1,4 +1,6 @@
 # C++ Learning Journal: 42 CPP Modules
+
+> Original August draft, preserved as learning history. The expanded and corrected CPP08 guide is [Journal-August.md](Journal-August.md); use it for the current theory and implementation checkpoints.
  
 A chronicle of my journey through C++ fundamentals, from basic CPP concepts to advanced polymorphism and memory management.
  
@@ -81,4 +83,3 @@ public:
         return this->c.end();
     }
 };
-

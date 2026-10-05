@@ -18,7 +18,7 @@ A chronicle of my journey through C++ fundamentals, from basic CPP concepts to a
 
 ---
 05:
-ex00 - <exceptions> std::exeption -> base class;
+ex00 - `<exception>` provides `std::exception`, the standard exception base class; `<stdexcept>` provides common derived error types.
 
 **TRY** - anticipation
 **THROW** - signal occurance
@@ -43,7 +43,7 @@ ex00 - <exceptions> std::exeption -> base class;
 # the throw flow: stack unwinding
 **throw by value happens** - handeled by the class
 	program stops it's normal path: constructor aborts building the obj 
-	-> call all it's destructors in local scope: never throw from a destructor - would terminate the program
+	-> when unwinding to a handler, destroy completed automatic objects and constructed base/member subobjects. A failed constructor does not run the destructor of the complete object. Avoid exceptions escaping destructors; an exception escaping one during unwinding can terminate the program.
 	->skips all until the matching catch block : exceptions are matched by their DATA TYPE
 	->in the main we use base class match without specific type, it works because of inheritance and we just want the log message.
 	->specific type is used in cases when we want to fix the problem or change the behaviour.
@@ -135,7 +135,40 @@ these creation functions are static -> they don't get the * this pointer.
 ## rand() - fake random number generator
 	srand(n) - sets the starting point - without it program runs the same squence 
 	time(NULL) - returns current Unix timestamp - starting point number -> robotomy result varies.
-	rand() % 2 gives 0 or 1: in real life we'd use <random> or /dev/urandom
+	rand() % 2 gives 0 or 1. For ordinary simulation, C++11 `<random>` provides explicit engines and distributions. Cryptographic randomness is a separate requirement; simulation engines must not be assumed secure.
 
+## CPP05 — missing theory and validation checklist
+
+### Invariants and failure before mutation
+
+Bureaucrat grades have a bounded valid range; lower numbers represent higher authority. Validate construction input before exposing an object, and validate promotion/demotion before changing its grade. Exercise both valid boundaries and a rejected step beyond each boundary. A failed operation should preserve the old valid state.
+
+Signing and execution are separate transitions. A signed form can still reject execution because the executing grade is insufficient. The shared base checks authorization; each concrete form performs its action. This is the Template Method pattern, independent of C++ template syntax.
+
+### Choose a consistent error contract
+
+A function that throws on an invalid signing attempt cannot promise `noexcept`. If a function instead returns a status, its caller must inspect that status. Header, definition, and caller must agree on return type and exception behavior. The current ex01 mixes these designs; see [Code-review.md](Code-review.md).
+
+`what()` should return a stable message without throwing. C++98 uses the matching `throw()` specification for a standard exception override; modern C++ uses `noexcept`, and `override` checks the signature. Throw by value and catch by const reference; a bare `throw;` rethrows the active exception without slicing it.
+
+### Side effects and ownership
+
+File creation can fail even with a valid grade. Check open/write results and report actual I/O failures. Do not claim a side effect succeeded merely because permission was granted.
+
+An Intern factory returns ownership of a created form under the exercise's raw-pointer interface. The caller must release it on every path, including failed signing/execution. In modern code a unique_ptr return value can encode that ownership; verify the permitted interface before changing the exercise.
+
+### Read-only identity and copying
+
+Const names/grade requirements must initialize in the constructor and cannot be reassigned. Define which mutable state assignment copies and which identity remains unchanged. Do not use const_cast to force assignment into a const member.
+
+### Test plan
+
+- Valid/invalid construction at both grade limits.
+- Successful and rejected promotion/demotion with state preserved on failure.
+- Unsigned execution, insufficient-grade signing, insufficient-grade execution, and successful execution.
+- Known/unknown factory names, correct concrete action, and cleanup after exceptions.
+- Fixed-seed robotomy runs for reproducibility; random outcomes are not proof of correctness.
+
+Connect these checks to the basic, strong, and no-throw guarantees in [basics.MD](basics.MD).
 
 

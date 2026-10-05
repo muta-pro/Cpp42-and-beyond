@@ -20,10 +20,7 @@ A chronicle of my journey through C++ fundamentals, from basic OOP concepts to a
 
 ### Core Concept: Grouping Data and Functions Together
 
-**Objects** are concrete variables created from a class. A C++ object is similar to a struct but more powerful:
-- Holds data
-- Has functions attached to it
-- Can automatically initialize and clean itself
+An **object** is a region of storage holding a value; integers and arrays are objects too. A class object is an instance of that class. In C++, both classes and structs can have data, functions, constructors, and destructors; their main language differences are default member access and default inheritance access.
 
 ### Key Concepts
 
@@ -45,14 +42,15 @@ Understanding where objects live and how to access them.
 
 ### Memory Regions
 
-**STACK** → Automatic lifetime  
-**HEAP** → Manual lifetime
+**Automatic storage duration** → Local objects normally live until their scope ends. A machine stack is the usual implementation.
+
+**Dynamic storage duration** → Storage lives until released by its owner. That owner can be an RAII object; manual cleanup is not the only option.
 
 ### References vs. Pointers
 
 #### References
 - Must be set at construction
-- Always exist (cannot be null)
+- A valid reference designates an object; it can still dangle if that object's lifetime ends
 - Cannot be reassigned to refer to another object
 
 #### Pointers
@@ -75,7 +73,7 @@ int arr[3] = {1, 2, 3};
 
 // Brace initialization (modern)
 std::string s{"hi"};
-int arr{1, 2, 3};
+int arr[]{1, 2, 3};
 ```
 
 **Benefits:**
@@ -147,7 +145,7 @@ Instead of C file APIs, use object-oriented streams:
 - `.bad()` - check for serious I/O errors
 - `.fail()` - check for any error (including EOF, too noisy for post-read checks)
 
-**Note:** `bad()` vs `fail()` — `fail()` also triggers on normal EOF, making it too noisy for post-read checks. `bad()` only fires on real hardware/OS errors.
+**Note:** `eofbit` records that input encountered EOF; `fail()` tests `failbit` or `badbit`, not `eofbit` alone. A failed read after consuming all input commonly sets both `eofbit` and `failbit`. `badbit` indicates a loss of stream integrity, not only a hardware error. After a read loop, distinguish expected EOF from a non-EOF failure; opening, formatting, and writing failures also need explicit checks.
 
 **Non-member function:**
 - `std::getline(stream, string)` - extract a line from stream
@@ -179,7 +177,7 @@ Style of resource handling that manages cleanup automatically without explicit e
 Classes can define types and constants inside themselves using `::` (scope resolution operator).
 
 ```cpp
-std::string::size_type  // size_type belongs to std::string namespace
+std::string::size_type  // size_type is a nested type of the std::string class
 std::string::npos       // Special constant meaning "not found"
 ```
 
@@ -432,4 +430,36 @@ Use strict `<` and `>` (not `<=` or `>=`) because if the point is on the line, i
 
 ---
 
-*Last updated: [Current progress through CPP02]*
+## CPP00–CPP02: Theory gaps to revisit
+
+### CPP00 — state, static members, and input contracts
+
+A class invariant describes valid state. A phone book's stored count and circular replacement index must stay consistent when contacts are added, rejected, or replaced. Separate parsing an index from checking whether a stored contact exists at that index. EOF should end an input loop cleanly, rather than repeatedly retrying a stream that cannot produce more input.
+
+An instance member belongs to each object; a static data member is shared by the class. A static member function has no `this` pointer and cannot access an instance without being given one. In the Account exercise, connect per-account values with class-wide totals and define how constructors/destructors affect each total. In C++98, an odr-used static data member normally needs an out-of-class definition.
+
+Headers declare interfaces; source files define ordinary functions and non-inline storage. Include guards prevent repeated inclusion in one translation unit. They do not solve multiple program definitions across translation units. Keep one `main` per executable; put alternative implementations into separate exercises or notes.
+
+Checkpoint: describe construction versus copy construction versus assignment, and trace how object count changes through each operation. These are different events even when the resulting values match.
+
+### CPP01 — ownership and boundary behavior
+
+`new T` pairs with `delete`; `new T[n]` pairs with `delete[]`. Copying a pointer does not transfer ownership. References and observing pointers can outlive their targets and become dangling; neither syntax guarantees lifetime safety.
+
+A reference member binds during construction, and assignment through the reference assigns to its target rather than rebinding it. A pointer member may be absent or reseated. For the weapon exercises, the observing Human must not outlive its Weapon. A reference returned by a getter also becomes invalid when its owning object dies.
+
+For replacement: reject an empty search string; define non-overlapping matching; test empty replacement, no matches, consecutive matches, empty file, and a file without a final newline. Output can fail during flushing/closing, so immediate insertion success is not the whole I/O story when reliable output is required.
+
+For Harl filtering, distinguish intentional fallthrough from an accidental missing `break`. The usual severity order is DEBUG → INFO → WARNING → ERROR. A C++98 implementation can use a compiler-recognized fallthrough comment; the `[[fallthrough]]` attribute is C++17.
+
+### CPP02 — value semantics and numeric contracts
+
+Orthodox Canonical Form covers default construction, copy construction, copy assignment, and destruction. Assignment normally returns `T&`; prefix increment returns a reference to the updated object, while postfix returns the old value. Read-only comparisons and queries should work on const objects.
+
+Fixed point stores a scaled integer, so one raw increment represents `1 / 256` when there are eight fractional bits. This is not the same as adding one whole real unit. State the rounding policy for negative conversions, the valid range, and behavior on zero division or overflow.
+
+Under C++98, left-shifting a negative signed value is undefined; right-shifting one is implementation-defined. Large intermediates and float-to-int casts need representability checks. Widen operands before arithmetic rather than casting an already-overflowed result.
+
+For the point-in-triangle exercise, use consistent orientation signs, and define whether points on edges count as inside. Test vertices, edges, outside points, reversed vertex order, and degenerate triangles. `const` coordinate members also constrain assignment: decide the supported interface instead of modifying const storage through a cast.
+
+See [basics.MD](basics.MD) for storage duration and numeric safety, and [Code-review.md](Code-review.md) for concrete defects. These additions are study material; they do not claim every exercise is finished.

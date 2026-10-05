@@ -84,7 +84,7 @@ In modern C++:
 void attack(const std::string &target) override;
 ```
 
-In older C++, override still happens even without the `override` keyword, but the keyword provides compile-time safety.
+In older C++, overriding still happens without the `override` keyword **if the base function is virtual and the signature matches**. A same-named non-virtual base function is hidden instead. The modern keyword asks the compiler to verify an override.
 
 ---
 
@@ -189,7 +189,7 @@ Polymorphism allows objects to behave differently based on their actual type, ev
 
 #### Upcasting
 
-**Definition:** Allocating an instance of a subclass with a pointer of the base class.
+**Definition:** Converting a derived pointer/reference to an accessible, unambiguous base pointer/reference. It does not require dynamic allocation.
 
 ```cpp
 Animal* animal = new Dog();
@@ -199,7 +199,7 @@ Without `virtual`, the compiler treats it as an `Animal` → static binding.
 
 #### V-Table (Virtual Table)
 
-Created when a class has virtual functions:
+A common implementation for classes with virtual functions (not a language-mandated layout):
 - Compiler generates a table of virtual function pointers
 - Lets the compiler check the actual class of the object at runtime
 - Even though the pointer type is `Animal`, it dynamically binds to `Dog::makeSound()`
@@ -240,7 +240,7 @@ Combining smaller objects to create a complex one.
 - Copy the contents of the original `Brain`
 - Each object owns its own `Brain`
 
-**Implementation:**
+**Earlier sketch — allocation-failure safety is incomplete:** The assignment below deletes the old Brain before creating a replacement. If allocation throws, the member dangles. It also omits copying the base state. Use it to identify the problem, not as a finished implementation: establish replacement ownership before releasing old state.
 ```cpp
 // Copy constructor
 Dog(const Dog& other) {
@@ -378,7 +378,7 @@ No data members, only pure virtual functions → pure interface.
 - `unequip(int idx)` → Sets slot to NULL (doesn't delete—caller's responsibility)
 - `use(int idx, ICharacter& target)` → Calls `materia->use(target)`
 
-**Deep copy:**
+**Earlier deep-copy sketch — not a complete assignment operator:** The following lacks a self-assignment guard and `return *this`, and deletes ownership before risky cloning. On self-assignment it can read freed objects. Type a replacement that stages owned clones safely before committing; consult the exception guarantees in [basics.MD](basics.MD).
 ```cpp
 Character& operator=(const Character& other) {
     // 1. Clean up old materias
@@ -397,7 +397,7 @@ Character& operator=(const Character& other) {
 **Purpose:** Type-based creation of materias
 
 **Methods:**
-- `learnMateria(AMateria*)` → Stores clone as template
+- `learnMateria(AMateria*)` → In the current code, takes ownership of the supplied prototype rather than cloning it; document that ownership contract
 - `createMateria(const std::string& type)` → Returns clone of template by type
 
 **Pattern:** Factory that creates objects based on string identifiers
@@ -488,9 +488,32 @@ AMateria* createMateria(const std::string& type) {
 
 ---
 
-*Complete through CPP04 - Polymorphism and Virtual Destructors*
-	
+## CPP03–CPP04: Additional theory checkpoints
 
+### CPP03 — construction order, hiding, and slicing
 
+Construction order is: virtual bases, direct bases in declaration order, members in declaration order, then the constructor body. Destruction reverses that order. Writing a different initializer-list order does not change it. The most-derived class initializes a shared virtual base.
+
+Access and inheritance are different decisions. Public inheritance preserves the public base interface; private inheritance restricts it. Use protected members only when the design needs derived access; private state with a deliberate interface often protects invariants better.
+
+Overloading means different parameter lists. Overriding replaces virtual behavior with a matching derived implementation. Hiding can make base overloads unavailable by name; a `using Base::function` declaration can restore an overload set. `Base::function()` explicitly calls that implementation.
+
+Copying a derived object into a base value slices away its derived part. A base reference or pointer can preserve access to the dynamic object, but does not automatically own or extend its lifetime. Test both value and reference cases to see the distinction.
+
+The diamond exercise combines two issues: a shared base's state and ambiguous inherited names. Virtual inheritance solves shared identity; explicit qualification solves name ambiguity. State changes in constructor bodies can still overwrite the same shared base members, so trace the final invariant rather than assuming a qualification selects separate storage.
+
+### CPP04 — dispatch, destruction, and owned resources
+
+Virtual dispatch during a constructor/destructor uses the class currently being constructed/destroyed, not a more-derived part whose lifetime is not active. Avoid relying on derived behavior to establish or clean up a base invariant.
+
+Deleting a derived object through a base pointer without a virtual destructor is undefined behavior. A polymorphic class needs at least one virtual function for the usual runtime-checked downcasts; that virtual function does not have to be its destructor. A virtual destructor is the safe deletion requirement when the base is used as an owning polymorphic interface.
+
+An abstract class can have constructors, data, and ordinary member functions. A pure virtual destructor still needs a definition because derived destruction calls it. Vtables are a common implementation technique, not a mandated C++ object layout.
+
+Composition with Brain means owning a separate resource. Independent copying must clone the state, not just copy its pointer. If a later allocation or clone throws during construction, clean up earlier resources; the enclosing destructor will not run for an object that never finished construction.
+
+For Materia: document who owns a newly created, equipped, rejected, and unequipped object. Never equip the same owning pointer twice. Test self-assignment and partial-copy failure in addition to successful cloning. A clone's base-pointer return type preserves a uniform interface, while virtual dispatch selects the concrete clone implementation.
+
+See [Code-review.md](Code-review.md) for the current MateriaSource self-assignment defect and copy-safety follow-ups. Study coverage and verified implementation progress are separate.
 
 
