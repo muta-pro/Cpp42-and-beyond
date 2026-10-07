@@ -1,7 +1,5 @@
 # August learning journal — CPP08: containers, iterators, algorithms
 
-Expanded during the guided review on 5 October 2026. This completes the study guide, not the exercise implementations. The original August draft remains in [Joutnal-August.md](Joutnal-August.md).
-
 ## Module map
 
 | Exercise | Main lesson | Current status |
@@ -11,8 +9,6 @@ Expanded during the guided review on 5 October 2026. This completes the study gu
 | ex02: MutantStack | Container adaptors, inheritance, dependent names, exposing iteration | Iteration and meaningful demo missing; assignment and flags need correction |
 
 Prerequisites: CPP05 exceptions, CPP06 conversions, CPP07 templates. The goal is to connect those tools: **store values in a container, describe a valid range with iterators, choose an algorithm, preserve the type's invariants**.
-
-Your Makefiles currently use C++17 for ex00/ex02 and C++20 for ex01. A 42 submission may require C++98; there is no subject PDF here to verify. Keep a subject-compliant implementation and modern experiments clearly distinguished. The explanations below label later features.
 
 ## 1. The STL model
 
