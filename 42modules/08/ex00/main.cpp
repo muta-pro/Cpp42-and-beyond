@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/02 17:46:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/08/22 19:06:19 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/07 15:56:00 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ int main() {
 		std::cout << "number not found" << std::endl;
 	}
 
+	const std::vector<int> cvec = {1};
+
 	try {
-		auto it = easyfind(vec, 22);
+		auto it = easyfind(cvec, 22);
 		std::cout << "found: " << *it << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "number 22 not found" << std::endl;
