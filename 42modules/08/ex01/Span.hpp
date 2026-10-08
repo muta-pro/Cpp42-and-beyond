@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 22:43:23 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 23:36:09 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 class Span {
 public:
 	Span();
-	explicit Span(unsigned int N);
+	explicit Span(unsigned int N); //write obj creation urself
 	Span(const Span& copy) = default;
 	Span &operator=(const Span& assign) = default;
 	~Span() = default;
