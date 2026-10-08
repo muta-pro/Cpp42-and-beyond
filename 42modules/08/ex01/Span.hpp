@@ -13,18 +13,16 @@
 #ifndef SPAN_HPP
 #define SPAN_HPP
 
-#include <algorithm>
-#include <numeric>
-#include <vector>
-#include <stdexcept>
 #include <concepts>
-#include <iterator>
 #include <cstddef>
+#include <iterator>
+#include <stdexcept>
+#include <vector>
 
 class Span {
 public:
 	Span();
-	explicit Span(unsigned int N); //write obj creation urself
+	explicit Span(unsigned int maxSize);
 	Span(const Span& copy) = default;
 	Span &operator=(const Span& assign) = default;
 	~Span() = default;
@@ -36,10 +34,12 @@ public:
 	template <std::forward_iterator Iter>
 	requires std::same_as<std::iter_value_t<Iter>, int>
 	void AddRange(Iter first, Iter last) {
+		// first and last must describe a valid range in the same container.
+		// Forward iterators let us count the range, then walk it again to copy.
 		const auto amountToAdd = std::distance(first, last);
-		if (amountToAdd < 0) 
-			throw std::overflow_error("Invalid iterator range");
-		std::size_t spaceLeft = _capacity - _collection.size();
+		if (amountToAdd < 0)
+			throw std::invalid_argument("Range is reversed");
+		const std::size_t spaceLeft = _capacity - _collection.size();
 		if (static_cast<std::size_t>(amountToAdd) > spaceLeft)
 			throw std::overflow_error("Range does not fit");
 		_collection.insert(_collection.end(), first, last);
@@ -50,5 +50,3 @@ private:
 };
 
 #endif
-/*
-The repeated-pass requirement matters because your implementation walks through the range once to count its elements, then again to insert them.*/
