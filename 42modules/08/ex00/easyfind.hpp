@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/02 17:46:16 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/07 16:31:09 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 15:03:31 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define EASYFIND_HPP
 
 #include <algorithm>
+#include <exception>
 
 template <typename T>
 typename T::iterator easyfind(T& cont, int n) {
