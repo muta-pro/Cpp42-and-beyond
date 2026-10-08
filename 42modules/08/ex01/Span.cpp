@@ -6,13 +6,15 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:37 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/09/26 21:00:00 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 18:04:06 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Span.hpp"
 
-Span::Span() : unsigned int N(N) {}
+Span::Span() {
+	_capacity(0);
+}
 
 Span::Span(const Span& copy) : unsigned
 
@@ -26,7 +28,6 @@ Span::Span(unsigned int maxSize) : _capacity(maxSize) {
 	_num.reserve(_capacity);
 }
 
-Span::Span(unsigned int N) : _maxSize(N) {}
 
 void Span::AddNumber(int value) {
 	if (_num.size() >= _capacity)
