@@ -1,7 +1,7 @@
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++20 -g -fsanitize=address -MMD -MP
 NAME = find
-SRC = main.cpp
+SRC = main.cpp Span.cpp
 OBJ = $(SRC:.cpp=.o)
 DEP = $(OBJ:.o=.d)
 all: $(NAME)

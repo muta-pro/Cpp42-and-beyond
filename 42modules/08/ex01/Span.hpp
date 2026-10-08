@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 18:39:54 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 22:43:23 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@
 class Span {
 public:
 	Span();
-	Span(unsigned int N);
-	Span(const Span& copy);
-	Span &operator=(const Span& assign);
-	~Span();
+	explicit Span(unsigned int N);
+	Span(const Span& copy) = default;
+	Span &operator=(const Span& assign) = default;
+	~Span() = default;
 
-	void	AddNumber(int n);
-	int		shortestSpan() const;
-	int		longestSpan() const;
+	void			AddNumber(int n);
+	long long		shortestSpan() const;
+	long long		longestSpan() const;
 
 	template <std::forward_iterator Iter>
 	requires std::convertible_to<std::iter_value_t<Iter>, int>

@@ -227,6 +227,12 @@ An **invariant** is a rule that must remain true while an object is usable. For 
 
 `reserve(10)` prepares space but does not create ten elements. `resize(10)` actually creates ten elements. The exercise's limit is my own rule; vector can grow further unless I check it.
 
+to release the reserved memory -> swap()
+    std::vector<int>().swap(v); internal buffer get's swaped with a temporary empty vector that get's destroyed at the end of the expression.
+
+*performance* 
+reserve() is memeber method in vector used to preallocate memory increasing it's capacity - not changing it's size (adding elements) - modifies internal buffer size. this reserves memory in advance perventing multiple allocatoins and data copies during elements addition. O(1);
+
 ### First checkpoint: constructors and copying
 
 A constructor initializer names an existing member, such as `_capacity`; it is not a place to declare a new variable.
