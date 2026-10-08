@@ -938,24 +938,30 @@ An exercise's required language standard is part of its contract. Modern extensi
 
 ## Exceptions, Assertions, and Guarantees
 
-Use `<exception>` for `std::exception`, `<stdexcept>` for types such as `logic_error`, `runtime_error`, and `out_of_range`, and `<cassert>` for `assert`.
+An exception reports that a function could not finish its job. For example, easyfind throws when the requested value is missing; its caller can catch that exception and print "not found."
 
-- **Exception:** report an operation that cannot complete, such as an invalid grade or missing search result.
-- **Assertion:** check a programmer assumption during development. Assertions can be disabled with `NDEBUG`; they do not replace validation of external input.
-- **Precondition:** something the caller must satisfy before invoking an operation, such as a valid iterator range.
-- **Invariant:** a rule the object's valid states must always satisfy, such as count not exceeding capacity.
+Use `<exception>` for `std::exception`, `<stdexcept>` for errors such as `logic_error`, `runtime_error`, and `out_of_range`, and `<cassert>` for `assert`. These are different headers. `<exception>` is singular.
 
-Throw by value; normally catch by `const` reference to preserve the exception's dynamic type and avoid copying. Order derived catches before base catches. When a handler is found, unwinding destroys completed automatic objects. If a constructor throws, the whole object's destructor does not run, but fully constructed base/member subobjects are destroyed. A raw pointer member does not automatically free the pointed-to allocation.
+- **Exception:** the function signals a problem to its caller.
+- **Assertion:** a development check that says "this should be true." A failed assertion stops the program. Builds can disable assertions with `NDEBUG`, so use normal checks for user input.
+- **Precondition:** a requirement the caller must meet before calling the function. For example, two iterators must belong to a valid range.
+- **Invariant:** a rule an object must keep true while it is usable. For Span, stored count must never exceed its limit.
+
+Normally throw an exception object by value and catch it with `const std::exception&` or the appropriate derived type. Catching by reference avoids a copy and keeps access to the actual exception type. Put more specific catch blocks before a general base-class catch.
+
+When an exception travels to a catch block, completed local objects are destroyed along the way. This is called **stack unwinding**. If construction fails, the complete object's destructor does not run; already constructed base/member objects are still cleaned up. A raw pointer does not clean up the allocation it points to, so an owning helper matters.
 
 | Guarantee | Meaning on failure |
 | --- | --- |
-| Basic | No resource leaks; invariants preserved, though values may change |
-| Strong | Operation has no observable effect if it fails |
-| No-throw | Operation will not emit an exception |
+| Basic | The object remains valid and leaks no resources; its values may have changed |
+| Strong | Failure leaves the previous state unchanged |
+| No-throw | The operation will not let an exception escape |
 
-`noexcept` is a promise, not an automatic recovery mechanism. An exception escaping a `noexcept` function calls `std::terminate`. Destructors should not emit exceptions, especially during unwinding.
+`noexcept` promises that an exception will not escape the function. It does not fix failures automatically: an escaping exception calls `std::terminate`. Destructors should not let exceptions escape, especially while another exception is being handled.
 
-For owning data, build replacement state under an RAII owner, complete the risky work, then commit. Do not delete the old storage first and assume the new allocation will succeed. **Copy-and-swap** can provide strong assignment safety only if construction of the temporary is safe and swapping the relevant state cannot throw.
+For an object that owns memory, first prepare the replacement, then finish copying, and only then replace the old data. This keeps the old object valid if allocation/copying fails. Let a local owning object clean up unfinished replacement data; that is RAII in practice.
+
+**Copy-and-swap** means preparing a copied temporary and exchanging its state with the current object. It can keep assignment safe, but only if making the temporary already cleans up properly on failure and the state exchange cannot throw.
 
 ## Rule of Three, Five, and Zero
 
@@ -982,15 +988,66 @@ Widen operands **before** arithmetic. A wider destination cannot fix overflow th
 
 `uintptr_t`, when provided, is an unsigned integer type capable of representing `void*` for a supported round trip; it need not have exactly the pointer's size. Modern C++ declares it in `<cstdint>` (C++11), not `<cstdlib>`. A recovered pointer is usable only while the original object lives. This is an address round trip, not portable persistent serialization.
 
-## Template Instantiation and Header Independence
+## Reading Template Syntax, One Piece at a Time
 
-A template describes how to produce a concrete specialization. Dependent operations may only be checked when that member is instantiated. An empty `main` that includes `MutantStack.hpp` does not test assignment or iteration.
+A template is a pattern with a placeholder for a type. The compiler fills in that placeholder when I use the pattern with a particular type.
 
-Definitions normally need to be visible where instantiation happens, often in the header or a `.tpp` included by it. A dependent qualified type such as `T::iterator` generally needs `typename`; a member of a dependent base may need `this->` qualification.
+For easyfind, read this declaration:
 
-Constraints express which operations/types are permitted, but they do not prove runtime values are safe. `convertible_to<double,int>` does not prove a particular double is representable in an int.
+```cpp
+template <typename T>
+typename T::const_iterator easyfind(const T& cont, int n);
+```
 
-A self-contained header includes what it uses. Compile a tiny file that includes only that header and instantiates its relevant operations. Do not rely on an unrelated `<iostream>` or `<vector>` include to supply another declaration indirectly.
+| Piece | Plain meaning |
+| --- | --- |
+| `template <typename T>` | T is a placeholder for a type |
+| `const T& cont` | Receive the original container without copying it; read through cont without changing it |
+| `T::const_iterator` | Use the read-only iterator type supplied by the container |
+| The second `typename` | Tell the compiler that this name inside T is a type |
+| `int n` | Receive the number to search for |
+
+In this example T is the entire container type. If I pass a vector of integers, T becomes `std::vector<int>`, not just `int`. If I pass a list of integers, T becomes `std::list<int>`.
+
+The `::` operator means "look inside this scope." A class can provide named types as well as named functions and data. `std::vector<int>::const_iterator` is one such type name. It is used to declare an actual variable, just as int is:
+
+```cpp
+int number;
+std::vector<int>::const_iterator it;
+```
+
+The types are `int` and `std::vector<int>::const_iterator`. The variable names are `number` and `it`. In a template, T is still unknown when the compiler first reads the pattern, so typename marks the nested name as a type.
+
+Filling in a template for a concrete type is called **instantiation**. Some errors only appear when a particular function/member is actually used. Including MutantStack.hpp in an empty main does not test assignment; calling assignment makes the compiler check that member too.
+
+The compiler normally needs to see a template function's body when using it for a new type. Keep the definition in the header, or in a .tpp file that the header includes. An ordinary non-template function can often put its body in a separately compiled .cpp instead.
+
+A member from a template base class may need `this->` to tell the compiler where to look; that is relevant to MutantStack's `this->c`.
+
+In C++20, a **constraint** limits which types a template accepts. `convertible_to<double,int>` says that a conversion is allowed for these types; it does not promise that every double value fits in an int.
+
+## Overloading: Same Name, Different Parameters
+
+An overload is another function with the same name but different parameters. For my vector/list/deque searches:
+
+- The easyfind receiving `T&` returns an iterator that can read/write an element.
+- The easyfind receiving `const T&` returns a const_iterator that can read the element but not change it.
+
+For an ordinary vector the compiler picks the first; for a const vector it picks the second. It chooses based on the argument and parameter types, not on which return type I would prefer. Changing only the return type does not make a valid overload.
+
+Templates and overloading are separate tools: the template handles different container types; the overloads handle different ways of accessing those containers.
+
+## Header Structure and Direct Includes
+
+A header should include the library headers for the tools it uses itself. For easyfind, `<algorithm>` supplies std::find and `<exception>` supplies std::exception.
+
+The program may compile without a direct include because another header happened to include it too. That is an indirect include. It is not something to depend on: different libraries or later changes may bring in different headers.
+
+An include guard uses `#ifndef`, `#define`, and `#endif` to prevent processing the header twice during one source file's compilation. Template bodies belong inside that guard. An explanatory comment outside the guard does no harm, but I can keep related comments together inside it for readability.
+
+The generic easyfind functions do not directly name vector/list/deque, so those includes belong in the code that creates those containers. A commented-out vector example does not require a vector include.
+
+To check header independence, compile a tiny source that includes only easyfind.hpp. Then separately create containers and call both overloads to check their bodies.
 
 ## ADL: Argument-Dependent Lookup
 
@@ -1015,7 +1072,11 @@ Vector **size** is the number of elements. **Capacity** is how many elements its
 
 ## Iterators, Ranges, and Lifetimes
 
-An iterator is a position supporting a specified set of operations, not an owning smart pointer. Classic algorithms usually use `[first,last)`, including the first position and excluding the last. Empty means first equals last; dereferencing end is invalid.
+An iterator represents a position in a collection. `*it` accesses the element at that position; `++it` moves to the next position. The word **dereference** means using `*it` to access the element.
+
+Classic algorithms usually use `[first,last)`: start at first and stop before last. `end()` means the position after the last element, not another stored value. Do not read `*end()`. For an empty container, begin equals end because there is no first element.
+
+An iterator usually does not own the data or keep it alive. If its container is destroyed or its storage changes in certain ways, the old iterator may become unusable. This is called invalidation.
 
 | Category | Example operation | Typical source |
 | --- | --- | --- |
@@ -1026,11 +1087,11 @@ An iterator is a position supporting a specified set of operations, not an ownin
 | Random access | Also offset/subtract compatible positions | vector, deque, array |
 | Contiguous (C++20) | Also consecutive underlying storage | vector<int>, array |
 
-An input iterator cannot be assumed reusable after a counting pass. Forward iterators support a count-then-copy approach. `std::distance` needs a valid range; it is not a validator for unrelated or unreachable positions.
+An input iterator can read a source that is consumed as it goes. Counting first may leave nothing for a second pass. Forward iterators can walk the same range more than once, so they support counting and then copying. `std::distance` requires valid positions from a real range; it cannot safely test whether arbitrary positions are valid.
 
 Mutation can invalidate borrowed positions. Vector reallocation invalidates all iterators/references/pointers; erase invalidates positions at and after the erased element. List insertion preserves iterators and erase invalidates the erased ones. Deque end insertion preserves existing element references but invalidates iterators. Check the exact operation's documented rules.
 
-`const_iterator` prevents writes through the iterator but can itself advance. `const iterator` prevents changing the iterator variable and can still permit writes to the value. A const-container overload should expose the appropriate const iterator type.
+For vector/list/deque, iterator can read/write an element; const_iterator can only read it. Both can advance. `const iterator` is different: the iterator variable cannot advance, but its element may still be writable. The const easyfind overload needs a read-only type both for its returned iterator and its local result variable.
 
 ## Algorithms and Preconditions
 
@@ -1065,7 +1126,11 @@ For Span: longest span is max minus min in O(n). Shortest span comes from adjace
 
 Complexity counts how work grows; actual performance also depends on allocation, locality, data size, and element operations. Memory complexity matters too: sorting a copied vector uses O(n) extra element storage.
 
-Use deterministic expected-value tests first, then scale tests. Include zero/one element, duplicates, extremes, valid rejected operations, independent copies, self-assignment, and const access. Tests should exercise template members rather than merely include their declarations.
+Start with small fixed inputs where I know the answer. **Duplicates** means a value appears more than once: for `7,1,7`, easyfind must return the first 7. An **empty container** stores no elements. A **missing value** is a value the container does not contain. A **target** is the value I ask the function to find.
+
+For easyfind, compare the returned position with the expected position, not only the printed value. Both 7s print the same, so position matters. For missing/empty searches, check that the catch block is reached without trying to read a missing element. For a const container, test a successful read, and separately confirm that attempting a write is rejected by the compiler.
+
+Then test larger inputs, numeric limits, rejected operations, copies that can change independently, self-assignment, and const access. Call each template member I want to check; including its declaration alone is not enough.
 
 Compiler warnings catch some mistakes; they do not prove correctness. AddressSanitizer detects many memory errors; UndefinedBehaviorSanitizer detects many invalid operations. Neither catches every defect. Recovery-mode sanitizer diagnostics still indicate a failed check even with exit status 0.
 

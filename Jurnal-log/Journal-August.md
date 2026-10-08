@@ -1,253 +1,377 @@
 # August learning journal — CPP08: containers, iterators, algorithms
 
-## Module map
+## What I am learning
 
-| Exercise | Main lesson | Current status |
+I already know how to store one number, use functions, and write classes. This module teaches me to work with collections of values without writing every storage and search operation myself.
+
+The three main pieces are:
+
+| Piece | Plain meaning | Example |
 | --- | --- | --- |
-| ex00: easyfind | Function templates, generic search, iterator results, exceptions | Current demo builds and runs; const and edge-case coverage to add |
-| ex01: Span | Container ownership, bounded insertion, member templates, efficient algorithms, numeric safety | Unfinished constructors and interface/build mismatches |
-| ex02: MutantStack | Container adaptors, inheritance, dependent names, exposing iteration | Iteration and meaningful demo missing; assignment and flags need correction |
+| Container | An object that stores a collection of values | A vector holding `10, 20, 30` |
+| Iterator | An object that represents a position in a collection | A position pointing at the value `20` |
+| Algorithm | A ready-made function that performs an operation | `std::find` searches between two positions |
 
-Prerequisites: CPP05 exceptions, CPP06 conversions, CPP07 templates. The goal is to connect those tools: **store values in a container, describe a valid range with iterators, choose an algorithm, preserve the type's invariants**.
+An algorithm still uses loops internally. I use it because it already expresses an operation such as searching or sorting.
 
-## 1. The STL model
-
-The standard library is broader than the STL: streams, strings, exceptions, and other facilities also belong to the standard library. STL usually refers to generic containers, iterators, algorithms, and associated function objects and allocators.
-
-- **Container:** owns or organizes a collection of values.
-- **Iterator:** a position with operations the algorithm can use.
-- **Algorithm:** performs work on a range without depending on one concrete container.
-- **Predicate or comparator:** behavior supplied to an algorithm.
-- **Adaptor:** presents a restricted interface over another component; `std::stack` is a container adaptor.
-
-Algorithms do not eliminate loops internally. They let me express a standard operation and reuse its tested implementation. I choose storage based on access patterns, then choose an algorithm compatible with its iterators.
-
-| Container | Useful property | Important cost or constraint |
+| Exercise | What I practice | Progress |
 | --- | --- | --- |
-| `vector<T>` | Contiguous storage, random indexing, fast iteration | Middle insertion/erase O(n); growth can invalidate positions |
-| `deque<T>` | Random indexing, efficient insertion at either end | Not contiguous; iterator invalidation differs from vector |
-| `list<T>` | Stable iterators to surviving nodes; insertion at a known position O(1) | No random indexing; finding the position is O(n) |
-| `set<T>` | Unique ordered keys | Key lookup O(log n); elements cannot be changed through iterators |
-| `map<K,V>` | Ordered key/value entries | Elements are pairs with const keys; use member lookup for keys |
-| `stack<T>` | LIFO operations: push, top, pop | No public iterator interface; default backing container is deque |
+| ex00: easyfind | Search different containers; handle missing values; read const containers | Latest pushed version checked on 8 October 2026: builds, demo runs, and extra checks pass |
+| ex01: Span | Store a limited number of integers; calculate smallest/largest gaps | Still needs the fixes recorded in the code review |
+| ex02: MutantStack | Keep stack operations and add a way to walk through its values | Still needs iteration, assignment, and build fixes |
 
-`array<T,N>` and unordered containers are C++11 additions. `forward_list` is C++11 too. Do not mix these into a C++98 answer accidentally.
+“Extra checks pass” means tests run separately in the cloud workspace passed. Those extra tests have not been added to my exercise's `main.cpp`.
 
-## 2. Ranges and iterator validity
+## 1. Choosing a container
 
-Most classic algorithms take a half-open range **`[first, last)`**. It includes `first` and excludes `last`.
+The STL, or Standard Template Library, is the part of the standard library built around containers, iterators, and algorithms. The standard library also contains other tools such as streams and exceptions.
 
-- `begin()` denotes the first element if one exists.
-- `end()` is a past-the-end position and must never be dereferenced.
-- Empty container: `begin() == end()`.
-- Both iterators must describe a valid range; `last` must be reachable from `first` using operations permitted for the category.
+| Container | How to picture it | Useful property | Limitation |
+| --- | --- | --- | --- |
+| `vector<T>` | Values next to each other in memory | Fast access by index; easy to walk through | Adding/removing in the middle shifts values |
+| `deque<T>` | A sequence with room to grow at either end | Fast indexing and adding at front/back | Its whole sequence is not one continuous memory block |
+| `list<T>` | Linked nodes, each containing a value | Insert/remove at a known position without moving other nodes | Finding that position may require walking through the list |
+| `set<T>` | Unique values kept in order | Efficient lookup; no duplicate keys | Stored keys cannot be changed through its iterators |
+| `map<K,V>` | Keys paired with values, ordered by key | Look up a value by its key | Each element is a pair, not just the key |
+| `stack<T>` | A pile: add/remove at the top | Useful when the newest value must be handled first | No public `begin()` or `end()` |
 
-An iterator is not necessarily a raw pointer or a smart pointer. It does not usually own the object. It becomes unusable when its referenced storage or element is invalidated.
+In `vector<int>`, `int` is the type of each stored element. In my easyfind template, however, `T` represents the **whole container type**, such as `vector<int>`.
 
-### Categories tell me which operations are available
+`array`, `forward_list`, and unordered containers are available from C++11. Concepts and ranges are C++20 features. The compiler's selected language version decides which syntax I can use.
 
-| Category | What it adds | Example |
-| --- | --- | --- |
-| Input | Read and advance, potentially single pass | `istream_iterator` |
-| Output | Write and advance | `back_insert_iterator` |
-| Forward | Multiple passes over the same range | `forward_list` iterator (C++11) |
-| Bidirectional | Move backward too | `list` iterator |
-| Random access | Jump by offsets, subtract compatible positions | `vector`, `deque` iterators |
-| Contiguous (C++20 concept) | Consecutive positions map to consecutive storage | `vector<int>` iterator |
+## 2. Understanding an iterator
 
-`std::find` works with input iterators. `std::sort` needs random-access iterators. Therefore a list uses `list.sort()`, not `std::sort(list.begin(), list.end())`.
+An iterator is a position, not the value itself. For an iterator named `it`:
 
-`std::distance` is O(1) for random-access iterators and O(n) for typical other categories. Counting and then inserting traverses twice, so a simple precheck design should require forward iterators. An input iterator might consume its source on the first pass.
-
-### Invalidation examples to memorize
-
-- Vector growth that reallocates invalidates all its iterators, references, and pointers. Without reallocation, appending still invalidates the old `end()`.
-- Vector erase invalidates positions at and after the erased element.
-- List insertion preserves existing iterators; erasure invalidates those to erased elements.
-- Deque insertion at either end invalidates iterators but preserves references to existing elements. Check the rules for other operations separately.
-- Ordered associative insertion preserves existing iterators; erasure invalidates the erased ones.
-
-A returned iterator is useful only while its original container and position remain valid.
-
-## 3. ex00 — easyfind
-
-### Contract before implementation
-
-Input: a container of integer values and a target integer. Result: an iterator to the **first** matching value. Missing target: signal failure according to the chosen contract, currently an exception.
-
-`std::find` compares elements to the target and returns `last` when no element matches. It does not throw merely because a value was absent; my wrapper adds that behavior.
-
-The search is O(n). A sorted container does not automatically make `std::find` faster. For a set, member `find` uses its key-search structure and is O(log n).
-
-### Dependent type names
-
-In `typename T::iterator`, the type of `T::iterator` depends on the template argument. `typename` tells the parser to treat that dependent qualified name as a type.
-
-Returning the iterator preserves access to the found position. Returning a copied integer would lose its position and connection to the container.
-
-### Const correctness
-
-A mutable container can expose a mutable iterator. A const container exposes a `const_iterator`, which prevents modifying elements through it. Add two overloads and make their return types agree with their parameters. A `const_iterator` can still advance; it is the pointed-to value that is read-only.
-
-`const iterator` means the iterator object itself cannot move. It is different from `const_iterator`.
-
-### Your checkpoint
-
-Before typing, answer: when search fails, which iterator does `std::find` return, and why must I compare it before dereferencing?
-
-Then type the const overload, include the exception header directly, and test:
-
-| Case | Expected |
+| Expression | Meaning |
 | --- | --- |
-| vector/list/deque with a match | Correct found value |
-| Empty container | Missing-value exception |
-| Repeated target values | Iterator to first occurrence |
-| Missing value | Exception, no dereference of end |
-| Const vector | Search succeeds, result cannot write the element |
+| `*it` | Access the element at that position |
+| `++it` | Move to the next position |
+| `it == values.end()` | Ask whether it is the position after the last element |
 
-The existing demo already covers seven searches. Preserve those outcomes while adding the missing cases.
+The word **dereference** means “access the value using `*it`.”
+
+For values `10, 20, 30`:
+
+```text
+positions:    [10]    [20]    [30]    end
+               ^
+             begin
+```
+
+`end()` does not point at a fourth value. It marks where the sequence stops. Never read `*values.end()`.
+
+If a container is empty, `begin()` equals `end()`: there is no first element to read.
+
+### What does [first, last) mean?
+
+The brackets describe which positions belong to a range. **Include first, stop before last.** Most classic algorithms use this rule.
+
+```cpp
+std::find(values.begin(), values.end(), 20);
+```
+
+This means: start at the first element, search for 20, and stop when reaching the position after the last element.
+
+The two positions must describe a real, valid range. Positions from unrelated containers are not a range I can safely pass to an algorithm.
+
+### Different iterators have different abilities
+
+These names describe what an iterator can do:
+
+| Name | Plain meaning | Example |
+| --- | --- | --- |
+| Input | Read and move forward; the source may only be usable once | Reading from a stream |
+| Output | Write and move forward | Adding results through a back-insertion iterator |
+| Forward | Walk forward, and walk the same range again | forward_list iterator |
+| Bidirectional | Walk forward or backward | list iterator |
+| Random access | Also jump by an offset, like an array index | vector/deque iterator |
+| Contiguous (C++20) | Also refers to consecutive elements in consecutive memory | vector of ordinary integers |
+
+`std::find` can walk forward. `std::sort` needs to jump around, so it requires random-access iterators. A list does not have those; it provides its own `list.sort()`.
+
+`std::distance(first,last)` counts the steps between valid positions. With a vector it can calculate the distance directly; with a list it walks through the elements.
+
+An input iterator can represent a source that gets consumed as I read it. Counting that source first may leave nothing for a second pass. A forward iterator supports walking the same range again.
+
+### When can an old iterator stop working?
+
+This is called **iterator invalidation**. An iterator does not own the elements or keep them alive.
+
+- If a vector needs a new allocation while growing, all old positions into its elements become unusable. Even without that move, appending changes the old end position.
+- Removing a vector element makes positions at that element and later unusable.
+- Inserting a list node leaves existing positions usable. Removing a node invalidates positions to that node.
+- Adding at a deque's front/back invalidates iterators, although references to existing elements stay valid.
+- Inserting in an ordered set/map preserves existing iterators; removing an element invalidates positions to the removed element.
+
+Read the rule for the particular container operation before reusing an old iterator.
+
+## 3. ex00 — easyfind, step by step
+
+### What should this function do?
+
+Give it a container and an integer to search for.
+
+- If that integer exists, return a position pointing to its first occurrence.
+- If it does not exist, throw an exception so the caller can handle the missing value.
+
+`std::find` itself does not throw just because a value is absent. It returns the final position supplied to it. My easyfind adds the exception.
+
+### Reading the template syntax
+
+Start with a function for one specific container:
+
+```cpp
+std::vector<int>::const_iterator
+easyfind(const std::vector<int>& cont, int n);
+```
+
+This declaration says: “Search a read-only vector of integers and return a read-only position in that vector.”
+
+A template lets me replace the repeated container type with a placeholder:
+
+```cpp
+template <typename T>
+typename T::const_iterator easyfind(const T& cont, int n);
+```
+
+| Part | Read it as |
+| --- | --- |
+| `template <typename T>` | This function pattern has a placeholder type named T |
+| `const T& cont` | Receive the original container without copying it; do not change it through cont |
+| `T::const_iterator` | The read-only iterator type provided by that container |
+| The second `typename` | Tell the compiler that T::const_iterator is a type name |
+| `int n` | The integer I want to find |
+
+For a const vector call, the compiler fills in `T = std::vector<int>`. This is called **template instantiation**: using the pattern to form a function for a particular type.
+
+`::` means “look inside this scope.” `std::vector` names vector inside std; `T::const_iterator` names a type inside the container class.
+
+A **type** describes what kind of object I can create. A **variable** is an actual object with a name. In `T::const_iterator it`, the type is `T::const_iterator`; the variable name is `it`.
+
+### What does overload mean?
+
+An overload is another function with the same name but different parameters.
+
+My first easyfind receives `T&` and returns `T::iterator`. My second receives `const T&` and returns `T::const_iterator`.
+
+For my ordinary vector call, the compiler picks the first. For my const vector call, it picks the second. It uses the argument and parameter types to choose; changing only a return type cannot create an overload.
+
+Templates let me reuse these patterns for different containers. Overloading lets me offer a mutable and a read-only version.
+
+| Iterator for vector/list/deque | Read a value | Change a value | Move to next position |
+| --- | --- | --- | --- |
+| `iterator` | Yes | Yes | Yes |
+| `const_iterator` | Yes | No | Yes |
+
+`const iterator` is a different spelling: it prevents moving the iterator variable itself. It is not the same as `const_iterator`.
+
+In the const overload, both the return type **and the local variable holding the search result** must allow read-only access. My earlier compile error happened because the local variable was still a mutable iterator.
+
+### Why check end before using the result?
+
+Searching `10,20,30` for 99 returns `end()`. Reading `*it` at that position would be invalid.
+
+My function already compares the result with end and throws if they are equal. The caller's catch block can then print “not found.” I do not need to dereference the missing result.
+
+### Is the header organized correctly?
+
+The current header has the needed pieces:
+
+1. `#ifndef` / `#define` / `#endif`: the include guard prevents the contents being processed twice in one source file's compilation.
+2. `#include <algorithm>`: declares `std::find`.
+3. `#include <exception>`: declares `std::exception`. The filename is singular: **exception**, not exceptions.
+4. Both template definitions: these normally stay in the header so the compiler can see their bodies when it needs them.
+
+The functions do not directly use vector/list/deque, so their headers can stay in the caller. The vector example at the bottom is a comment and needs no additional include.
+
+It previously worked because another included header happened to bring in std::exception too. This is an **indirect include**. I should include the header for each library tool I use directly rather than rely on that coincidence.
+
+### Small tests I can type myself
+
+A test means: choose an input, run the function, and compare the result with something I already know should happen.
+
+| What to try | What should happen | What I learn |
+| --- | --- | --- |
+| vector `10,20,30`, search 20 | Position points to 20 | Ordinary search works |
+| Same kind of search in a list and deque | Found value is correct | The template works with more than one container |
+| Empty vector, search 20 | Catch the missing-value exception | An empty collection is handled safely |
+| `7,1,7`, search 7 | Returned position equals begin | It finds the first 7, not the later one |
+| `10,20,30`, search 99 | Catch the exception; do not read a missing element | Missing values are handled safely |
+| Const vector `1,2`, search 1 | Read 1 through the returned iterator | Read-only containers work |
+
+Repeat the empty, duplicate, and missing-value tests with list/deque when comfortable.
+
+To check that a const result cannot write, try assigning through `*it` in a **separate small compilation**. That attempt should fail to compile. Do not leave it in the normal executable and expect the build to succeed.
+
+My current demo uses const `cvec = {1}` and searches for 22, so “number 22 not found” is the correct result. Add a separate search for 1 to see the const overload succeed too.
+
+### Checked on 8 October 2026
+
+The current seven demo searches built and ran. Separate scratch tests passed 15 runtime checks: found/missing/empty/duplicate cases for vector/list/deque, const-vector success/failure, and writing through a mutable result. The iterator types were checked at compile time. Writing through a const result was rejected as expected. The header compiled by itself.
+
+These checks used the pushed code unchanged. I still need to type the extra cases into my own demo if I want them saved with the exercise.
 
 ## 4. ex01 — Span
 
-### Representation and invariants
+### Begin with the stored state
 
-Use an owning `vector<int>` for values and an unsigned capacity limit. The vector manages allocation and cleanup through RAII.
+Span keeps integers in a vector and remembers the maximum count it allows.
 
-An **invariant** is a condition every usable object must preserve:
+An **invariant** is a rule that must remain true while an object is usable. For Span:
 
-1. Stored count never exceeds the logical limit: `_num.size() <= _capacity`.
-2. Copying preserves both the values and the limit.
-3. Read-only queries leave the stored values and their order unchanged.
-4. A rejected insertion leaves the object in the promised state.
+- The stored count must never exceed the limit.
+- A copied Span must contain the same values and limit, independently of the original.
+- Asking for a span must not change the stored values or their original order.
+- Rejecting an insertion must preserve the state promised by the function.
 
-`reserve(N)` requests storage capacity but creates no values: size stays zero. `resize(N)` creates N elements. Reserved memory is an optimization, not enforcement of the exercise limit; `push_back` can still grow unless I check the invariant.
+`reserve(10)` prepares space but does not create ten elements. `resize(10)` actually creates ten elements. The exercise's limit is my own rule; vector can grow further unless I check it.
 
-### Construction, copying, assignment
+### First checkpoint: constructors and copying
 
-A member initializer initializes an existing member: it is not a place to declare a variable. Members initialize in declaration order, regardless of the order written in the initializer list.
+A constructor initializer names an existing member, such as `_capacity`; it is not a place to declare a new variable.
 
-The vector already implements independent value copying and cleanup. I do not need to manually delete it. Modern application code can often use the **Rule of Zero**; an exercise requiring Orthodox Canonical Form may still ask me to write the special members.
+Keep one constructor definition for each signature and one consistent capacity member name. Initialize the default state deliberately. The vector can copy its values itself; I do not need to manually delete its contents.
 
-Assignment returns `Span&` so assignment chaining behaves normally. `this` is a pointer; `&other` is the other object's address; `*this` is the current object. A self-assignment guard must compare addresses, not a pointer with an object.
+Copy construction creates a new object. Assignment replaces the state of an existing object. Assignment returns `Span&`; `return *this` returns the current object by reference. To check for self-assignment, compare `this` with `&other`: both are addresses.
 
-### Guided checkpoint A: make state coherent
+Ensure declarations in the header match definitions in the source, and include Span.cpp in the Makefile's sources. Use the same range-function name in the header and demo.
 
-Type only the constructors and copy operations first.
+In modern code, allowing vector/string to handle cleanup and copying is called the **Rule of Zero**. If the exercise asks for explicit special members, write them, but keep the container's automatic ownership.
 
-1. Choose one capacity name and remove the duplicate constructor definition yourself.
-2. Initialize the default state deliberately (a zero-capacity default is a reasonable choice if the subject allows it).
-3. Copy both data members; return the current object from assignment.
-4. Make the header and implementation signatures match.
-5. Add `Span.cpp` to the Makefile's sources, and use one name consistently for range insertion.
+### Second checkpoint: add values safely
 
-Explain before continuing: why is copying a vector different from copying a raw owning pointer?
+For one value: check space first, then append. A zero-capacity Span rejects its first value.
 
-### Single-value insertion
+For a range: receive a first position and an ending position. Count how many elements will be added, check that they fit, then insert. A rejected oversized valid range should not partly fill the object.
 
-Check whether size already equals the limit, throw if full, otherwise append the value. A full zero-capacity object must reject its first insertion. Check **before** changing state.
+A **member template** is a class function with its own type placeholder. Span still stores int, but its range function can accept positions from different containers. Keep that template definition in the header so the compiler can use it for each iterator type.
 
-### Range insertion and member templates
+Your C++20 constraint `std::forward_iterator<Iter>` means “accept an iterator that can walk the same range more than once.” That matters because counting and then inserting are two passes.
 
-A member template gives one operation its own template parameter. Span stays a concrete class storing `int`; its range member accepts iterators from different compatible sources.
+`std::convertible_to<...,int>` asks whether the type can convert to int. It does not prove every value fits: a huge double can still have a permitted conversion that is unsafe for that particular value. Choose an int-only requirement or a documented checked conversion policy.
 
-The public range is `[first,last)`. A count-before-insert approach can reject oversized valid ranges before altering state. The definition normally belongs in the header because other translation units need to see it to instantiate it.
+A negative distance check cannot validate every bad range. Never use positions from unrelated containers, and do not reverse a list range expecting an exception. If I later expose positions into my private storage, inserting from that same storage needs special care; a separate source copy can avoid the overlap.
 
-For your C++20 exploration:
+Test one value, exactly full, one beyond full, an empty range, a fitting range, and a valid range too large to fit. After rejection, verify the previous contents remain as promised.
 
-- `std::forward_iterator<Iter>` expresses the multipass requirement.
-- `std::convertible_to<std::iter_value_t<Iter>, int>` checks implicit convertibility.
-- That conversion constraint does **not** prove a value fits in `int`: a large `double` is still convertible. For stricter numeric safety, require actual int values or validate each conversion under a documented policy.
+### Third checkpoint: largest and smallest gaps
 
-For C++98, use a normal member-template parameter and document its iterator/value requirements; concepts and `requires` are unavailable.
+A span is the distance between stored values, not the distance between their positions.
 
-`distance < 0` does not validate arbitrary iterators. Reversed random-access positions can have a negative distance; reversed list ranges or iterators from unrelated containers already violate the operation's preconditions. Do not execute invalid-range tests expecting an exception.
+For `6,3,17,9,11`:
 
-If a range comes from the same vector being modified, range insertion has aliasing hazards. Your private storage currently prevents ordinary callers obtaining those iterators; retain that design or stage a source copy if you later expose them.
+- Largest gap: 17 minus 3 = **14**.
+- Sort a copy: `3,6,9,11,17`.
+- Neighboring gaps: `3,3,2,6`.
+- Smallest gap: **2**.
 
-### Guided checkpoint B: insertion
+Checking neighbors works because a gap between non-neighbors is the sum of smaller neighboring gaps. It cannot beat every gap contained in it. Repeated values give a smallest gap of zero.
 
-Test one value, exactly full, one beyond full, empty range, a fitting range, and a too-large **valid** range. After rejection, compare the stored state with its previous state. If you retain two-pass counting, explain why an input iterator is insufficient.
+`minmax_element` (C++11) finds the smallest and largest values and returns two iterator positions in a pair. Separate min/max passes are another option. Sorting a copy lets the query leave my original ordering unchanged.
 
-### Longest span
+**Do the arithmetic in a type large enough before subtracting.** On this machine, the gap between INT_MIN and INT_MAX is 4,294,967,295, which does not fit in signed int. Casting the result afterward is too late. A suitably wide intermediate such as long long on this machine helps; the return type must also hold the result.
 
-For at least two values, longest span is `maximum - minimum`. `std::minmax_element` (C++11) returns a pair of iterators; finding both takes O(n). C++98 can use separate `min_element` and `max_element` passes, still O(n).
+`adjacent_difference` first copies the initial value to its output, then writes gaps. Its default subtraction still uses the input value type. A larger output type alone does not fix int overflow. A loop over neighbors, converting both operands before subtracting, is a clear first implementation to type.
 
-Widen operands before subtracting. For the 32-bit `int` used here, the full span can exceed signed `int`; choose a suitable nonnegative result type and agree on it across the whole interface.
-
-### Shortest span
-
-Sort a **copy** of the values and scan adjacent pairs. Why adjacent? In sorted order, the distance between non-neighbors is a sum of consecutive nonnegative gaps, so it cannot be smaller than every gap it contains.
-
-Sorting costs O(n log n), scanning O(n), and copying uses O(n) extra storage. Duplicate values give a gap of 0.
-
-`std::sort` has a complexity guarantee; a particular internal sorting strategy is an implementation detail.
-
-Your `adjacent_difference` approach skips its first output correctly: that output is the first input value, not a gap. But default subtraction still occurs in the input type. A widened output vector alone does not avoid signed overflow. For now, type an adjacent scan that widens both operands before subtraction; revisit numeric algorithms afterward.
-
-### Guided checkpoint C: span results
-
-| Stored values / operation | Expected |
+| Values or operation | Expected result |
 | --- | --- |
-| Empty or one value; either query | Exception |
-| `6,3,17,9,11` | Shortest 2, longest 14 |
-| `5,5` | Shortest 0, longest 0 |
-| `-10,-3,2` | Shortest 5, longest 12 |
-| `INT_MIN,INT_MAX` | Exact full span, no signed overflow |
-| Query twice | Same results; original order unchanged |
-| Copy then change one object | Other object's values unchanged |
-| Exactly 10,000 deterministic values `0..9999` | Shortest 1, longest 9999 |
+| No values or one value; ask either span | Exception: there are not two values to compare |
+| `6,3,17,9,11` | Smallest 2; largest 14 |
+| `5,5` | Both 0 |
+| `-10,-3,2` | Smallest 5; largest 12 |
+| INT_MIN and INT_MAX | Exact full distance, with safe arithmetic |
+| Ask twice | Same answer; original values unchanged |
+| Copy, then change one object | Other object's values unchanged |
+| Values 0 through 9999 | Smallest 1; largest 9999 |
 
-Start with fixed expected cases. A random stress run can follow, but it cannot replace them. Run with AddressSanitizer and UndefinedBehaviorSanitizer and inspect diagnostics, even when the exit code is zero.
+Start with fixed inputs where I know the answers. Then try a large collection. Random data is useful later, but a random output alone does not tell me whether the answer is right.
+
+### How much work do the algorithms do?
+
+Here n means the number of values, not the number of seconds:
+
+- Finding the smallest/largest values visits the collection: O(n).
+- Sorting costs O(n log n) comparisons; checking neighbors afterward is O(n).
+- Copying the values needs room for another n values: O(n) extra storage.
+
+std::sort promises a complexity bound, not one particular internal sorting method.
 
 ## 5. ex02 — MutantStack
 
-### What std::stack hides
+### What a stack gives me
 
-`std::stack<T>` is an adaptor, usually over `deque<T>`. It exposes `push`, `pop`, `top`, `empty`, and `size`. `top()` accesses the newest value; `pop()` removes it and returns nothing. Check for emptiness before either operation.
+A stack handles the newest value first: **last in, first out**, or LIFO.
 
-The actual backing container is its protected member `c`, and the associated type is `container_type`. The exercise exposes iteration over that existing storage; it does not need a second container.
+| Function | Meaning |
+| --- | --- |
+| push | Add a value at the top |
+| top | Access the current top value |
+| pop | Remove it; does not return the value |
+| empty | Ask whether any values remain |
+| size | Count the stored values |
 
-### Dependent base lookup
+Check for emptiness before top/pop.
 
-The base class depends on `T`. Use `this->c` to access the dependent base member. A typedef for an iterator must identify the dependent nested type with `typename`.
+std::stack is a **container adaptor**: it wraps another container and exposes only selected operations. Its usual underlying container is a deque. That container is a protected member named `c`; a derived class can access it.
 
-Expose mutable and const iterator types. Overload `begin()` and `end()` on the constness of the stack. Reverse iteration is a useful extension after basic iteration works.
+MutantStack adds a way to walk through the existing values. It should not keep a second copy of the whole collection.
 
-Normal forward iteration follows the backing container from oldest/bottom to newest/top. Repeated `top()`/`pop()` visits the values in the opposite order and destroys them.
+### Follow the iterator type
 
-### Copying and inheritance boundaries
+The type-name path is: stack → its `container_type` → that container's `iterator`.
 
-Delegate copying to `std::stack<T>`; its container already has value semantics. Explicit special members are useful practice if required, but no raw allocation is needed here.
+The backing container type depends on the stack's template argument, so the iterator type is a dependent name. Use typename to mark it as a type. Use `this->c` to refer to the member from the template base class.
 
-Standard containers/adaptors are not intended as runtime-polymorphic bases. Do not delete a MutantStack through a `std::stack<T>*`; the base destructor is not virtual. For this exercise use ordinary values, copies, and references without owning base pointers. In a general application, composition is often a better design.
+Add mutable begin/end functions and const begin/end functions. A const stack should let me read its elements, not change them. Reverse iteration can be a later extension.
 
-### Guided checkpoint D: implement iteration
+Forward iteration walks from the oldest/bottom value to the newest/top value. Repeated top/pop walks the other way and removes values.
 
-1. Correct the sanitizer argument and pointer/object comparison yourself.
-2. Type the iterator typedefs by following `stack → container_type → iterator`.
-3. Add mutable `begin`/`end`, then their const overloads.
-4. Write a nonempty demo that actually instantiates copy construction and assignment.
+### Copying and build checks
 
-Test pushing `5,17`, reading top 17, popping, then reading top 5. Add `3,5,737,0`; forward iteration should now yield `5,3,5,737,0`. Modify an element through a mutable iterator, read through a const stack, copy to another stack, and show that later changes do not affect the copy. Compare the same forward sequence with a list. Never dereference `end()` or call `top()` on an empty stack.
+Let std::stack copy its own stored values. No raw allocation is needed.
 
-## 6. Completion checklist for today's session
+The self-assignment check must compare two addresses: `this` and `&other`. Fix the sanitizer option so it is one argument: `-fsanitize=address,undefined`, without a space after the comma.
 
-- [ ] Explain half-open ranges and iterator categories without looking at the notes.
-- [ ] Explain size versus reserved capacity and state the Span invariant.
-- [ ] Type easyfind const support and edge-case checks.
-- [ ] Make Span's declarations, definitions, demo, and build sources agree.
-- [ ] Implement safe copying and capacity-checked insertion.
-- [ ] Get all fixed span cases and the 10,000-value test right.
-- [ ] Implement and test mutable/const MutantStack iteration and copying.
-- [ ] Build with the chosen language standard and inspect sanitizer diagnostics.
-- [ ] Compare submission requirements with your assigned subject before calling it submission-ready.
+An empty main does not test a template's functions. Call assignment, copying, and iteration so the compiler has to check those operations.
 
-These boxes remain unchecked until you implement and verify them. The first live step is small: explain the missing-value result of `std::find`, then type the const easyfind overload and send it for review.
+Use stacks as ordinary value objects here. Do not delete a MutantStack through a std::stack pointer: std::stack has no virtual destructor. In a general application, keeping a container as a member instead of inheriting from it is often easier to control; that design is called composition.
 
-## 7. Beyond this module
+### My test sequence
 
-After these exercises, study **exception guarantees** (basic, strong, no-throw), **Rule of Zero**, **range views and borrowed lifetimes** (C++20), comparator **strict weak ordering**, and deterministic property tests. These concepts explain why an implementation can compile and still violate a lifetime, numeric, or API contract.
+Push 5 and 17: top should be 17. Pop once: top should be 5. Then push 3,5,737,0. Walking forward should give `5,3,5,737,0`.
 
-For CPP09, preview parsing and associative lookup, stack-based expression evaluation, and algorithms whose complexity must be analyzed. This repository currently has no CPP09 exercise directory, so that is a next topic rather than completed work.
+Next, change a value through a mutable iterator; read through a const stack; copy and assign stacks; change one and confirm its copy stays unchanged. Try self-assignment. Compare the forward sequence with the same values in a list. Never read end or access an empty top.
 
-Reference pages: [iterators](https://en.cppreference.com/w/cpp/iterator), [vector invalidation and capacity](https://en.cppreference.com/w/cpp/container/vector), [find](https://en.cppreference.com/w/cpp/algorithm/find), [stack](https://en.cppreference.com/w/cpp/container/stack), [adjacent_difference](https://en.cppreference.com/w/cpp/algorithm/adjacent_difference).
+## 6. What remains for this study session
+
+- [ ] Explain T, typename, iterator, const_iterator, and overload in my own words.
+- [ ] Type the missing easyfind test cases into my demo.
+- [ ] Make Span constructors, signatures, demo calls, and build sources agree.
+- [ ] Check that all insertion paths respect the capacity rule.
+- [ ] Implement safe gap arithmetic and verify the fixed expected results.
+- [ ] Test 10,000 stored values with known answers.
+- [ ] Implement and test MutantStack iteration and copying.
+- [ ] Build with the chosen language version and read sanitizer diagnostics.
+
+AddressSanitizer checks many memory errors. UndefinedBehaviorSanitizer checks many invalid operations. A diagnostic still means something went wrong even if the process exits with zero. Neither tool proves every behavior is correct.
+
+## 7. Later topics, after the core exercises work
+
+Learn these names gradually:
+
+| Topic | Plain meaning |
+| --- | --- |
+| Exception guarantees | What remains valid when an operation fails |
+| Rule of Zero | Let owning member types manage cleanup and copying |
+| Strict weak ordering | A sorting comparison must give consistent answers; x must not be less than itself |
+| C++20 views | Ways to describe/filter a sequence without necessarily copying its values |
+| Lifetime | How long the data behind an iterator or view stays alive |
+
+For sorting, `<` can be a valid comparison; `<=` is not an ordinary sort comparator because it says an element precedes itself. Ordering also needs consistency and transitivity: if a comes before b and b before c, a must come before c.
+
+A view does not automatically keep borrowed data alive. Some views own their source, so check the particular type. C++20 std::span is a view of consecutive elements; it is different from the exercise class named Span.
+
+For CPP09, later practice parsing, key-based lookup, stack expression evaluation, and comparing algorithm costs. There is no CPP09 exercise directory here yet.
+
+References: [iterators](https://en.cppreference.com/w/cpp/iterator), [vector](https://en.cppreference.com/w/cpp/container/vector), [find](https://en.cppreference.com/w/cpp/algorithm/find), [stack](https://en.cppreference.com/w/cpp/container/stack), [adjacent_difference](https://en.cppreference.com/w/cpp/algorithm/adjacent_difference).

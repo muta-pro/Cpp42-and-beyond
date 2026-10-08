@@ -133,3 +133,11 @@ Evidence: static review of the selected implementation; equivalent patterns recu
 Work through the [August journal](Journal-August.md), one checkpoint at a time: easyfind const behavior → Span state and copying → single/range insertion → span arithmetic → MutantStack iteration → boundary and scale checks. Send your first typed change for review before moving on if you want feedback at each step.
 
 The theory notes are prepared. Module 08's code is **not complete yet**; completion depends on you typing and validating the remaining implementations.
+
+## easyfind follow-up — 8 October 2026
+
+GitHub commit `688ff15` fixes the const overload's local iterator type and directly includes `<exception>`. The header structure is correct: include guard, required library includes, then the two template definitions. Its commented vector example is harmless.
+
+The current demo builds and runs all seven searches. Separate scratch tests passed 15 runtime checks for vector/list/deque match, empty, duplicate, and missing cases, const-vector success/failure, and mutable writes. Compile-time checks confirmed the return types, and a write through the const result was rejected as expected. A source including only easyfind.hpp also compiled.
+
+No exercise source or test file was edited for this follow-up. The added checks are outside the checkout, so the repository's demo still needs empty, duplicate, and successful const-search cases if you want those checks saved with your exercise. The August journal and relevant basics sections now explain the terminology and test inputs in simpler language. The earlier all-exercise build counts above remain the dated 5 October review; the full suite was not rerun for this focused check.
