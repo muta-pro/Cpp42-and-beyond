@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 23:36:09 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/09 00:16:28 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ public:
 	long long		longestSpan() const;
 
 	template <std::forward_iterator Iter>
-	requires std::convertible_to<std::iter_value_t<Iter>, int>
+	requires std::same_as<std::iter_value_t<Iter>, int>
 	void AddRange(Iter first, Iter last) {
 		const auto amountToAdd = std::distance(first, last);
 		if (amountToAdd < 0) 
@@ -50,3 +50,5 @@ private:
 };
 
 #endif
+/*
+The repeated-pass requirement matters because your implementation walks through the range once to count its elements, then again to insert them.*/

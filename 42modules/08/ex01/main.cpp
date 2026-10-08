@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:08:56 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 23:34:52 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/09 00:08:37 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include <iostream>
 #include <set>
 #include <cstdlib>
+#include <list>
+#include <vector>
+#include <algorithm>
 
 int main() {
 	Span span1(100);
@@ -32,12 +35,19 @@ int main() {
 
 	std::generate(randNum.begin(), randNum.end(), std::rand);
 	try {
-		bigSpan.AddNumber(randNum.begin(), randNum.end());
+		bigSpan.AddRange(randNum.begin(), randNum.end());
 		std::cout << "Shortest span: " << bigSpan.shortestSpan() << std::endl;
 		std::cout << "Longest span: " << bigSpan.longestSpan() << std::endl;
 	}
 	catch (const std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
+
+	Span emptyspan();
+
+	std::vector<int> v = {1, 5.5};
+	v.AddRange(v.begin(), v.end());
+
+
 	return 0;
 }

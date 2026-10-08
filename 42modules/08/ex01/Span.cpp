@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:37 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 23:07:49 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/09 00:05:46 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void Span::AddNumber(int value) {
 long long Span::shortestSpan() const {
 	if (_collection.size() <= 1)
 		throw std::logic_error("Not enough values");
-	std::vector<int> sorted = _collection;
+	std::vector<long long> sorted = _collection;
 	std::sort(sorted.begin(), sorted.end());
 
-	std::vector<int> differences(sorted.size());
+	std::vector<long long> differences(sorted.size());
 	std::adjacent_difference(sorted.begin(), sorted.end(), differences.begin());
 	auto smallest = std::min_element(differences.begin() + 1, differences.end());
 	return *smallest;
