@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:37 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/08 22:43:30 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 22:47:32 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,5 @@ long long Span::longestSpan() const {
 	if (_collection.size() <= 1)
 		throw std::logic_error("Not enough values");
 	auto minmax = std::minmax_element(_collection.begin(), _collection.end());
-	return *minmax.second - *minmax.first;
+	return static_cast<long long>*minmax.second - static_cast<long long>*minmax.first;
 }
