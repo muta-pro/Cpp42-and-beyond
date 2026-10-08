@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/02 17:46:00 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/07 15:56:00 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 17:01:46 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main() {
 		std::cout << "number not found" << std::endl;
 	}
 
-	const std::vector<int> cvec = {1};
+	const std::vector<int> cvec = {1, 22};
 
 	try {
 		auto it = easyfind(cvec, 22);
@@ -74,13 +74,23 @@ int main() {
 		std::cout << "number not found" << std::endl;
 	}
 
-	std::array<int, 4> arr_cont = {0, 40, 42, 100};
+	std::array<int, 4> arr_cont = {42, 40, 42, 100};
 
 	try {
 		auto arr_it = easyfind(arr_cont, 42);
-		std::cout << "found: " << *arr_it << std::endl;
+		if (arr_cont.begin() == arr_it)
+			std::cout << "found: " << *arr_it << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "number not found" << std::endl;
+	}
+
+	std::vector<int> emp = {};
+
+	try {
+		auto vemp = easyfind(emp, 2);
+		std::cout << "found: " << *vemp << std::endl;
+	} catch (std::exception &e) {
+		std::cout << "containter is empty" << std::endl;
 	}
 
 	return 0;
