@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/09/26 20:57:26 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/08 18:39:54 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ public:
 	template <std::forward_iterator Iter>
 	requires std::convertible_to<std::iter_value_t<Iter>, int>
 	void AddRange(Iter first, Iter last) {
-		auto count = std::distance(first, last);
-		if (count < 0) 
+		const auto amountToAdd = std::distance(first, last);
+		if (amountToAdd < 0) 
 			throw std::overflow_error("Invalid iterator range");
-		std::size_t spaceLeft = _capacity - _num.size();
-		if (static_cast<std::size_t>(count) > spaceLeft)
+		std::size_t spaceLeft = _capacity - _collection.size();
+		if (static_cast<std::size_t>(amountToAdd) > spaceLeft)
 			throw std::overflow_error("Range does not fit");
-		_num.insert(_num.end(), first, last);
+		_collection.insert(_collection.end(), first, last);
 	}
 private:
-	std::vector<int>	_num;
+	std::vector<int>	_collection;
 	unsigned int		_capacity;
 };
 
