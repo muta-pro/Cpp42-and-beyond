@@ -17,10 +17,10 @@ An algorithm still uses loops internally. I use it because it already expresses 
 | Exercise | What I practice | Progress |
 | --- | --- | --- |
 | ex00: easyfind | Search different containers; handle missing values; read const containers | Latest pushed version checked on 8 October 2026: builds, demo runs, and extra checks pass |
-| ex01: Span | Store a limited number of integers; calculate smallest/largest gaps | Still needs the fixes recorded in the code review |
+| ex01: Span | Store a limited number of integers; calculate smallest/largest gaps | Current version checked on 13 October 2026: demo and template checks pass |
 | ex02: MutantStack | Keep stack operations and add a way to walk through its values | Still needs iteration, assignment, and build fixes |
 
-“Extra checks pass” means tests run separately in the cloud workspace passed. Those extra tests have not been added to my exercise's `main.cpp`.
+For easyfind, “extra checks” refers to separate scratch tests. Span's current `main.cpp` already saves checks for its calculations, insertion limits, copying and 10,000 values; additional template checks were run separately.
 
 ## 1. Choosing a container
 
@@ -153,7 +153,7 @@ A **type** describes what kind of object I can create. A **variable** is an actu
 
 An overload is another function with the same name but different parameters.
 
-My first easyfind receives `T&` and returns `T::iterator`. My second receives `const T&` and returns `T::const_iterator`.
+My first easyfind receives `T&`; the second receives `const T&`. Both currently use `auto` to deduce the iterator returned by std::find: mutable for an ordinary vector, read-only for a const vector.
 
 For my ordinary vector call, the compiler picks the first. For my const vector call, it picks the second. It uses the argument and parameter types to choose; changing only a return type cannot create an overload.
 
@@ -180,12 +180,12 @@ The current header has the needed pieces:
 
 1. `#ifndef` / `#define` / `#endif`: the include guard prevents the contents being processed twice in one source file's compilation.
 2. `#include <algorithm>`: declares `std::find`.
-3. `#include <exception>`: declares `std::exception`. The filename is singular: **exception**, not exceptions.
+3. The current `#include <stdexcept>` also makes `std::exception` available. Its direct header is `<exception>`, singular; `<stdexcept>` declares the more specific errors used by Span.
 4. Both template definitions: these normally stay in the header so the compiler can see their bodies when it needs them.
 
 The functions do not directly use vector/list/deque, so their headers can stay in the caller. The vector example at the bottom is a comment and needs no additional include.
 
-It previously worked because another included header happened to bring in std::exception too. This is an **indirect include**. I should include the header for each library tool I use directly rather than rely on that coincidence.
+An **indirect include** brings a declaration through another header. For clear dependencies, include the header for each library tool used directly.
 
 ### Small tests I can type myself
 
@@ -204,104 +204,187 @@ Repeat the empty, duplicate, and missing-value tests with list/deque when comfor
 
 To check that a const result cannot write, try assigning through `*it` in a **separate small compilation**. That attempt should fail to compile. Do not leave it in the normal executable and expect the build to succeed.
 
-My current demo uses const `cvec = {1}` and searches for 22, so “number 22 not found” is the correct result. Add a separate search for 1 to see the const overload succeed too.
+The current const vector is `cvec = {1, 22}`; searching for 22 succeeds. The missing-22 message comes from the list search instead.
 
 ### Checked on 8 October 2026
 
-The current seven demo searches built and ran. Separate scratch tests passed 15 runtime checks: found/missing/empty/duplicate cases for vector/list/deque, const-vector success/failure, and writing through a mutable result. The iterator types were checked at compile time. Writing through a const result was rejected as expected. The header compiled by itself.
+The eight demo searches built and ran. Separate scratch tests passed 15 runtime checks: found/missing/empty/duplicate cases for vector/list/deque, const-vector success/failure, and writing through a mutable result. The iterator types were checked at compile time. Writing through a const result was rejected as expected. The header compiled by itself.
 
 These checks used the pushed code unchanged. I still need to type the extra cases into my own demo if I want them saved with the exercise.
 
 ## 4. ex01 — Span
 
-### Begin with the stored state
+Based on [Span.hpp](../42modules/08/ex01/Span.hpp), [Span.cpp](../42modules/08/ex01/Span.cpp) and [main.cpp](../42modules/08/ex01/main.cpp), commit `79e6974`, checked on 13 October 2026. Earlier review findings concern older code.
 
-Span keeps integers in a vector and remembers the maximum count it allows.
+The concepts are **initialization and ownership**, **constrained templates**, and **algorithms with safe arithmetic**. A span is a gap between stored numbers.
 
-An **invariant** is a rule that must remain true while an object is usable. For Span:
+### Checkpoint 1 — Explain how an empty, bounded object is constructed
 
-- The stored count must never exceed the limit.
-- A copied Span must contain the same values and limit, independently of the original.
-- Asking for a span must not change the stored values or their original order.
-- Rejecting an insertion must preserve the state promised by the function.
+Start with the two private members:
 
-`reserve(10)` prepares space but does not create ten elements. `resize(10)` actually creates ten elements. The exercise's limit is my own rule; vector can grow further unless I check it.
-
-to release the reserved memory -> swap()
-    std::vector<int>().swap(v); internal buffer get's swaped with a temporary empty vector that get's destroyed at the end of the expression.
-
-*performance* 
-reserve() is memeber method in vector used to preallocate memory increasing it's capacity - not changing it's size (adding elements) - modifies internal buffer size. this reserves memory in advance perventing multiple allocatoins and data copies during elements addition. O(1);
-
-### First checkpoint: constructors and copying
-
-A constructor initializer names an existing member, such as `_capacity`; it is not a place to declare a new variable.
-
-Keep one constructor definition for each signature and one consistent capacity member name. Initialize the default state deliberately. The vector can copy its values itself; I do not need to manually delete its contents.
-
-Copy construction creates a new object. Assignment replaces the state of an existing object. Assignment returns `Span&`; `return *this` returns the current object by reference. To check for self-assignment, compare `this` with `&other`: both are addresses.
-
-Ensure declarations in the header match definitions in the source, and include Span.cpp in the Makefile's sources. Use the same range-function name in the header and demo.
-
-In modern code, allowing vector/string to handle cleanup and copying is called the **Rule of Zero**. If the exercise asks for explicit special members, write them, but keep the container's automatic ownership.
-
-### Second checkpoint: add values safely
-
-For one value: check space first, then append. A zero-capacity Span rejects its first value.
-
-For a range: receive a first position and an ending position. Count how many elements will be added, check that they fit, then insert. A rejected oversized valid range should not partly fill the object.
-
-A **member template** is a class function with its own type placeholder. Span still stores int, but its range function can accept positions from different containers. Keep that template definition in the header so the compiler can use it for each iterator type.
-
-Your C++20 constraint `std::forward_iterator<Iter>` means “accept an iterator that can walk the same range more than once.” That matters because counting and then inserting are two passes.
-
-`std::convertible_to<...,int>` asks whether the type can convert to int. It does not prove every value fits: a huge double can still have a permitted conversion that is unsafe for that particular value. Choose an int-only requirement or a documented checked conversion policy.
-
-A negative distance check cannot validate every bad range. Never use positions from unrelated containers, and do not reverse a list range expecting an exception. If I later expose positions into my private storage, inserting from that same storage needs special care; a separate source copy can avoid the overlap.
-
-Test one value, exactly full, one beyond full, an empty range, a fitting range, and a valid range too large to fit. After rejection, verify the previous contents remain as promised.
-
-### Third checkpoint: largest and smallest gaps
-
-A span is the distance between stored values, not the distance between their positions.
-
-For `6,3,17,9,11`:
-
-- Largest gap: 17 minus 3 = **14**.
-- Sort a copy: `3,6,9,11,17`.
-- Neighboring gaps: `3,3,2,6`.
-- Smallest gap: **2**.
-
-Checking neighbors works because a gap between non-neighbors is the sum of smaller neighboring gaps. It cannot beat every gap contained in it. Repeated values give a smallest gap of zero.
-
-`minmax_element` (C++11) finds the smallest and largest values and returns two iterator positions in a pair. Separate min/max passes are another option. Sorting a copy lets the query leave my original ordering unchanged.
-
-**Do the arithmetic in a type large enough before subtracting.** On this machine, the gap between INT_MIN and INT_MAX is 4,294,967,295, which does not fit in signed int. Casting the result afterward is too late. A suitably wide intermediate such as long long on this machine helps; the return type must also hold the result.
-
-`adjacent_difference` first copies the initial value to its output, then writes gaps. Its default subtraction still uses the input value type. A larger output type alone does not fix int overflow. A loop over neighbors, converting both operands before subtracting, is a clear first implementation to type.
-
-| Values or operation | Expected result |
+| Name or expression | What it represents |
 | --- | --- |
-| No values or one value; ask either span | Exception: there are not two values to compare |
-| `6,3,17,9,11` | Smallest 2; largest 14 |
-| `5,5` | Both 0 |
-| `-10,-3,2` | Smallest 5; largest 12 |
-| INT_MIN and INT_MAX | Exact full distance, with safe arithmetic |
-| Ask twice | Same answer; original values unchanged |
-| Copy, then change one object | Other object's values unchanged |
-| Values 0 through 9999 | Smallest 1; largest 9999 |
+| `_collection` | The object's `vector<int>` of numbers |
+| `_collection.size()` | How many numbers are stored now |
+| `_capacity` | The maximum count this Span allows |
+| `_collection.capacity()` | Allocated space, measured in elements; vector can grow beyond it |
+| `maxSize` | A constructor parameter supplying the initial limit |
 
-Start with fixed inputs where I know the answers. Then try a large collection. Random data is useful later, but a random output alone does not tell me whether the answer is right.
+The rule to preserve is `_collection.size() <= _capacity`. Vector does not enforce this custom limit; my insertion methods do.
 
-### How much work do the algorithms do?
+```cpp
+Span::Span() : _capacity(0) {}
 
-Here n means the number of values, not the number of seconds:
+Span::Span(unsigned int maxSize) : _capacity(maxSize) {
+    _collection.reserve(_capacity);
+}
+```
 
-- Finding the smallest/largest values visits the collection: O(n).
-- Sorting costs O(n log n) comparisons; checking neighbors afterward is O(n).
-- Copying the values needs room for another n values: O(n) extra storage.
+Both constructors initialize `_capacity`. The colon starts the **member initializer list**, before the body inside `{ }`. For `Span object(5);`: argument 5 → parameter `maxSize` → member `_capacity`. The member retains the limit after construction.
 
-std::sort promises a complexity bound, not one particular internal sorting method.
+The omitted `_collection` still runs vector's default constructor and becomes empty. Explicitly writing `_collection()` would do the same. The integer member has no constructor supplying a useful default value, so I initialize `_capacity` myself.
+
+Construction follows **declaration order in the header**: `_collection`, then `_capacity`, then the body. Both members exist before `reserve` runs.
+
+`reserve(5)` prepares storage but leaves size zero; `resize(5)` creates five elements. This Span must start empty. Reserving may allocate and move existing elements, so it is not generally O(1).
+
+The header declares the constructor; the .cpp defines its initialization and body. `explicit` allows `Span object(5);` and rejects implicit conversion through `Span object = 5;`. The default constructor takes no input to convert.
+
+**OCF and `= default`:** the compiler supplies copying, assignment and destruction. Copies get independent vector storage and the same limit. Assignment replaces existing state and returns `Span&`; destruction lets vector release storage. Together with the default constructor, these cover Orthodox Canonical Form.
+
+**Checkpoint question:** Immediately after `Span object(5);`, what are the limit and stored count, and what happened before the constructor body started?
+
+### Checkpoint 2 — Trace insertion and separate type checks from size checks
+
+`AddNumber(int value)` checks `size() >= _capacity`, throws `overflow_error` if full, otherwise appends using `push_back(value)`. The default, zero-capacity Span rejects its first number.
+
+The range version is defined in the header:
+
+```cpp
+template <std::forward_iterator Iter>
+requires std::same_as<std::iter_value_t<Iter>, int>
+void AddRange(Iter first, Iter last) {
+    const auto amountToAdd = std::distance(first, last);
+    if (amountToAdd < 0)
+        throw std::invalid_argument("Range is reversed");
+    const std::size_t spaceLeft = _capacity - _collection.size();
+    if (static_cast<std::size_t>(amountToAdd) > spaceLeft)
+        throw std::overflow_error("Range does not fit");
+    _collection.insert(_collection.end(), first, last);
+}
+```
+
+**Read its declaration from the inside out:**
+
+| Part | Meaning and reason |
+| --- | --- |
+| `template <std::forward_iterator Iter>` | `Iter` is a placeholder **type**. The forward_iterator concept requires an iterator supporting repeated passes. |
+| `std::iter_value_t<Iter>` | Obtain the iterator's element type. The `_t` suffix names a type helper. |
+| `std::same_as<std::iter_value_t<Iter>, int>` | Require element type int. Inner `<Iter>` feeds the helper; outer brackets hold the two compared types. |
+| `requires` | Accept this function version only when the requirement holds. |
+| `void AddRange(Iter first, Iter last)` | Return nothing; receive two iterator objects by value, of the same deduced type. |
+
+For `object.AddRange(values.begin(), values.end())` with `vector<int>`:
+
+```text
+Iter = vector<int>::iterator
+    -> iter_value_t<Iter> = int
+    -> same_as<int, int> is satisfied
+```
+
+A list supplies another iterator type with int elements. Const-vector iterators still access int, so they work too. `vector<double>` is rejected at compilation, before any call or exception. This `same_as` rule replaces the earlier `convertible_to` conversion policy.
+
+Span is an ordinary class; **AddRange is a member function template**. Its header definition lets the compiler form versions for callers' iterator types. Concepts and `requires` need C++20 in compiler and editor settings.
+
+**Read its body in execution order:**
+
+| Statement | What happens and why |
+| --- | --- |
+| `amountToAdd = std::distance(first, last)` | Count elements. `auto` deduces a signed difference type; `const` fixes the local count. Forward iterators allow this counting pass, then a copying pass. |
+| `if (amountToAdd < 0)` and throw | Reject a negative distance before unsigned conversion; detects a reversed vector range. |
+| `spaceLeft = _capacity - _collection.size()` | Calculate remaining slots using unsigned count type `size_t`. The class rule prevents subtracting a larger count from a smaller limit. |
+| `static_cast<std::size_t>(amountToAdd) > spaceLeft` and throw | Convert the nonnegative count to the size type; reject an oversized range before inserting. |
+| `insert(_collection.end(), first, last)` | Append copies. Argument one is the destination; first/last delimit the source, excluding last. |
+
+Supply a valid range from one container. Negative-count checking cannot validate unrelated positions; a reversed list range can already be invalid inside `distance`. An empty valid range adds nothing, even to a full Span.
+
+**Headers:** `<iterator>` supplies iterator concepts, type helpers and distance; `<concepts>` supplies same_as; `<cstddef>` supplies size_t; `<vector>` supplies storage; `<stdexcept>` supplies the exceptions.
+
+**Checkpoint question:** With limit 5 and two stored numbers, trace a source range containing three numbers. Which checks happen while compiling, and which happen when the call runs?
+
+### Checkpoint 3 — Explain every step that turns stored numbers into gaps
+
+The current shortest-span implementation is:
+
+```cpp
+long long Span::shortestSpan() const {
+    if (_collection.size() <= 1)
+        throw std::logic_error("Not enough values");
+    std::vector<long long> sorted(_collection.begin(), _collection.end());
+    std::sort(sorted.begin(), sorted.end());
+    std::vector<long long> differences(sorted.size());
+    std::adjacent_difference(sorted.begin(), sorted.end(), differences.begin());
+    auto smallest = std::min_element(differences.begin() + 1, differences.end());
+    return *smallest;
+}
+```
+
+| Line | Syntax, behavior and implementation choice |
+| --- | --- |
+| Function declaration | `long long` is the return type; `Span::` identifies the class; `()` means no arguments. Trailing `const` prevents changing the object's ordinary members through this method. |
+| Count check and throw | A gap needs two values. `logic_error` rejects zero/one and guarantees the later search has a gap to inspect. |
+| Construct `sorted` from two iterators | The **range constructor** copies each int into a long long element. The temporary copy preserves original order; widening inputs makes later subtraction safe on this platform. |
+| `std::sort(...)` | Sort the copy ascending. Vector supports the required random-access iterators; closest values become neighbors. |
+| Construct `differences` from a count | The **count constructor** creates sorted.size() elements, initially zero. The next algorithm needs existing output elements; reserve alone would not create them. |
+| `std::adjacent_difference(...)` | Read sorted inputs, write from differences.begin(). Output one copies input one; later outputs are current input minus previous input. |
+| `std::min_element(begin() + 1, end())` | Skip the first output, which is not a gap. `+ 1` advances one vector position. `auto smallest` holds the returned iterator, not the number. |
+| `return *smallest;` | Read the number at that valid position and return it by value. Temporary vectors are destroyed; the returned number survives independently. |
+
+The trailing `const` applies to the Span object; the local temporary vectors can still be changed and sorted.
+
+One complete trace:
+
+```text
+stored:       [6, 3, 17, 9, 11]   unchanged
+sorted copy:  [3, 6, 9, 11, 17]
+differences:  [3, 3, 3,  2,  6]
+               ^ skip this first output
+minimum gap:  2
+```
+
+A non-neighbor gap is the sum of neighboring nonnegative gaps, so it cannot beat all its component gaps. Duplicate neighbors give zero.
+
+**Widen before subtraction:** largest int minus smallest int is `4294967295` here, exceeding signed int. A wide return type cannot repair earlier overflow. Both inputs and outputs are long long. The range constructor also handles copying between the different vector types.
+
+The longest span uses:
+
+```cpp
+auto minmax = std::minmax_element(_collection.begin(), _collection.end());
+return static_cast<long long>(*minmax.second)
+     - static_cast<long long>(*minmax.first);
+```
+
+After the same two-value guard, `minmax_element` returns two iterators in a pair: `first` for minimum, `second` for maximum. `*` reads values; `static_cast<long long>` converts each before subtraction. Above: `17 - 3 = 14`.
+
+`<algorithm>` provides sorting and minimum/maximum searches; `<numeric>` provides adjacent_difference. For n stored values, longest takes O(n); shortest takes O(n log n) and O(n) extra space. A loop tracking the minimum could avoid the second vector; this version practices combining algorithms.
+
+**Checkpoint question:** Explain why `sorted` uses two iterators in its constructor, `differences` uses a count, and the minimum search starts one position after begin.
+
+### What the current demo verifies
+
+`checkSpans` compares expected answers; `checkTooFewValues` checks exceptions. Local catches handle expected rejections; unexpected failures reach the outer catch and return status 1.
+
+| Saved case in main.cpp | Expected behavior |
+| --- | --- |
+| Five-number example; mixed vector/list/set sources | Gaps 2/14 and 1/54 |
+| Duplicates; negative values; integer extremes | Gaps 0/0, 5/12 and 4294967295/4294967295 on this platform |
+| Empty or one-value Span | Both queries throw |
+| Zero capacity; full object; oversized range | Insertion throws; oversized range adds no values |
+| Empty range into a full object | Adds nothing; answers stay the same |
+| Copy and assignment, then change each object | Independent results and copied limits |
+| Numbers 0 through 9999, filled using `std::iota` | Shortest 1; longest 9999 |
+
+Checked on 13 October 2026: `make re` and `./span` passed with address/undefined-behavior sanitizers. Separate compiler checks accepted const-vector/list iterators, rejected double/stream iterators, and verified explicit construction. Exercise sources stayed unchanged.
 
 ## 5. ex02 — MutantStack
 
@@ -353,10 +436,11 @@ Next, change a value through a mutable iterator; read through a const stack; cop
 
 - [ ] Explain T, typename, iterator, const_iterator, and overload in my own words.
 - [ ] Type the missing easyfind test cases into my demo.
-- [ ] Make Span constructors, signatures, demo calls, and build sources agree.
-- [ ] Check that all insertion paths respect the capacity rule.
-- [ ] Implement safe gap arithmetic and verify the fixed expected results.
-- [ ] Test 10,000 stored values with known answers.
+- [x] Make Span constructors, signatures, demo calls, and build sources agree.
+- [x] Check single-number and range insertion limits with valid test inputs.
+- [x] Implement safe gap arithmetic and verify the fixed expected results.
+- [x] Test 10,000 stored values with known answers.
+- [ ] Answer the three Span checkpoint questions in my own words.
 - [ ] Implement and test MutantStack iteration and copying.
 - [ ] Build with the chosen language version and read sanitizer diagnostics.
 
