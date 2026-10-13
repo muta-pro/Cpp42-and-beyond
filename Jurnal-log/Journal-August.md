@@ -1,9 +1,5 @@
 # August learning journal — CPP08: containers, iterators, algorithms
 
-## What I am learning
-
-I already know how to store one number, use functions, and write classes. This module teaches me to work with collections of values without writing every storage and search operation myself.
-
 The three main pieces are:
 
 | Piece | Plain meaning | Example |
@@ -106,10 +102,7 @@ This is called **iterator invalidation**. An iterator does not own the elements 
 
 Read the rule for the particular container operation before reusing an old iterator.
 
-## 3. ex00 — easyfind, step by step
-
-### What should this function do?
-
+## 3. ex00
 Give it a container and an integer to search for.
 
 - If that integer exists, return a position pointing to its first occurrence.
@@ -174,22 +167,7 @@ Searching `10,20,30` for 99 returns `end()`. Reading `*it` at that position woul
 
 My function already compares the result with end and throws if they are equal. The caller's catch block can then print “not found.” I do not need to dereference the missing result.
 
-### Is the header organized correctly?
-
-The current header has the needed pieces:
-
-1. `#ifndef` / `#define` / `#endif`: the include guard prevents the contents being processed twice in one source file's compilation.
-2. `#include <algorithm>`: declares `std::find`.
-3. The current `#include <stdexcept>` also makes `std::exception` available. Its direct header is `<exception>`, singular; `<stdexcept>` declares the more specific errors used by Span.
-4. Both template definitions: these normally stay in the header so the compiler can see their bodies when it needs them.
-
-The functions do not directly use vector/list/deque, so their headers can stay in the caller. The vector example at the bottom is a comment and needs no additional include.
-
-An **indirect include** brings a declaration through another header. For clear dependencies, include the header for each library tool used directly.
-
 ### Small tests I can type myself
-
-A test means: choose an input, run the function, and compare the result with something I already know should happen.
 
 | What to try | What should happen | What I learn |
 | --- | --- | --- |
@@ -206,15 +184,7 @@ To check that a const result cannot write, try assigning through `*it` in a **se
 
 The current const vector is `cvec = {1, 22}`; searching for 22 succeeds. The missing-22 message comes from the list search instead.
 
-### Checked on 8 October 2026
-
-The eight demo searches built and ran. Separate scratch tests passed 15 runtime checks: found/missing/empty/duplicate cases for vector/list/deque, const-vector success/failure, and writing through a mutable result. The iterator types were checked at compile time. Writing through a const result was rejected as expected. The header compiled by itself.
-
-These checks used the pushed code unchanged. I still need to type the extra cases into my own demo if I want them saved with the exercise.
-
-## 4. ex01 — Span
-
-Based on [Span.hpp](../42modules/08/ex01/Span.hpp), [Span.cpp](../42modules/08/ex01/Span.cpp) and [main.cpp](../42modules/08/ex01/main.cpp), commit `79e6974`, checked on 13 October 2026. Earlier review findings concern older code.
+## 4. ex01 
 
 The concepts are **initialization and ownership**, **constrained templates**, and **algorithms with safe arithmetic**. A span is a gap between stored numbers.
 
@@ -247,6 +217,9 @@ The omitted `_collection` still runs vector's default constructor and becomes em
 Construction follows **declaration order in the header**: `_collection`, then `_capacity`, then the body. Both members exist before `reserve` runs.
 
 `reserve(5)` prepares storage but leaves size zero; `resize(5)` creates five elements. This Span must start empty. Reserving may allocate and move existing elements, so it is not generally O(1).
+to release the reserved memory -> swap()
+  std::vector<int>().swap(v); internal buffer gets swapped with temp empty vector that gets destroyed at the end of the expression;
+  *performance* reserve() is member method in vector used to preallocate memory increasing it's capacity without changing size by adding elements, but modifying internal buffer size. This reserves memory perventing multiple allocations and data copies during element addition 0(1);
 
 The header declares the constructor; the .cpp defines its initialization and body. `explicit` allows `Span object(5);` and rejects implicit conversion through `Span object = 5;`. The default constructor takes no input to convert.
 
