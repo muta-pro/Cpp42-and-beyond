@@ -296,6 +296,15 @@ A list supplies another iterator type with int elements. Const-vector iterators 
 
 Span is an ordinary class; **AddRange is a member function template**. Its header definition lets the compiler form versions for callers' iterator types. Concepts and `requires` need C++20 in compiler and editor settings.
 
+std::forward_iterator is a concept - rule about type to support;
+repeated trasversal, reading and moving foreward: list, vector, set;
+count elements with std::distance;
+traverse again to insert elements;
+
+std::iter_value_t<Iter>
+get the type of the element iterator is accessing
+std::same_as<type, int>
+    must be an int;
 **Read its body in execution order:**
 
 | Statement | What happens and why |
@@ -369,6 +378,7 @@ After the same two-value guard, `minmax_element` returns two iterators in a pair
 `<algorithm>` provides sorting and minimum/maximum searches; `<numeric>` provides adjacent_difference. For n stored values, longest takes O(n); shortest takes O(n log n) and O(n) extra space. A loop tracking the minimum could avoid the second vector; this version practices combining algorithms.
 
 **Checkpoint question:** Explain why `sorted` uses two iterators in its constructor, `differences` uses a count, and the minimum search starts one position after begin.
+    sorted receives two iterators because it needs existing input values. differences receives a count because it needs output elements ready for writing. The minimum search skips the first output because adjacent_difference copies the initial input there; the actual gaps begin at the second element.
 
 ### What the current demo verifies
 

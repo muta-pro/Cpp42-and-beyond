@@ -6,7 +6,7 @@
 /*   By: imutavdz <imutavdz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:09:42 by imutavdz          #+#    #+#             */
-/*   Updated: 2026/10/09 00:16:28 by imutavdz         ###   ########.fr       */
+/*   Updated: 2026/10/13 12:00:20 by imutavdz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ public:
 	template <std::forward_iterator Iter>
 	requires std::same_as<std::iter_value_t<Iter>, int>
 	void AddRange(Iter first, Iter last) {
-		// first and last must describe a valid range in the same container.
-		// Forward iterators let us count the range, then walk it again to copy.
 		const auto amountToAdd = std::distance(first, last);
 		if (amountToAdd < 0)
 			throw std::invalid_argument("Range is reversed");
+
 		const std::size_t spaceLeft = _capacity - _collection.size();
 		if (static_cast<std::size_t>(amountToAdd) > spaceLeft)
 			throw std::overflow_error("Range does not fit");
+		
 		_collection.insert(_collection.end(), first, last);
 	}
 private:

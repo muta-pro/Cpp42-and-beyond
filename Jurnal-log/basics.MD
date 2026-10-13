@@ -1037,6 +1037,44 @@ For an ordinary vector the compiler picks the first; for a const vector it picks
 
 Templates and overloading are separate tools: the template handles different container types; the overloads handle different ways of accessing those containers.
 
+# The std::vector class in C++ provides multiple constructors to initialize vectors from various data sources.  The primary initialization methods include:
+
+Default Constructor: Creates an empty vector with no elements (e.g., std::vector<int> v;). 
+Fill Constructor: Creates a vector with n elements, each initialized to a specific value (e.g., std::vector<int> v(5, 10); creates five 10s).
+Range Constructor: Initializes the vector with a copy of elements from a specified range, such as another vector or an array (e.g., std::vector<int> v(first, last);). 
+Copy/Move Constructor: Creates a vector as a copy of or by moving another existing vector (e.g., std::vector<int> v(other_v);).
+Initializer List Constructor: Initializes the vector with a list of explicit values using braces (e.g., std::vector<int> v = {1, 2, 3};).
+When initializing a vector within a class constructor, it is efficient to use the member initializer list (e.g., MyClass(int size) : vec(size, 0) {}) rather than assigning values inside the constructor body.
+# The count constructor (also called the fill constructor) has two overloads:
+
+explicit vector(size_type count);                          // (1)
+vector(size_type count, const T& value);                   // (2)
+
+Overload (1) — count only:
+Creates count default-inserted elements. For numeric types this means value-initialized to 0. 
+
+std::vector<int> v(5);   // [0, 0, 0, 0, 0]
+
+Overload (2) — count + value:
+Creates count copies of value.
+
+std::vector<int> v(5, 7);   // [7, 7, 7, 7, 7]
+
+Key distinction: Overload (1) is explicit and requires T to be default-constructible (not copy-constructible). Overload (2) requires T to be copy-constructible (not default-constructible). This split exists because since C++11, std::vector no longer requires its element type to be copy-constructible — move-constructibility suffices. 
+
+# The name diff is simply your variable name. The constructor prepares the output slots; the next algorithm calculates their contents.
+std::vector<long long> a(5);  // Five zeros.
+std::vector<long long> b{5};  // One element containing 5.
+
+# algorythm:
+std::adjacent_difference(
+    sorted.begin(),       // First input position.
+    sorted.end(),         // Input stopping position.
+    differences.begin()   // First output position.
+);
+This algorithm produces one output per input. It copies the first input unchanged, then subtracts each previous input from the current input
+
+
 ## Header Structure and Direct Includes
 
 A header should include the library headers for the tools it uses itself. For easyfind, `<algorithm>` supplies std::find and `<exception>` supplies std::exception.
