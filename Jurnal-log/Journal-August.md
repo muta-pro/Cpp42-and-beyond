@@ -218,7 +218,7 @@ Construction follows **declaration order in the header**: `_collection`, then `_
 
 `reserve(5)` prepares storage but leaves size zero; `resize(5)` creates five elements. This Span must start empty. Reserving may allocate and move existing elements, so it is not generally O(1).
 to release the reserved memory -> swap()
-  std::vector<int>().swap(v); internal buffer get's swapped with temp empty vector that get's destroyed at the end of the expressin;
+  std::vector<int>().swap(v); internal buffer gets swapped with temp empty vector that gets destroyed at the end of the expression;
   *performance* reserve() is member method in vector used to preallocate memory increasing it's capacity without changing size by adding elements, but modifying internal buffer size. This reserves memory perventing multiple allocations and data copies during element addition 0(1);
 
 The header declares the constructor; the .cpp defines its initialization and body. `explicit` allows `Span object(5);` and rejects implicit conversion through `Span object = 5;`. The default constructor takes no input to convert.
