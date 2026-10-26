@@ -1,6 +1,10 @@
 # C++ learning review — 5 October 2026
 
-This review records improvements for you to implement. No exercise source, header, test, or Makefile was edited. The learning notes were expanded separately.
+The findings below record the original 5 October review. During that review, no exercise source, header, test, or Makefile was edited; the learning notes were expanded separately.
+
+**Follow-up — 26 October 2026:** Span and MutantStack have since been completed. All three CPP08 exercises now build and their demos run successfully with their configured sanitizers. MutantStack passes 17 runtime checks plus separate iterator-type and const-write compiler checks. See the [updated August journal](Journal-August.md#5-ex02--mutantstack) for the implementation and reasoning.
+
+The original 31/36 total and findings below are a historical snapshot. The full repository suite was not rerun for this follow-up.
 
 ## What was checked
 

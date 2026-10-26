@@ -17,16 +17,31 @@
 
 template <typename T>
 class MutantStack : public std::stack<T> {
-	public:
-			MutantStack() : std::stack<T>() {}
-			MutantStack(const MutantStack &copy) : std::stack<T>(copy) {}
-			MutantStack &operator=(const MutantStack &assign) {
-				if (this != assign) {
-					std::stack<T>::operator=(assign); }
-					return *this;
-			}
-			~MutantStack() {}
-	private:
+public:
+	using container_type = typename std::stack<T>::container_type;
+	using iterator = typename container_type::iterator;
+	using const_iterator = typename container_type::const_iterator;
+
+	MutantStack() = default;
+	MutantStack(const MutantStack& copy) = default;
+	MutantStack& operator=(const MutantStack& other) = default;
+	~MutantStack() = default;
+
+	iterator begin() {
+		return this->c.begin();
+	}
+
+	iterator end() {
+		return this->c.end();
+	}
+
+	const_iterator begin() const {
+		return this->c.begin();
+	}
+
+	const_iterator end() const {
+		return this->c.end();
+	}
 };
 
 #endif

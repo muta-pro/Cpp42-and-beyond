@@ -14,7 +14,7 @@ An algorithm still uses loops internally. I use it because it already expresses 
 | --- | --- | --- |
 | ex00: easyfind | Search different containers; handle missing values; read const containers | Latest pushed version checked on 8 October 2026: builds, demo runs, and extra checks pass |
 | ex01: Span | Store a limited number of integers; calculate smallest/largest gaps | Current version checked on 13 October 2026: demo and template checks pass |
-| ex02: MutantStack | Keep stack operations and add a way to walk through its values | Still needs iteration, assignment, and build fixes |
+| ex02: MutantStack | Keep stack operations and add a way to walk through its values | Completed and checked on 26 October 2026: runtime, iterator-type and const-write checks pass |
 
 For easyfind, “extra checks” refers to separate scratch tests. Span's current `main.cpp` already saves checks for its calculations, insertion limits, copying and 10,000 values; additional template checks were run separately.
 
@@ -371,49 +371,151 @@ Checked on 13 October 2026: `make re` and `./span` passed with address/undefined
 
 ## 5. ex02 — MutantStack
 
-### What a stack gives me
+The current [header](../42modules/08/ex02/MutantStack.hpp) and [demo](../42modules/08/ex02/main.cpp) complete the last CPP08 exercise. The goal is to retain the stack interface while adding access to its existing elements through iterators.
 
-A stack handles the newest value first: **last in, first out**, or LIFO.
+### Checkpoint 1 — Identify the owning container and the iterator types
 
-| Function | Meaning |
+```cpp
+template <typename T>
+class MutantStack : public std::stack<T> {
+```
+
+Here `T` is the **element type**, such as int or string. The whole class is a template; Span instead had an ordinary class with one member function template.
+
+`: public std::stack<T>` means public inheritance: a MutantStack contains a stack base object and exposes its public operations:
+
+| Operation | Meaning |
 | --- | --- |
-| push | Add a value at the top |
-| top | Access the current top value |
-| pop | Remove it; does not return the value |
-| empty | Ask whether any values remain |
-| size | Count the stored values |
+| `push(value)` | Add a value at the top |
+| `top()` | Access the top value; the mutable overload can change it |
+| `pop()` | Remove the top value, without returning it |
+| `empty()` / `size()` | Ask whether values remain / how many remain |
 
-Check for emptiness before top/pop.
+`std::stack` is a **container adaptor**. It stores values in another container, by default `std::deque<T>`, and restricts the public interface to stack operations. The backing container is its protected member `c`. Protected access allows the derived class to use it; an ordinary caller cannot access it directly.
 
-std::stack is a **container adaptor**: it wraps another container and exposes only selected operations. Its usual underlying container is a deque. That container is a protected member named `c`; a derived class can access it.
+Our four new methods return positions into that existing container. They add no second collection to keep synchronized.
 
-MutantStack adds a way to walk through the existing values. It should not keep a second copy of the whole collection.
+The header names those types:
 
-### Follow the iterator type
+```cpp
+using container_type = typename std::stack<T>::container_type;
+using iterator = typename container_type::iterator;
+using const_iterator = typename container_type::const_iterator;
+```
 
-The type-name path is: stack → its `container_type` → that container's `iterator`.
+| Syntax | Meaning |
+| --- | --- |
+| `using name = type;` | Give an existing type a convenient alias; create no object or storage |
+| `std::stack<T>::container_type` | The backing container type supplied by this stack specialization |
+| `container_type::iterator` | That container's mutable position type |
+| `container_type::const_iterator` | Its position type permitting read-only element access |
+| `typename` | Mark a name depending on T as a type; this is required here by the chosen C++17 syntax |
 
-The backing container type depends on the stack's template argument, so the iterator type is a dependent name. Use typename to mark it as a type. Use `this->c` to refer to the member from the template base class.
+For `MutantStack<int>`, follow the path:
 
-Add mutable begin/end functions and const begin/end functions. A const stack should let me read its elements, not change them. Reverse iteration can be a later extension.
+```text
+T = int
+std::stack<int>
+    -> container_type = std::deque<int>
+        -> iterator = std::deque<int>::iterator
+```
 
-Forward iteration walks from the oldest/bottom value to the newest/top value. Repeated top/pop walks the other way and removes values.
+The iterator is a library-defined position type. These aliases let us use the actual backing container's types without writing its implementation ourselves. Template definitions stay in the header so callers can instantiate the class for their element types.
 
-### Copying and build checks
+**Checkpoint question:** For `MutantStack<std::string>`, what are T, the base class and the backing container? Which object owns the stored elements?
 
-Let std::stack copy its own stored values. No raw allocation is needed.
+### Checkpoint 2 — Explain the four iterator methods
 
-The self-assignment check must compare two addresses: `this` and `&other`. Fix the sanitizer option so it is one argument: `-fsanitize=address,undefined`, without a space after the comma.
+```cpp
+iterator begin() {
+    return this->c.begin();
+}
 
-An empty main does not test a template's functions. Call assignment, copying, and iteration so the compiler has to check those operations.
+iterator end() {
+    return this->c.end();
+}
 
-Use stacks as ordinary value objects here. Do not delete a MutantStack through a std::stack pointer: std::stack has no virtual destructor. In a general application, keeping a container as a member instead of inheriting from it is often easier to control; that design is called composition.
+const_iterator begin() const {
+    return this->c.begin();
+}
 
-### My test sequence
+const_iterator end() const {
+    return this->c.end();
+}
+```
 
-Push 5 and 17: top should be 17. Pop once: top should be 5. Then push 3,5,737,0. Walking forward should give `5,3,5,737,0`.
+Each line `return this->c.begin();` has three steps:
 
-Next, change a value through a mutable iterator; read through a const stack; copy and assign stacks; change one and confirm its copy stays unchanged. Try self-assignment. Compare the forward sequence with the same values in a list. Never read end or access an empty top.
+1. `this->c` accesses this object's inherited backing container. `this` is a pointer to the current object, and `->` accesses a member through that pointer.
+2. `.begin()` asks the container for its first position.
+3. `return` passes that iterator back by value. It continues to refer to the original stored element.
+
+The base class depends on T. Writing `this->c` tells template lookup to resolve this inherited member for the instantiated type. `typename` handles dependent **type names**; `this->` handles access to this dependent **member object**.
+
+`end()` similarly returns the position after the last element. An empty stack has `begin() == end()`; never dereference end.
+
+The trailing `const` creates a read-only member-function overload. A mutable stack selects the mutable version; a const object or const reference selects the const version. The underlying container then supplies a const_iterator. Return types alone cannot distinguish overloads; the trailing const matters.
+
+With the demonstration values:
+
+```text
+begin -> [5] [3] [5] [737] [0] -> end
+        bottom             top
+```
+
+Iteration walks from bottom to top without removing anything. Repeated top/pop starts at the top and removes values. That distinction explains why iteration prints `5 3 5 737 0`.
+
+These methods also enable range-based for and algorithms such as find and accumulate. Mutable access through `*stack.begin()` changes the actual stored element; access through a const_iterator cannot assign to it.
+
+Take fresh iterators after structural changes such as push/pop, following the backing container's invalidation rules. Check empty before top/pop: inherited stack operations do not promise an exception for empty access.
+
+**Checkpoint question:** Why does `const MutantStack<int>& view = stack;` select different begin/end overloads, and why can the returned iterator still be moved while its element stays read-only?
+
+### Checkpoint 3 — Explain copying and verify the observable behavior
+
+```cpp
+MutantStack() = default;
+MutantStack(const MutantStack& copy) = default;
+MutantStack& operator=(const MutantStack& other) = default;
+~MutantStack() = default;
+```
+
+The compiler-generated default constructor constructs an empty base stack. Copy construction copies the base's container and its elements; assignment replaces an existing object's base state and returns a reference to that object. Destruction cleans up through the base and its container.
+
+This satisfies the exercise's Orthodox Canonical Form while leaving ownership with standard-library types. There are no raw allocations or saved iterators to copy manually. The original handwritten `this != assign` compared a pointer with an object; a manual address comparison would use `this != &assign`. Defaulted assignment needs no handwritten self-assignment branch.
+
+The demo's `check(bool condition, const char* message)` throws runtime_error when a comparison is false and prints PASS when it is true. Each `&&` requires all its comparisons to succeed; it also stops evaluation at the first false operand. The outer catch reports an unexpected failure and returns 1; completing every check returns 0.
+
+| Test in main | What it establishes |
+| --- | --- |
+| Empty construction, push, top, size and pop | The inherited stack interface still works |
+| Push 5 and 17, pop once, then push 3, 5, 737, 0 | A known five-value sequence, top 0 |
+| Compare iteration with list `{5,3,5,737,0}` | Correct order and length; the four-iterator equal overload checks both ranges |
+| Inspect size/top after iteration | Reading has not consumed the stack |
+| Const iteration, find 737, sum 750 | Const begin/end work with standard algorithms |
+| Assign 42 through begin and update the reference list | Iterators access the owned values; the const view sees the same updated object |
+| Copy construct; assign over a stack containing -1 | Both operations reproduce the full sequence, replacing previous state |
+| Set original top to 99, pop the copy, push 123 onto the assigned object | Independent storage: sizes 5/4/6 and tops 99/737/123 |
+| Assign an object through a reference to itself | Self-assignment preserves its values |
+| Construct an ordinary std::stack from the MutantStack | The base state can be copied independently, as in the exercise's sample usage |
+| Pop until empty; check mutable and const ranges | Both pairs of positions correctly represent emptiness |
+| Instantiate with std::string | The template is not accidentally restricted to integers |
+
+In the find check, `found != end && *found == 737` uses short-circuit evaluation to avoid reading end. Const write protection cannot be tested by leaving an invalid assignment in main: it would prevent compilation. A separate scratch compilation confirms that `*view.begin() = 7;` is rejected.
+
+Use these classes as value objects. The ordinary-stack test copies the base state into a new object. Deleting a derived object through a std::stack pointer would be invalid because its destructor is not virtual. In application code, composition is another way to control the exposed interface.
+
+**Build:** C++17 is sufficient here. The corrected sanitizer option is one argument, `-fsanitize=address,undefined`. The target is `mutantstack`; no .cpp implementation is needed for this header-defined template. The local Sublime project and clangd flags select C++17 for this exercise.
+
+```sh
+cd 42modules/08/ex02
+make
+./mutantstack
+```
+
+Checked on 26 October 2026: the rebuild and all runtime checks passed with address/undefined-behavior sanitizers. Separate checks verified the four iterator return types, mutable/const dereference, range-based for and rejection of writing through a const iterator.
+
+**Checkpoint question:** Why does defaulted copying copy the values correctly, while merely including the old header in an empty main failed to reveal its broken assignment operator?
 
 ## 6. What remains for this study session
 
@@ -424,7 +526,8 @@ Next, change a value through a mutable iterator; read through a const stack; cop
 - [x] Implement safe gap arithmetic and verify the fixed expected results.
 - [x] Test 10,000 stored values with known answers.
 - [ ] Answer the three Span checkpoint questions in my own words.
-- [ ] Implement and test MutantStack iteration and copying.
+- [x] Implement and test MutantStack iteration and copying.
+- [ ] Answer the three MutantStack checkpoint questions in my own words.
 - [ ] Build with the chosen language version and read sanitizer diagnostics.
 
 AddressSanitizer checks many memory errors. UndefinedBehaviorSanitizer checks many invalid operations. A diagnostic still means something went wrong even if the process exits with zero. Neither tool proves every behavior is correct.
