@@ -483,24 +483,13 @@ The compiler-generated default constructor constructs an empty base stack. Copy 
 
 This satisfies the exercise's Orthodox Canonical Form while leaving ownership with standard-library types. There are no raw allocations or saved iterators to copy manually. The original handwritten `this != assign` compared a pointer with an object; a manual address comparison would use `this != &assign`. Defaulted assignment needs no handwritten self-assignment branch.
 
-The demo's `check(bool condition, const char* message)` throws runtime_error when a comparison is false and prints PASS when it is true. Each `&&` requires all its comparisons to succeed; it also stops evaluation at the first false operand. The outer catch reports an unexpected failure and returns 1; completing every check returns 0.
+The focused main follows four sections: the subject's stack/iterator example, the equivalent list operations, copying and assignment of MutantStack objects, and copying into an ordinary std::stack. It explicitly exercises ++ and -- before traversal.
 
-| Test in main | What it establishes |
-| --- | --- |
-| Empty construction, push, top, size and pop | The inherited stack interface still works |
-| Push 5 and 17, pop once, then push 3, 5, 737, 0 | A known five-value sequence, top 0 |
-| Compare iteration with list `{5,3,5,737,0}` | Correct order and length; the four-iterator equal overload checks both ranges |
-| Inspect size/top after iteration | Reading has not consumed the stack |
-| Const iteration, find 737, sum 750 | Const begin/end work with standard algorithms |
-| Assign 42 through begin and update the reference list | Iterators access the owned values; the const view sees the same updated object |
-| Copy construct; assign over a stack containing -1 | Both operations reproduce the full sequence, replacing previous state |
-| Set original top to 99, pop the copy, push 123 onto the assigned object | Independent storage: sizes 5/4/6 and tops 99/737/123 |
-| Assign an object through a reference to itself | Self-assignment preserves its values |
-| Construct an ordinary std::stack from the MutantStack | The base state can be copied independently, as in the exercise's sample usage |
-| Pop until empty; check mutable and const ranges | Both pairs of positions correctly represent emptiness |
-| Instantiate with std::string | The template is not accidentally restricted to integers |
+The two labeled output blocks show the same top, size and traversal results. The four-iterator std::equal call checks the final stack/list sequences automatically. Later comparisons check that copies reproduce the values and remain independent. Failed comparisons throw runtime_error; the outer catch reports failure and returns 1. Completing the comparisons returns 0.
 
-In the find check, `found != end && *found == 737` uses short-circuit evaluation to avoid reading end. Const write protection cannot be tested by leaving an invalid assignment in main: it would prevent compilation. A separate scratch compilation confirms that `*view.begin() = 7;` is rejected.
+For a descriptive walkthrough of every section, the template's connection to main, and the final constructor call, read [MutantStack: reading the focused tests](../42modules/08/ex02/README.md). It explains why `std::stack<int> ordinary(mstack);` constructs a separate base-class object, while `assigned = mstack;` assigns to an already existing derived object.
+
+The earlier 17-check version additionally demonstrated const iteration, search, summing, strings and self-assignment. Those are useful optional checks, rather than individual cases prescribed by the subject. They are no longer part of the focused main; the header's const interface is unchanged.
 
 Use these classes as value objects. The ordinary-stack test copies the base state into a new object. Deleting a derived object through a std::stack pointer would be invalid because its destructor is not virtual. In application code, composition is another way to control the exposed interface.
 

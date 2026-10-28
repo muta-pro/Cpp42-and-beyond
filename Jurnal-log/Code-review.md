@@ -2,7 +2,9 @@
 
 The findings below record the original 5 October review. During that review, no exercise source, header, test, or Makefile was edited; the learning notes were expanded separately.
 
-**Follow-up — 26 October 2026:** Span and MutantStack have since been completed. All three CPP08 exercises now build and their demos run successfully with their configured sanitizers. MutantStack passes 17 runtime checks plus separate iterator-type and const-write compiler checks. See the [updated August journal](Journal-August.md#5-ex02--mutantstack) for the implementation and reasoning.
+**Follow-up — 26 October 2026:** Span and MutantStack were completed. All three CPP08 exercises built and their demos ran successfully with their configured sanitizers. At that point, MutantStack passed 17 runtime checks plus separate iterator-type and const-write compiler checks. See the [updated August journal](Journal-August.md#5-ex02--mutantstack) for the implementation and reasoning.
+
+**Follow-up — 28 October 2026:** MutantStack's main was simplified around the subject's example, list comparison and copying. The [test walkthrough](../42modules/08/ex02/README.md) describes the current tests; the earlier 17-check count refers to the previous main.
 
 The original 31/36 total and findings below are a historical snapshot. The full repository suite was not rerun for this follow-up.
 
