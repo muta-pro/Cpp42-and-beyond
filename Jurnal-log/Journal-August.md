@@ -370,10 +370,9 @@ After the same two-value guard, `minmax_element` returns two iterators in a pair
 Checked on 13 October 2026: `make re` and `./span` passed with address/undefined-behavior sanitizers. Separate compiler checks accepted const-vector/list iterators, rejected double/stream iterators, and verified explicit construction. Exercise sources stayed unchanged.
 
 ## 5. ex02 — MutantStack
+The goal is to retain the stack interface while adding access to its existing elements through iterators.
 
-The current [header](../42modules/08/ex02/MutantStack.hpp) and [demo](../42modules/08/ex02/main.cpp) complete the last CPP08 exercise. The goal is to retain the stack interface while adding access to its existing elements through iterators.
-
-### Checkpoint 1 — Identify the owning container and the iterator types
+# Identify the owning container and the iterator types
 
 ```cpp
 template <typename T>
@@ -424,7 +423,7 @@ The iterator is a library-defined position type. These aliases let us use the ac
 
 **Checkpoint question:** For `MutantStack<std::string>`, what are T, the base class and the backing container? Which object owns the stored elements?
 
-### Checkpoint 2 — Explain the four iterator methods
+### Explain the four iterator methods
 
 ```cpp
 iterator begin() {
@@ -471,7 +470,7 @@ Take fresh iterators after structural changes such as push/pop, following the ba
 
 **Checkpoint question:** Why does `const MutantStack<int>& view = stack;` select different begin/end overloads, and why can the returned iterator still be moved while its element stays read-only?
 
-### Checkpoint 3 — Explain copying and verify the observable behavior
+### Explain copying and verify the observable behavior
 
 ```cpp
 MutantStack() = default;
@@ -505,16 +504,6 @@ In the find check, `found != end && *found == 737` uses short-circuit evaluation
 
 Use these classes as value objects. The ordinary-stack test copies the base state into a new object. Deleting a derived object through a std::stack pointer would be invalid because its destructor is not virtual. In application code, composition is another way to control the exposed interface.
 
-**Build:** C++17 is sufficient here. The corrected sanitizer option is one argument, `-fsanitize=address,undefined`. The target is `mutantstack`; no .cpp implementation is needed for this header-defined template. The local Sublime project and clangd flags select C++17 for this exercise.
-
-```sh
-cd 42modules/08/ex02
-make
-./mutantstack
-```
-
-Checked on 26 October 2026: the rebuild and all runtime checks passed with address/undefined-behavior sanitizers. Separate checks verified the four iterator return types, mutable/const dereference, range-based for and rejection of writing through a const iterator.
-
 **Checkpoint question:** Why does defaulted copying copy the values correctly, while merely including the old header in an empty main failed to reveal its broken assignment operator?
 
 ## 6. What remains for this study session
@@ -529,8 +518,6 @@ Checked on 26 October 2026: the rebuild and all runtime checks passed with addre
 - [x] Implement and test MutantStack iteration and copying.
 - [ ] Answer the three MutantStack checkpoint questions in my own words.
 - [ ] Build with the chosen language version and read sanitizer diagnostics.
-
-AddressSanitizer checks many memory errors. UndefinedBehaviorSanitizer checks many invalid operations. A diagnostic still means something went wrong even if the process exits with zero. Neither tool proves every behavior is correct.
 
 ## 7. Later topics, after the core exercises work
 
